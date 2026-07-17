@@ -5,8 +5,127 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-fun-gutenberg-blocks-card-flip-to-modal {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
+ .wp-block-fun-gutenberg-blocks-card-flip-to-modal {
+	box-sizing: border-box;
+}
+
+.gb-flip-card-modal {
+	position: relative;
+	width: 100%;
+}
+
+.gb-flip-card-modal *,
+.gb-flip-card-modal *::before,
+.gb-flip-card-modal *::after {
+	box-sizing: border-box;
+}
+
+.gb-flip-card-modal__preview {
+	width: 100%;
+	min-height: 220px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+	border: 1px solid #d0d0d0;
+	border-radius: 16px;
+	background: #f7f7f7;
+	cursor: pointer;
+	transition:
+		transform 180ms ease,
+		box-shadow 180ms ease,
+		border-color 180ms ease;
+}
+
+.gb-flip-card-modal__preview:hover,
+.gb-flip-card-modal__preview:focus {
+	transform: translateY(-2px);
+	border-color: #8a8a8a;
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+	outline: none;
+}
+
+.gb-flip-card-modal__preview:focus-visible {
+	outline: 3px solid currentColor;
+	outline-offset: 4px;
+}
+
+.gb-flip-card-modal__preview-inner {
+	max-width: 32rem;
+	text-align: center;
+}
+
+.gb-flip-card-modal__preview-title {
+	margin: 0 0 0.5rem;
+	font-size: 1.35rem;
+	line-height: 1.2;
+}
+
+.gb-flip-card-modal__preview-text {
+	margin: 0;
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+.gb-flip-card-modal__backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 9998;
+	background: rgba(0, 0, 0, 0.55);
+}
+
+.gb-flip-card-modal__dialog {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	z-index: 9999;
+	width: min(90vw, 720px);
+	max-height: 85vh;
+	padding: 2rem;
+	overflow-y: auto;
+	border-radius: 18px;
+	background: #ffffff;
+	box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+	transform: translate(-50%, -50%);
+}
+
+.gb-flip-card-modal__close {
+	position: absolute;
+	top: 0.75rem;
+	right: 0.75rem;
+	width: 2.25rem;
+	height: 2.25rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #d0d0d0;
+	border-radius: 999px;
+	background: #ffffff;
+	color: #111111;
+	font-size: 1.5rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.gb-flip-card-modal__close:hover,
+.gb-flip-card-modal__close:focus {
+	background: #f0f0f0;
+	outline: none;
+}
+
+.gb-flip-card-modal__close:focus-visible {
+	outline: 3px solid currentColor;
+	outline-offset: 3px;
+}
+
+.gb-flip-card-modal__content {
+	padding-right: 1rem;
+}
+
+.gb-flip-card-modal__content > :first-child {
+	margin-top: 0;
+}
+
+.gb-flip-card-modal__content > :last-child {
+	margin-bottom: 0;
 }

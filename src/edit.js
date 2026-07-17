@@ -1,15 +1,5 @@
 /**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
-import { __ } from '@wordpress/i18n';
-
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
+ * WordPress dependencies
  */
 import { useBlockProps } from '@wordpress/block-editor';
 
@@ -22,17 +12,44 @@ import { useBlockProps } from '@wordpress/block-editor';
 import './editor.scss';
 
 /**
- * The edit function describes the structure of your block in the context of the
- * editor. This represents what the editor will render when the block is used.
- *
+ * The editor preview for the block.
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
- * @return {Element} Element to render.
+ * Stage A:
+ * - Shows the preview card
+ * - Shows a non-interactive modal content preview below it
  */
 export default function Edit() {
+	const blockProps = useBlockProps( {
+		className: 'gb-flip-card-modal gb-flip-card-modal--editor',
+	} );
+
 	return (
-		<p { ...useBlockProps() }>
-			{ __( 'Card Flip to Modal – hello from the editor!', 'card-flip-to-modal' ) }
-		</p>
+		<div { ...blockProps }>
+			<div className="gb-flip-card-modal__preview">
+				<div className="gb-flip-card-modal__preview-inner">
+					<h3 className="gb-flip-card-modal__preview-title">
+						Card Flip to Modal
+					</h3>
+					<p className="gb-flip-card-modal__preview-text">
+						Click to open the modal content.
+					</p>
+				</div>
+			</div>
+
+			<div className="gb-flip-card-modal__editor-modal-preview">
+				<div className="gb-flip-card-modal__editor-label">
+					Modal Content Preview
+				</div>
+
+				<div className="gb-flip-card-modal__content">
+					<h2>Modal Content</h2>
+					<p>
+						This is where expanded modal content will appear in a
+						later stage.
+					</p>
+				</div>
+			</div>
+		</div>
 	);
 }

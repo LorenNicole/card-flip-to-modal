@@ -4,6 +4,25 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-fun-gutenberg-blocks-card-flip-to-modal {
-	border: 1px dotted #f00;
+ .wp-block-fun-gutenberg-blocks-card-flip-to-modal.gb-flip-card-modal--editor {
+	padding: 1rem;
+	border: 1px dashed #b8b8b8;
+	border-radius: 18px;
+}
+
+.gb-flip-card-modal__editor-modal-preview {
+	margin-top: 1rem;
+	padding: 1.5rem;
+	border: 1px solid #d0d0d0;
+	border-radius: 16px;
+	background: #ffffff;
+}
+
+.gb-flip-card-modal__editor-label {
+	margin-bottom: 0.75rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: #666666;
 }
