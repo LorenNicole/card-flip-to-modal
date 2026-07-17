@@ -11,6 +11,17 @@
 	"supports": {
 		"html": false
 	},
+	"attributes": {
+		"modalSize": {
+			"type": "string",
+			"enum": [ "small", "medium", "large", "custom" ],
+			"default": "medium"
+		},
+		"customModalWidth": {
+			"type": "string",
+			"default": "720px"
+		}
+	},
 	"textdomain": "card-flip-to-modal",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",

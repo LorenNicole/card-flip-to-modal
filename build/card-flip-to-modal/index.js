@@ -2,6 +2,73 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/card-flip-to-modal/constants.js"
+/*!*********************************************!*\
+  !*** ./src/card-flip-to-modal/constants.js ***!
+  \*********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DEFAULT_CUSTOM_MODAL_WIDTH: () => (/* binding */ DEFAULT_CUSTOM_MODAL_WIDTH),
+/* harmony export */   DEFAULT_MODAL_SIZE: () => (/* binding */ DEFAULT_MODAL_SIZE),
+/* harmony export */   MODAL_SIZE_OPTIONS: () => (/* binding */ MODAL_SIZE_OPTIONS),
+/* harmony export */   ModalSize: () => (/* binding */ ModalSize),
+/* harmony export */   getModalSizeClassName: () => (/* binding */ getModalSizeClassName),
+/* harmony export */   getModalWidthStyle: () => (/* binding */ getModalWidthStyle),
+/* harmony export */   getSafeCustomModalWidth: () => (/* binding */ getSafeCustomModalWidth),
+/* harmony export */   isValidCssSize: () => (/* binding */ isValidCssSize)
+/* harmony export */ });
+const ModalSize = Object.freeze({
+  SMALL: 'small',
+  MEDIUM: 'medium',
+  LARGE: 'large',
+  CUSTOM: 'custom'
+});
+const DEFAULT_MODAL_SIZE = ModalSize.MEDIUM;
+const DEFAULT_CUSTOM_MODAL_WIDTH = '720px';
+const MODAL_SIZE_OPTIONS = [{
+  label: 'Small',
+  value: ModalSize.SMALL
+}, {
+  label: 'Medium',
+  value: ModalSize.MEDIUM
+}, {
+  label: 'Large',
+  value: ModalSize.LARGE
+}, {
+  label: 'Custom',
+  value: ModalSize.CUSTOM
+}];
+const VALID_CSS_SIZE_PATTERN = /^(?:\d+(?:\.\d+)?(?:px|rem|em|vw|vh|vmin|vmax|%|ch)|clamp\([^)]+\)|min\([^)]+\)|max\([^)]+\)|calc\([^)]+\))$/i;
+function getModalSizeClassName(modalSize = DEFAULT_MODAL_SIZE) {
+  const allowedSizes = Object.values(ModalSize);
+  const safeModalSize = allowedSizes.includes(modalSize) ? modalSize : DEFAULT_MODAL_SIZE;
+  return `gb-flip-card-modal--size-${safeModalSize}`;
+}
+function isValidCssSize(value) {
+  if (typeof value !== 'string') {
+    return false;
+  }
+  return VALID_CSS_SIZE_PATTERN.test(value.trim());
+}
+function getSafeCustomModalWidth(customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH) {
+  if (isValidCssSize(customModalWidth)) {
+    return customModalWidth.trim();
+  }
+  return DEFAULT_CUSTOM_MODAL_WIDTH;
+}
+function getModalWidthStyle(modalSize, customModalWidth) {
+  if (modalSize !== ModalSize.CUSTOM) {
+    return undefined;
+  }
+  return {
+    '--gb-flip-card-modal-width': getSafeCustomModalWidth(customModalWidth)
+  };
+}
+
+/***/ },
+
 /***/ "./src/card-flip-to-modal/edit.js"
 /*!****************************************!*\
   !*** ./src/card-flip-to-modal/edit.js ***!
@@ -16,12 +83,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./editor.scss */ "./src/card-flip-to-modal/editor.scss");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./constants */ "./src/card-flip-to-modal/constants.js");
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./editor.scss */ "./src/card-flip-to-modal/editor.scss");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
 /**
  * WordPress dependencies
  */
+
+
 
 
 
@@ -44,25 +116,60 @@ __webpack_require__.r(__webpack_exports__);
 
 const TEMPLATE = [['fun-gutenberg-blocks/card-flip-to-modal-preview'], ['fun-gutenberg-blocks/card-flip-to-modal-content']];
 const ALLOWED_BLOCKS = ['fun-gutenberg-blocks/card-flip-to-modal-preview', 'fun-gutenberg-blocks/card-flip-to-modal-content'];
-function Edit() {
+function getModalSizeOptions() {
+  return _constants__WEBPACK_IMPORTED_MODULE_3__.MODAL_SIZE_OPTIONS.map(option => ({
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)(option.label, 'card-flip-to-modal'),
+    value: option.value
+  }));
+}
+function Edit({
+  attributes,
+  setAttributes
+}) {
+  const {
+    modalSize = _constants__WEBPACK_IMPORTED_MODULE_3__.DEFAULT_MODAL_SIZE,
+    customModalWidth = _constants__WEBPACK_IMPORTED_MODULE_3__.DEFAULT_CUSTOM_MODAL_WIDTH
+  } = attributes;
+  const customWidthIsValid = (0,_constants__WEBPACK_IMPORTED_MODULE_3__.isValidCssSize)(customModalWidth);
+  const safeCustomModalWidth = (0,_constants__WEBPACK_IMPORTED_MODULE_3__.getSafeCustomModalWidth)(customModalWidth);
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps)({
-    className: 'gb-flip-card-modal gb-flip-card-modal--editor'
+    className: ['gb-flip-card-modal', 'gb-flip-card-modal--editor', (0,_constants__WEBPACK_IMPORTED_MODULE_3__.getModalSizeClassName)(modalSize)].join(' '),
+    style: (0,_constants__WEBPACK_IMPORTED_MODULE_3__.getModalWidthStyle)(modalSize, safeCustomModalWidth)
   });
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InspectorControls, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-        title: "Card Flip to Modal",
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InspectorControls, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Modal Settings', 'card-flip-to-modal'),
         initialOpen: true,
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("p", {
-          children: "Edit the preview card and modal content directly in the block. Modal open/close behavior runs on the front end."
-        })
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Modal width', 'card-flip-to-modal'),
+          value: modalSize,
+          options: getModalSizeOptions(),
+          onChange: value => setAttributes({
+            modalSize: value
+          }),
+          help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Choose how wide the modal appears on the front end.', 'card-flip-to-modal')
+        }), modalSize === _constants__WEBPACK_IMPORTED_MODULE_3__.ModalSize.CUSTOM && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Custom modal width', 'card-flip-to-modal'),
+            value: customModalWidth,
+            onChange: value => setAttributes({
+              customModalWidth: value
+            }),
+            help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Use a valid CSS width such as 720px, 80vw, 45rem, 60%, or clamp(320px, 80vw, 1000px).', 'card-flip-to-modal')
+          }), !customWidthIsValid && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+            status: "warning",
+            isDismissible: false,
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Enter a valid CSS size. The modal will use 720px until this value is valid.', 'card-flip-to-modal')
+          })]
+        })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       ...blockProps,
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InnerBlocks, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InnerBlocks, {
         allowedBlocks: ALLOWED_BLOCKS,
         template: TEMPLATE,
-        templateLock: 'all'
+        templateLock: "all"
       })
     })]
   });
@@ -136,12 +243,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constants */ "./src/card-flip-to-modal/constants.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
 /**
  * WordPress dependencies
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
+
 
 
 /**
@@ -150,13 +259,21 @@ __webpack_require__.r(__webpack_exports__);
  * The preview and modal content are saved by the child blocks.
  */
 
-function save() {
+function save({
+  attributes
+}) {
+  const {
+    modalSize = _constants__WEBPACK_IMPORTED_MODULE_1__.DEFAULT_MODAL_SIZE,
+    customModalWidth = _constants__WEBPACK_IMPORTED_MODULE_1__.DEFAULT_CUSTOM_MODAL_WIDTH
+  } = attributes;
+  const safeCustomModalWidth = (0,_constants__WEBPACK_IMPORTED_MODULE_1__.getSafeCustomModalWidth)(customModalWidth);
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save({
-    className: 'gb-flip-card-modal'
+    className: ['gb-flip-card-modal', (0,_constants__WEBPACK_IMPORTED_MODULE_1__.getModalSizeClassName)(modalSize)].join(' '),
+    style: (0,_constants__WEBPACK_IMPORTED_MODULE_1__.getModalWidthStyle)(modalSize, safeCustomModalWidth)
   });
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
     ...blockProps,
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InnerBlocks.Content, {})
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InnerBlocks.Content, {})
   });
 }
 
@@ -226,13 +343,23 @@ module.exports = window["wp"]["components"];
 
 /***/ },
 
+/***/ "@wordpress/i18n"
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ },
+
 /***/ "./src/card-flip-to-modal/block.json"
 /*!*******************************************!*\
   !*** ./src/card-flip-to-modal/block.json ***!
   \*******************************************/
 (module) {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"fun-gutenberg-blocks/card-flip-to-modal","version":"0.1.0","title":"Card Flip to Modal","category":"widgets","icon":"smiley","description":"A Gutenberg block that opens custom card content in a modal.","example":{},"supports":{"html":false},"textdomain":"card-flip-to-modal","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"fun-gutenberg-blocks/card-flip-to-modal","version":"0.1.0","title":"Card Flip to Modal","category":"widgets","icon":"smiley","description":"A Gutenberg block that opens custom card content in a modal.","example":{},"supports":{"html":false},"attributes":{"modalSize":{"type":"string","enum":["small","medium","large","custom"],"default":"medium"},"customModalWidth":{"type":"string","default":"720px"}},"textdomain":"card-flip-to-modal","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
 
 /***/ }
 

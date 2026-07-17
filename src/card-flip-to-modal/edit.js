@@ -6,7 +6,23 @@ import {
 	InspectorControls,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { PanelBody } from '@wordpress/components';
+import { 
+	Notice,
+	PanelBody,
+	SelectControl,
+	TextControl, 
+} from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import {
+	DEFAULT_CUSTOM_MODAL_WIDTH,
+	DEFAULT_MODAL_SIZE,
+	MODAL_SIZE_OPTIONS,
+	ModalSize,
+	getModalSizeClassName,
+	getModalWidthStyle,
+	getSafeCustomModalWidth,
+	isValidCssSize,
+} from './constants';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -34,19 +50,84 @@ const ALLOWED_BLOCKS = [
 	'fun-gutenberg-blocks/card-flip-to-modal-content',
 ];
 
-export default function Edit() {
+function getModalSizeOptions() {
+	return MODAL_SIZE_OPTIONS.map( ( option ) => ( {
+		label: __( option.label, 'card-flip-to-modal' ),
+		value: option.value,
+	} ) );
+}
+
+export default function Edit( { attributes, setAttributes } ) {
+	const {
+		modalSize = DEFAULT_MODAL_SIZE,
+		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+	} = attributes;
+
+	const customWidthIsValid = isValidCssSize( customModalWidth );
+	const safeCustomModalWidth =
+		getSafeCustomModalWidth( customModalWidth );
+
 	const blockProps = useBlockProps( {
-		className: 'gb-flip-card-modal gb-flip-card-modal--editor',
+		className: [
+			'gb-flip-card-modal',
+			'gb-flip-card-modal--editor',
+			getModalSizeClassName( modalSize ),
+		].join( ' ' ),
+		style: getModalWidthStyle( modalSize, safeCustomModalWidth ),
 	} );
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Card Flip to Modal" initialOpen={ true }>
-					<p>
-						Edit the preview card and modal content directly in the
-						block. Modal open/close behavior runs on the front end.
-					</p>
+				<PanelBody
+					title={ __( 'Modal Settings', 'card-flip-to-modal' ) }
+					initialOpen={ true }
+				>
+					<SelectControl
+						label={ __( 'Modal width', 'card-flip-to-modal' ) }
+						value={ modalSize }
+						options={ getModalSizeOptions() }
+						onChange={ ( value ) =>
+							setAttributes( { modalSize: value } )
+						}
+						help={ __(
+							'Choose how wide the modal appears on the front end.',
+							'card-flip-to-modal'
+						) }
+					/>
+
+					{ modalSize === ModalSize.CUSTOM && (
+						<>
+							<TextControl
+								label={ __(
+									'Custom modal width',
+									'card-flip-to-modal'
+								) }
+								value={ customModalWidth }
+								onChange={ ( value ) =>
+									setAttributes( {
+										customModalWidth: value,
+									} )
+								}
+								help={ __(
+									'Use a valid CSS width such as 720px, 80vw, 45rem, 60%, or clamp(320px, 80vw, 1000px).',
+									'card-flip-to-modal'
+								) }
+							/>
+
+							{ ! customWidthIsValid && (
+								<Notice
+									status="warning"
+									isDismissible={ false }
+								>
+									{ __(
+										'Enter a valid CSS size. The modal will use 720px until this value is valid.',
+										'card-flip-to-modal'
+									) }
+								</Notice>
+							) }
+						</>
+					) }
 				</PanelBody>
 			</InspectorControls>
 
@@ -54,7 +135,7 @@ export default function Edit() {
 				<InnerBlocks
 					allowedBlocks={ ALLOWED_BLOCKS }
 					template={ TEMPLATE }
-					templateLock={'all'}
+					templateLock="all"
 				/>
 			</div>
 		</>

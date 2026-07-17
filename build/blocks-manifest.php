@@ -16,6 +16,22 @@ return array(
 		'supports' => array(
 			'html' => false
 		),
+		'attributes' => array(
+			'modalSize' => array(
+				'type' => 'string',
+				'enum' => array(
+					'small',
+					'medium',
+					'large',
+					'custom'
+				),
+				'default' => 'medium'
+			),
+			'customModalWidth' => array(
+				'type' => 'string',
+				'default' => '720px'
+			)
+		),
 		'textdomain' => 'card-flip-to-modal',
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
