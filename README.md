@@ -1,7 +1,100 @@
 # Card Flip to Modal
 
-A custom WordPress Gutenberg block plugin that displays a clickable preview card and opens separate editable modal content using nested blocks.
+A custom WordPress Gutenberg block plugin that displays editable preview content on the page and opens separate editable content inside an accessible modal.
 
-## Status
+This plugin was created as a WordPress development portfolio project to demonstrate custom block development, React-based Gutenberg editor components, InnerBlocks, front-end JavaScript behavior, Sass styling, accessibility-focused modal behavior, and modern WordPress build tooling.
 
-Initial development.
+## Features
+
+- Custom parent Gutenberg block
+- Locked block structure for consistent editing
+- Editable Preview Area using InnerBlocks
+- Editable Modal Content area using InnerBlocks
+- Separate preview content and modal content
+- Click-to-open modal behavior
+- Keyboard activation with Enter and Space
+- Escape key closes the modal
+- Close button inside the modal
+- Focus moves into the modal when opened
+- Focus remains trapped inside the modal while open
+- Focus returns to the preview card after closing
+- Page scrolling locks while the modal is open
+- Modal content scrolls internally when content is long
+- Multiple Card Flip to Modal blocks can be used on one page
+- Opening one modal closes any other open modal
+- Front-end behavior powered by lightweight JavaScript
+- Editor experience built with React-based Gutenberg components
+- Sass styling with BEM-style class names
+
+## Technologies Used
+
+- WordPress
+- Gutenberg Block Editor
+- React JSX through WordPress block components
+- InnerBlocks
+- JavaScript
+- Sass / SCSS
+- BEM-style CSS class naming
+- PHP block registration
+- @wordpress/scripts
+- npm
+
+## Installation
+
+1. Download or clone this repository.
+2. Copy the plugin folder into your WordPress `wp-content/plugins/` directory.
+3. In the WordPress admin, go to **Plugins**.
+4. Activate **Card Flip to Modal**.
+5. Open the block editor for a page or post.
+6. Insert the **Card Flip to Modal** block.
+7. Edit the Preview Area and Modal Content area.
+
+The `build/` folder is included in this repository so the plugin can be installed and activated without running npm commands.
+
+## How to Use
+
+After inserting the block, you will see two editable areas in the editor:
+
+### Preview Area
+
+The Preview Area is the content visitors see on the page before opening the modal.
+
+This area can include supported blocks such as:
+
+- Heading
+- Paragraph
+- Image
+- List
+- Buttons
+
+Visitors can click this area, or focus it with the keyboard and press Enter or Space, to open the modal.
+
+### Modal Content
+
+The Modal Content area is the expanded content shown inside the modal.
+
+This area can include longer text, images, lists, buttons, video, or other supported content blocks.
+
+## Accessibility Notes
+
+The block includes modal and keyboard accessibility behavior:
+
+- Preview card is keyboard-focusable.
+- Enter opens the modal.
+- Space opens the modal.
+- Escape closes the modal.
+- Focus moves into the modal when it opens.
+- Focus remains trapped inside the modal while it is open.
+- Focus returns to the preview card after the modal closes.
+- The close button is keyboard-focusable.
+- Background page scrolling is locked while the modal is open.
+- The modal uses dialog-related ARIA attributes.
+
+## Development
+
+These steps are only needed if you want to edit the plugin source code.
+
+Install dependencies:
+
+```bash
+npm install
