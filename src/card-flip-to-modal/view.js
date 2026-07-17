@@ -31,6 +31,8 @@
  * - Returns focus to the preview card when closed.
  */
 
+import { modalFocus } from './modal-focus';
+
 const BLOCK_SELECTOR = '.wp-block-fun-gutenberg-blocks-card-flip-to-modal';
 const OPEN_CLASS = 'gb-flip-card-modal--is-open';
 const BODY_LOCK_CLASS = 'gb-flip-card-modal-lock-scroll';
@@ -117,6 +119,7 @@ function openModal( block, trigger ) {
 	if ( closeButton ) {
 		closeButton.focus();
 	} else {
+		dialog.setAttribute( 'tabindex', '-1' );
 		dialog.focus();
 	}
 }
@@ -131,9 +134,17 @@ function handlePreviewKeydown( event, block, preview ) {
 }
 
 function handleDocumentKeydown( event ) {
-	if ( event.key === 'Escape' && activeBlock ) {
-		closeModal( activeBlock );
+	if ( ! activeBlock ) {
+		return;
 	}
+
+	if ( event.key === 'Escape' ) {
+		closeModal( activeBlock );
+		return;
+	}
+
+	const { dialog, closeButton } = getBlockParts( activeBlock );
+	modalFocus( event, dialog, closeButton );
 }
 
 function initCardFlipToModalBlock( block ) {

@@ -22,6 +22,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const ALLOWED_BLOCKS = ['core/image', 'core/heading', 'core/paragraph', 'core/list', 'core/buttons', 'core/video'];
+const TEMPLATE = [['core/heading', {
+  level: 2,
+  content: 'Modal Content'
+}], ['core/paragraph', {
+  content: 'This is where expanded custom modal content will appear.'
+}]];
 function Edit() {
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps)({
     className: 'gb-flip-card-modal__editor-modal-preview'
@@ -34,7 +40,9 @@ function Edit() {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "gb-flip-card-modal__content",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InnerBlocks, {
-        allowedBlocks: ALLOWED_BLOCKS
+        allowedBlocks: ALLOWED_BLOCKS,
+        template: TEMPLATE,
+        templateLock: false
       })
     })]
   });

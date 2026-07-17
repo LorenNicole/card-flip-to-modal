@@ -25,45 +25,8 @@ import './editor.scss';
  * - Shows a non-interactive modal content preview below it
  */
 const TEMPLATE = [
-	[
-		'fun-gutenberg-blocks/card-flip-to-modal-preview',
-		{},
-		[
-			[
-				'core/heading',
-				{
-					level: 3,
-					content: 'Card Flip to Modal',
-				},
-			],
-			[
-				'core/paragraph',
-				{
-					content: 'Click to open the modal content.',
-				},
-			],
-		],
-	],
-	[
-		'fun-gutenberg-blocks/card-flip-to-modal-content',
-		{},
-		[
-			[
-				'core/heading',
-				{
-					level: 2,
-					content: 'Modal Content',
-				},
-			],
-			[
-				'core/paragraph',
-				{
-					content:
-						'This is where expanded custom modal content will appear.',
-				},
-			],
-		],
-	],
+	[ 'fun-gutenberg-blocks/card-flip-to-modal-preview' ],
+	[ 'fun-gutenberg-blocks/card-flip-to-modal-content' ],
 ];
 
 const ALLOWED_BLOCKS = [
@@ -91,7 +54,7 @@ export default function Edit() {
 				<InnerBlocks
 					allowedBlocks={ ALLOWED_BLOCKS }
 					template={ TEMPLATE }
-					templateLock="all"
+					templateLock={'all'}
 				/>
 			</div>
 		</>

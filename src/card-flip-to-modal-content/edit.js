@@ -12,6 +12,22 @@ const ALLOWED_BLOCKS = [
 	'core/video',
 ];
 
+const TEMPLATE = [
+	[
+		'core/heading',
+		{
+			level: 2,
+			content: 'Modal Content',
+		},
+	],
+	[
+		'core/paragraph',
+		{
+			content: 'This is where expanded custom modal content will appear.',
+		},
+	],
+];
+
 export default function Edit() {
 	const blockProps = useBlockProps( {
 		className: 'gb-flip-card-modal__editor-modal-preview',
@@ -24,7 +40,11 @@ export default function Edit() {
 			</div>
 
 			<div className="gb-flip-card-modal__content">
-				<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
+				<InnerBlocks 
+					allowedBlocks={ ALLOWED_BLOCKS } 
+					template={ TEMPLATE } 
+					templateLock={false}
+				/>
 			</div>
 		</div>
 	);

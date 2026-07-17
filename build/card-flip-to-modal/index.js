@@ -42,17 +42,7 @@ __webpack_require__.r(__webpack_exports__);
  * - Shows a non-interactive modal content preview below it
  */
 
-const TEMPLATE = [['fun-gutenberg-blocks/card-flip-to-modal-preview', {}, [['core/heading', {
-  level: 3,
-  content: 'Card Flip to Modal'
-}], ['core/paragraph', {
-  content: 'Click to open the modal content.'
-}]]], ['fun-gutenberg-blocks/card-flip-to-modal-content', {}, [['core/heading', {
-  level: 2,
-  content: 'Modal Content'
-}], ['core/paragraph', {
-  content: 'This is where expanded custom modal content will appear.'
-}]]]];
+const TEMPLATE = [['fun-gutenberg-blocks/card-flip-to-modal-preview'], ['fun-gutenberg-blocks/card-flip-to-modal-content']];
 const ALLOWED_BLOCKS = ['fun-gutenberg-blocks/card-flip-to-modal-preview', 'fun-gutenberg-blocks/card-flip-to-modal-content'];
 function Edit() {
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps)({
@@ -72,7 +62,7 @@ function Edit() {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InnerBlocks, {
         allowedBlocks: ALLOWED_BLOCKS,
         template: TEMPLATE,
-        templateLock: "all"
+        templateLock: 'all'
       })
     })]
   });
