@@ -34,6 +34,14 @@ export default function Edit() {
 
 	return (
 		<div { ...blockProps }>
+			<div className="gb-flip-card-modal__editor-section-header">
+				<strong>Preview Area</strong>
+				<p>
+					This content appears on the page before the modal opens.
+					Visitors click this area to open the modal.
+				</p>
+			</div>
+			
 			<div className="gb-flip-card-modal__preview-inner">
 				<InnerBlocks 
 					allowedBlocks={ ALLOWED_BLOCKS } 

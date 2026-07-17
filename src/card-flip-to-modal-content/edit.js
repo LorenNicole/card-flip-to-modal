@@ -35,8 +35,13 @@ export default function Edit() {
 
 	return (
 		<div { ...blockProps }>
-			<div className="gb-flip-card-modal__editor-label">
-				Modal Content Preview
+			<div className="gb-flip-card-modal__editor-section-header">
+				<strong>Expanded Modal Content</strong>
+				<p>
+					This content appears inside the modal after the preview area is
+					clicked. Add longer text, images, buttons, lists, or other
+					supported content here.
+				</p>
 			</div>
 
 			<div className="gb-flip-card-modal__content">

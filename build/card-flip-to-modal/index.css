@@ -3,13 +3,28 @@
   \***********************************************************************************************************************************************************************************************************************************************************/
 /**
  * The following styles get applied inside the editor only.
- *
- * Replace them with your own styles or remove the file completely.
  */
+/**
+* The following styles get applied inside the editor only.
+*/
 .wp-block-fun-gutenberg-blocks-card-flip-to-modal.gb-flip-card-modal--editor {
   padding: 1rem;
   border: 1px dashed #b8b8b8;
   border-radius: 18px;
+}
+.wp-block-fun-gutenberg-blocks-card-flip-to-modal.gb-flip-card-modal--editor .gb-flip-card-modal__preview {
+  display: block;
+  min-height: auto;
+  padding: 1.5rem;
+  background: transparent;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+.wp-block-fun-gutenberg-blocks-card-flip-to-modal.gb-flip-card-modal--editor .gb-flip-card-modal__preview:hover, .wp-block-fun-gutenberg-blocks-card-flip-to-modal.gb-flip-card-modal--editor .gb-flip-card-modal__preview:focus, .wp-block-fun-gutenberg-blocks-card-flip-to-modal.gb-flip-card-modal--editor .gb-flip-card-modal__preview:focus-visible {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
 }
 
 .gb-flip-card-modal__editor-modal-preview {
@@ -19,14 +34,26 @@
   border-radius: 16px;
   background: #ffffff;
 }
-
-.gb-flip-card-modal__editor-label {
-  margin-bottom: 0.75rem;
-  font-size: 0.75rem;
+.gb-flip-card-modal__editor-section-header {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #dcdcde;
+  border-radius: 6px;
+  background: #f6f7f7;
+  text-align: left;
+}
+.gb-flip-card-modal__editor-section-header strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #666666;
+}
+.gb-flip-card-modal__editor-section-header p {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #50575e;
 }
 
 /*# sourceMappingURL=index.css.map*/

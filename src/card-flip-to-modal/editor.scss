@@ -1,28 +1,69 @@
 /**
  * The following styles get applied inside the editor only.
- *
- * Replace them with your own styles or remove the file completely.
  */
 
- .wp-block-fun-gutenberg-blocks-card-flip-to-modal.gb-flip-card-modal--editor {
-	padding: 1rem;
-	border: 1px dashed #b8b8b8;
-	border-radius: 18px;
+ /**
+ * The following styles get applied inside the editor only.
+ */
+
+.wp-block-fun-gutenberg-blocks-card-flip-to-modal {
+	&.gb-flip-card-modal--editor {
+		padding: 1rem;
+		border: 1px dashed #b8b8b8;
+		border-radius: 18px;
+
+		.gb-flip-card-modal {
+			&__preview {
+				display: block;
+				min-height: auto;
+				padding: 1.5rem;
+				background: transparent;
+				cursor: default;
+				transform: none;
+				box-shadow: none;
+			}
+		
+			&__preview:hover,
+			&__preview:focus,
+			&__preview:focus-visible {
+				background: transparent;
+				transform: none;
+				box-shadow: none;
+			}
+		}
+	}
 }
 
-.gb-flip-card-modal__editor-modal-preview {
-	margin-top: 1rem;
-	padding: 1.5rem;
-	border: 1px solid #d0d0d0;
-	border-radius: 16px;
-	background: #ffffff;
-}
+.gb-flip-card-modal {
+	&__editor-modal-preview {
+		margin-top: 1rem;
+		padding: 1.5rem;
+		border: 1px solid #d0d0d0;
+		border-radius: 16px;
+		background: #ffffff;
+	}
 
-.gb-flip-card-modal__editor-label {
-	margin-bottom: 0.75rem;
-	font-size: 0.75rem;
-	font-weight: 600;
-	letter-spacing: 0.05em;
-	text-transform: uppercase;
-	color: #666666;
+	&__editor-section-header {
+		width: 100%;
+		margin-bottom: 1rem;
+		padding: 0.75rem 1rem;
+		border: 1px solid #dcdcde;
+		border-radius: 6px;
+		background: #f6f7f7;
+		text-align: left;
+
+		strong {
+			display: block;
+			margin-bottom: 0.25rem;
+			font-size: 0.9rem;
+			font-weight: 600;
+		}
+
+		p {
+			margin: 0;
+			font-size: 0.8rem;
+			line-height: 1.4;
+			color: #50575e;
+		}
+	}
 }
