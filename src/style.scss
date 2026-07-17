@@ -129,3 +129,12 @@
 .gb-flip-card-modal__content > :last-child {
 	margin-bottom: 0;
 }
+
+body.gb-flip-card-modal-lock-scroll {
+	overflow: hidden;
+}
+
+.gb-flip-card-modal--is-open .gb-flip-card-modal__backdrop,
+.gb-flip-card-modal--is-open .gb-flip-card-modal__dialog {
+	display: block;
+}
