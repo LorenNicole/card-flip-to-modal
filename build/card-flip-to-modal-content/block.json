@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "fun-gutenberg-blocks/card-flip-to-modal-content",
+  "version": "0.1.0",
+  "title": "Card Flip to Modal Content",
+  "category": "widgets",
+  "icon": "welcome-widgets-menus",
+  "description": "Editable modal content for the Card Flip to Modal block.",
+  "parent": [
+    "fun-gutenberg-blocks/card-flip-to-modal"
+  ],
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "textdomain": "card-flip-to-modal",
+  "editorScript": "file:./index.js"
+}

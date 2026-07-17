@@ -1,0 +1,30 @@
+/*!***********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/card-flip-to-modal/editor.scss ***!
+  \***********************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-fun-gutenberg-blocks-card-flip-to-modal.gb-flip-card-modal--editor {
+  padding: 1rem;
+  border: 1px dashed #b8b8b8;
+  border-radius: 18px;
+}
+
+.gb-flip-card-modal__editor-modal-preview {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.gb-flip-card-modal__editor-label {
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #666666;
+}

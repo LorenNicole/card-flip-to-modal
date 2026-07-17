@@ -1,8 +1,8 @@
 {
-	"name": "card-flip-to-modal-temp",
+	"name": "card-flip-to-modal",
 	"version": "0.1.0",
 	"description": "A Gutenberg block that opens custom card content in a modal.",
-	"author": "The WordPress Contributors",
+	"author": "Loren Nicole Simons",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
