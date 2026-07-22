@@ -20,6 +20,11 @@
 		"@wordpress/i18n": "latest"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^33.0.0"
+		"@types/wordpress__block-editor": "^15.0.6",
+		"@types/wordpress__blocks": "^15.10.2",
+		"@types/wordpress__components": "^23.0.12",
+		"@types/wordpress__i18n": "^3.4.0",
+		"@wordpress/scripts": "^33.0.0",
+		"typescript": "^6.0.3"
 	}
 }
