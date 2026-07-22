@@ -1,5 +1,5 @@
 /**
- * Use this file for JavaScript code that you want to run in the front-end 
+ * Use this file for JavaScript code that you want to run in the front-end
  * on posts/pages that contain this block.
  *
  * When this file is defined as the value of the `viewScript` property
@@ -15,7 +15,6 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
  */
-
 
 /**
  * Front-end behavior for Card Flip to Modal.
@@ -37,27 +36,42 @@ const BLOCK_SELECTOR = '.wp-block-fun-gutenberg-blocks-card-flip-to-modal';
 const OPEN_CLASS = 'gb-flip-card-modal--is-open';
 const BODY_LOCK_CLASS = 'gb-flip-card-modal-lock-scroll';
 
-let activeBlock = null;
-let activeTrigger = null;
+let activeBlock: HTMLElement | null = null;
+let activeTrigger: HTMLElement | null = null;
 
-function getBlockParts( block ) {
+interface BlockParts {
+	preview: HTMLElement | null;
+	backdrop: HTMLElement | null;
+	dialog: HTMLElement | null;
+	closeButton: HTMLButtonElement | null;
+}
+
+function getBlockParts( block: HTMLElement ): BlockParts {
 	return {
-		preview: block.querySelector( '.gb-flip-card-modal__preview' ),
-		backdrop: block.querySelector( '.gb-flip-card-modal__backdrop' ),
-		dialog: block.querySelector( '.gb-flip-card-modal__dialog' ),
-		closeButton: block.querySelector( '.gb-flip-card-modal__close' ),
+		preview: block.querySelector< HTMLElement >(
+			'.gb-flip-card-modal__preview'
+		),
+		backdrop: block.querySelector< HTMLElement >(
+			'.gb-flip-card-modal__backdrop'
+		),
+		dialog: block.querySelector< HTMLElement >(
+			'.gb-flip-card-modal__dialog'
+		),
+		closeButton: block.querySelector< HTMLButtonElement >(
+			'.gb-flip-card-modal__close'
+		),
 	};
 }
 
-function lockPageScroll() {
+function lockPageScroll(): void {
 	document.body.classList.add( BODY_LOCK_CLASS );
 }
 
-function unlockPageScroll() {
+function unlockPageScroll(): void {
 	document.body.classList.remove( BODY_LOCK_CLASS );
 }
 
-function closeModal( block = activeBlock ) {
+function closeModal( block: HTMLElement | null = activeBlock ): void {
 	if ( ! block ) {
 		return;
 	}
@@ -80,7 +94,7 @@ function closeModal( block = activeBlock ) {
 
 	unlockPageScroll();
 
-	if ( activeTrigger && typeof activeTrigger.focus === 'function' ) {
+	if ( activeTrigger ) {
 		activeTrigger.focus();
 	}
 
@@ -90,13 +104,13 @@ function closeModal( block = activeBlock ) {
 	}
 }
 
-function closeAnyOpenModal() {
+function closeAnyOpenModal(): void {
 	if ( activeBlock ) {
 		closeModal( activeBlock );
 	}
 }
 
-function openModal( block, trigger ) {
+function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	const { preview, backdrop, dialog, closeButton } = getBlockParts( block );
 
 	if ( ! preview || ! backdrop || ! dialog ) {
@@ -124,7 +138,11 @@ function openModal( block, trigger ) {
 	}
 }
 
-function handlePreviewKeydown( event, block, preview ) {
+function handlePreviewKeydown(
+	event: KeyboardEvent,
+	block: HTMLElement,
+	preview: HTMLElement
+): void {
 	if ( event.key !== 'Enter' && event.key !== ' ' ) {
 		return;
 	}
@@ -133,7 +151,7 @@ function handlePreviewKeydown( event, block, preview ) {
 	openModal( block, preview );
 }
 
-function handleDocumentKeydown( event ) {
+function handleDocumentKeydown( event: KeyboardEvent ): void {
 	if ( ! activeBlock ) {
 		return;
 	}
@@ -147,7 +165,7 @@ function handleDocumentKeydown( event ) {
 	modalFocus( event, dialog, closeButton );
 }
 
-function initCardFlipToModalBlock( block ) {
+function initCardFlipToModalBlock( block: HTMLElement ): void {
 	const { preview, closeButton } = getBlockParts( block );
 
 	if ( ! preview ) {
@@ -162,7 +180,7 @@ function initCardFlipToModalBlock( block ) {
 		handlePreviewKeydown( event, block, preview );
 	} );
 
-    // The close button lives inside this block's modal,
+	// The close button lives inside this block's modal,
 	// but it is still part of the same block instance.
 	if ( closeButton ) {
 		closeButton.addEventListener( 'click', () => {
@@ -172,6 +190,9 @@ function initCardFlipToModalBlock( block ) {
 }
 
 document.addEventListener( 'DOMContentLoaded', () => {
-	document.querySelectorAll( BLOCK_SELECTOR ).forEach( initCardFlipToModalBlock );
+	document
+		.querySelectorAll< HTMLElement >( BLOCK_SELECTOR )
+		.forEach( initCardFlipToModalBlock );
+
 	document.addEventListener( 'keydown', handleDocumentKeydown );
 } );
