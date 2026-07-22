@@ -3,12 +3,25 @@ export const ModalSize = Object.freeze( {
 	MEDIUM: 'medium',
 	LARGE: 'large',
 	CUSTOM: 'custom',
-} );
+} as const );
 
-export const DEFAULT_MODAL_SIZE = ModalSize.MEDIUM;
+export type ModalSizeValue = ( typeof ModalSize )[ keyof typeof ModalSize ];
+
+export interface ModalSizeOption {
+	label: string;
+	value: ModalSizeValue;
+}
+
+export type ModalWidthStyle =
+	| {
+			'--gb-flip-card-modal-width': string;
+	  }
+	| undefined;
+
+export const DEFAULT_MODAL_SIZE: ModalSizeValue = ModalSize.MEDIUM;
 export const DEFAULT_CUSTOM_MODAL_WIDTH = '720px';
 
-export const MODAL_SIZE_OPTIONS = [
+export const MODAL_SIZE_OPTIONS: ModalSizeOption[] = [
 	{
 		label: 'Small',
 		value: ModalSize.SMALL,
@@ -30,16 +43,24 @@ export const MODAL_SIZE_OPTIONS = [
 const VALID_CSS_SIZE_PATTERN =
 	/^(?:\d+(?:\.\d+)?(?:px|rem|em|vw|vh|vmin|vmax|%|ch)|clamp\([^)]+\)|min\([^)]+\)|max\([^)]+\)|calc\([^)]+\))$/i;
 
-export function getModalSizeClassName( modalSize = DEFAULT_MODAL_SIZE ) {
-	const allowedSizes = Object.values( ModalSize );
-	const safeModalSize = allowedSizes.includes( modalSize )
+export function isModalSizeValue( value: unknown ): value is ModalSizeValue {
+	return (
+		typeof value === 'string' &&
+		( Object.values( ModalSize ) as string[] ).includes( value )
+	);
+}
+
+export function getModalSizeClassName(
+	modalSize: unknown = DEFAULT_MODAL_SIZE
+): string {
+	const safeModalSize = isModalSizeValue( modalSize )
 		? modalSize
 		: DEFAULT_MODAL_SIZE;
 
 	return `gb-flip-card-modal--size-${ safeModalSize }`;
 }
 
-export function isValidCssSize( value ) {
+export function isValidCssSize( value: unknown ): value is string {
 	if ( typeof value !== 'string' ) {
 		return false;
 	}
@@ -48,8 +69,8 @@ export function isValidCssSize( value ) {
 }
 
 export function getSafeCustomModalWidth(
-	customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH
-) {
+	customModalWidth: unknown = DEFAULT_CUSTOM_MODAL_WIDTH
+): string {
 	if ( isValidCssSize( customModalWidth ) ) {
 		return customModalWidth.trim();
 	}
@@ -57,7 +78,10 @@ export function getSafeCustomModalWidth(
 	return DEFAULT_CUSTOM_MODAL_WIDTH;
 }
 
-export function getModalWidthStyle( modalSize, customModalWidth ) {
+export function getModalWidthStyle(
+	modalSize: unknown,
+	customModalWidth: unknown
+): ModalWidthStyle {
 	if ( modalSize !== ModalSize.CUSTOM ) {
 		return undefined;
 	}
