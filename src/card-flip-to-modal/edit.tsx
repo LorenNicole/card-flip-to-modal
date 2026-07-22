@@ -1,27 +1,28 @@
-/**
- * WordPress dependencies
- */
 import {
 	InnerBlocks,
 	InspectorControls,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { 
+import {
 	Notice,
 	PanelBody,
 	SelectControl,
-	TextControl, 
+	TextControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
 	DEFAULT_MODAL_SIZE,
 	MODAL_SIZE_OPTIONS,
 	ModalSize,
+	type ModalSizeOption,
+	type ModalSizeValue,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCustomModalWidth,
 	isValidCssSize,
+	isModalSizeValue,
 } from './constants';
 
 /**
@@ -35,11 +36,17 @@ import './editor.scss';
 /**
  * The editor preview for the block.
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
- *
- * Stage A:
- * - Shows the preview card
- * - Shows a non-interactive modal content preview below it
  */
+interface EditAttributes {
+	modalSize?: ModalSizeValue;
+	customModalWidth?: string;
+}
+
+interface EditProps {
+	attributes: EditAttributes;
+	setAttributes: ( attributes: Partial< EditAttributes > ) => void;
+}
+
 const TEMPLATE = [
 	[ 'fun-gutenberg-blocks/card-flip-to-modal-preview' ],
 	[ 'fun-gutenberg-blocks/card-flip-to-modal-content' ],
@@ -51,13 +58,13 @@ const ALLOWED_BLOCKS = [
 ];
 
 function getModalSizeOptions() {
-	return MODAL_SIZE_OPTIONS.map( ( option ) => ( {
+	return MODAL_SIZE_OPTIONS.map( ( option: ModalSizeOption ) => ( {
 		label: __( option.label, 'card-flip-to-modal' ),
 		value: option.value,
 	} ) );
 }
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
@@ -87,9 +94,13 @@ export default function Edit( { attributes, setAttributes } ) {
 						label={ __( 'Modal width', 'card-flip-to-modal' ) }
 						value={ modalSize }
 						options={ getModalSizeOptions() }
-						onChange={ ( value ) =>
-							setAttributes( { modalSize: value } )
-						}
+						onChange={ ( value ) => {
+							if ( ! isModalSizeValue( value ) ) {
+								return;
+							}
+
+							setAttributes( { modalSize: value } );
+						} }
 						help={ __(
 							'Choose how wide the modal appears on the front end.',
 							'card-flip-to-modal'
