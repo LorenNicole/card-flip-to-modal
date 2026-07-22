@@ -7,7 +7,7 @@ export default function save() {
 	const blockProps = useBlockProps.save( {
 		className: 'gb-flip-card-modal__preview',
 		role: 'button',
-		tabIndex: '0',
+		tabIndex: 0,
 		'aria-haspopup': 'dialog',
 		'aria-expanded': 'false',
 	} );
