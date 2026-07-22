@@ -9,6 +9,10 @@ const ALLOWED_BLOCKS = [
 	'core/paragraph',
 	'core/list',
 	'core/buttons',
+	'core/video',
+	'core/group',
+	'core/columns',
+	'core/column',
 ];
 
 const TEMPLATE = [
