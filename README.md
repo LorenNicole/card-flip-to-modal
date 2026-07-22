@@ -35,6 +35,8 @@ This plugin was created as a WordPress development portfolio project to demonstr
 - React JSX through WordPress block components
 - InnerBlocks
 - JavaScript
+- TypeScript
+- React JSX / TSX through WordPress block components
 - Sass / SCSS
 - BEM-style CSS class naming
 - PHP block registration
@@ -114,6 +116,7 @@ The block includes modal and keyboard accessibility behavior:
 ## Development
 
 These steps are only needed if you want to edit the plugin source code.
+The source files are written in TypeScript and TSX. WordPress loads the compiled JavaScript files from the `build/` folder.
 
 Install dependencies:
 
