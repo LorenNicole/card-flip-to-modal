@@ -9,7 +9,7 @@
  *
  * ```js
  * {
- *   "viewScript": "file:./view.js"
+ *   "viewScript": "file:./view.ts"
  * }
  * ```
  *
