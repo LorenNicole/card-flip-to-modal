@@ -25,6 +25,8 @@ This plugin was created as a WordPress development portfolio project to demonstr
 - Front-end behavior powered by lightweight JavaScript
 - Editor experience built with React-based Gutenberg components
 - Sass styling with BEM-style class names
+- Modal width presets: Small, Medium, and Large
+- Custom modal width using valid CSS size values
 
 ## Technologies Used
 
@@ -74,6 +76,25 @@ Visitors can click this area, or focus it with the keyboard and press Enter or S
 The Modal Content area is the expanded content shown inside the modal.
 
 This area can include longer text, images, lists, buttons, video, or other supported content blocks.
+
+### Modal Settings
+
+When the Card Flip to Modal block is selected, the sidebar includes Modal Settings.
+
+The modal width can be set to:
+
+- Small
+- Medium
+- Large
+- Custom
+
+Custom width accepts valid CSS size values such as:
+
+- 720px
+- 80vw
+- 45rem
+- 60%
+- clamp(320px, 80vw, 1000px)
 
 ## Accessibility Notes
 
