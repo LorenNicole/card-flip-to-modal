@@ -15,7 +15,7 @@ const ALLOWED_BLOCKS = [
 	'core/column',
 ];
 
-const TEMPLATE = [
+const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 	[
 		'core/heading',
 		{
@@ -48,10 +48,10 @@ export default function Edit() {
 			</div>
 
 			<div className="gb-flip-card-modal__content">
-				<InnerBlocks 
-					allowedBlocks={ ALLOWED_BLOCKS } 
-					template={ TEMPLATE } 
-					templateLock={false}
+				<InnerBlocks
+					allowedBlocks={ ALLOWED_BLOCKS }
+					template={ TEMPLATE }
+					templateLock={ false }
 				/>
 			</div>
 		</div>
