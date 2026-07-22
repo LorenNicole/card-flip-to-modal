@@ -15,6 +15,7 @@ export default function save() {
 				role="dialog"
 				aria-modal="true"
 				aria-label="Card modal content"
+				tabIndex={ -1 }
 				hidden
 			>
 				<button
