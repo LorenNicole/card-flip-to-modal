@@ -9,6 +9,7 @@
 
 .gb-flip-card-modal {
 	--gb-flip-card-modal-width: 720px;
+	--gb-flip-card-preview-min-height: 220px;
 
 	position: relative;
 	width: 100%;
@@ -37,13 +38,9 @@
 		display: block;
 	}
 
-	&__dialog {
-		width: min(90vw, var(--gb-flip-card-modal-width));
-	}
-
 	&__preview {
 		width: 100%;
-		min-height: 220px;
+		min-height: var(--gb-flip-card-preview-min-height, 220px);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -56,17 +53,36 @@
 			box-shadow 180ms ease,
 			border-color 180ms ease;
 
-		&:hover,
 		&:focus {
-			transform: translateY(-2px);
-			border-color: #8a8a8a;
-			box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 			outline: none;
 		}
 
 		&:focus-visible {
 			outline: 3px solid currentColor;
 			outline-offset: 4px;
+		}
+	}
+
+	&--preview-hover-lift {
+		.gb-flip-card-modal {
+			&__preview {
+				&:hover,
+				&:focus {
+					transform: translateY(-2px);
+					border-color: #8a8a8a;
+				}
+			}
+		}
+	}
+
+	&--preview-shadow {
+		.gb-flip-card-modal {
+			&__preview {
+				&:hover,
+				&:focus {
+					box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+				}
+			}
 		}
 	}
 

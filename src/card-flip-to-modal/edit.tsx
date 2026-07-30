@@ -8,6 +8,8 @@ import {
 	PanelBody,
 	SelectControl,
 	TextControl,
+	RangeControl,
+	ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -23,6 +25,13 @@ import {
 	getSafeCustomModalWidth,
 	isValidCssSize,
 	isModalSizeValue,
+	DEFAULT_PREVIEW_MIN_HEIGHT,
+	MAX_PREVIEW_MIN_HEIGHT,
+	MIN_PREVIEW_MIN_HEIGHT,
+	PREVIEW_MIN_HEIGHT_STEP,
+	getPreviewCardClassNames,
+	getPreviewCardStyle,
+	getSafeNumber,
 } from './constants';
 
 /**
@@ -40,6 +49,9 @@ import './editor.scss';
 interface EditAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
+	previewMinHeight?: number;
+	previewHasShadow?: boolean;
+	previewHasHoverLift?: boolean;
 }
 
 interface EditProps {
@@ -47,7 +59,9 @@ interface EditProps {
 	setAttributes: ( attributes: Partial< EditAttributes > ) => void;
 }
 
-const TEMPLATE = [
+type BlockTemplate = [ string ][];
+
+const TEMPLATE: BlockTemplate = [
 	[ 'fun-gutenberg-blocks/card-flip-to-modal-preview' ],
 	[ 'fun-gutenberg-blocks/card-flip-to-modal-content' ],
 ];
@@ -68,20 +82,39 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+		previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
+		previewHasShadow = true,
+		previewHasHoverLift = true,
 	} = attributes;
+
+	const safePreviewMinHeight = getSafeNumber(
+		previewMinHeight,
+		DEFAULT_PREVIEW_MIN_HEIGHT,
+		MIN_PREVIEW_MIN_HEIGHT,
+		MAX_PREVIEW_MIN_HEIGHT
+	);
 
 	const customWidthIsValid = isValidCssSize( customModalWidth );
 	const safeCustomModalWidth =
 		getSafeCustomModalWidth( customModalWidth );
 
-	const blockProps = useBlockProps( {
-		className: [
-			'gb-flip-card-modal',
-			'gb-flip-card-modal--editor',
-			getModalSizeClassName( modalSize ),
-		].join( ' ' ),
-		style: getModalWidthStyle( modalSize, safeCustomModalWidth ),
-	} );
+		const blockProps = useBlockProps( {
+			className: [
+				'gb-flip-card-modal',
+				'gb-flip-card-modal--editor',
+				getModalSizeClassName( modalSize ),
+				...getPreviewCardClassNames( {
+					previewHasShadow,
+					previewHasHoverLift,
+				} ),
+			].join( ' ' ),
+			style: {
+				...getModalWidthStyle( modalSize, safeCustomModalWidth ),
+				...getPreviewCardStyle( {
+					previewMinHeight: safePreviewMinHeight,
+				} ),
+			},
+		} );
 
 	return (
 		<>
@@ -139,6 +172,49 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							) }
 						</>
 					) }
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Preview Card Settings', 'card-flip-to-modal' ) }
+					initialOpen={ false }
+				>
+					<RangeControl
+						label={ __( 'Minimum height', 'card-flip-to-modal' ) }
+						value={ safePreviewMinHeight }
+						min={ MIN_PREVIEW_MIN_HEIGHT }
+						max={ MAX_PREVIEW_MIN_HEIGHT }
+						step={ PREVIEW_MIN_HEIGHT_STEP }
+						onChange={ ( value ) =>
+							setAttributes( {
+								previewMinHeight: getSafeNumber(
+									value,
+									DEFAULT_PREVIEW_MIN_HEIGHT,
+									MIN_PREVIEW_MIN_HEIGHT,
+									MAX_PREVIEW_MIN_HEIGHT
+								),
+							} )
+						}
+						help={ __(
+							'Set the minimum height of the preview card in pixels.',
+							'card-flip-to-modal'
+						) }
+					/>
+
+					<ToggleControl
+						label={ __( 'Card shadow', 'card-flip-to-modal' ) }
+						checked={ previewHasShadow }
+						onChange={ ( value ) =>
+							setAttributes( { previewHasShadow: value } )
+						}
+					/>
+
+					<ToggleControl
+						label={ __( 'Hover lift effect', 'card-flip-to-modal' ) }
+						checked={ previewHasHoverLift }
+						onChange={ ( value ) =>
+							setAttributes( { previewHasHoverLift: value } )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 

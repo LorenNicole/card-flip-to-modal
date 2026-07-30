@@ -20,6 +20,18 @@
 		"customModalWidth": {
 			"type": "string",
 			"default": "720px"
+		},
+		"previewMinHeight": {
+			"type": "number",
+			"default": 220
+		},
+		"previewHasShadow": {
+			"type": "boolean",
+			"default": true
+		},
+		"previewHasHoverLift": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"textdomain": "card-flip-to-modal",

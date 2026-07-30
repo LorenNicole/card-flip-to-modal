@@ -2,11 +2,7 @@
  * The following styles get applied inside the editor only.
  */
 
- /**
- * The following styles get applied inside the editor only.
- */
-
-.wp-block-fun-gutenberg-blocks-card-flip-to-modal {
+ .wp-block-fun-gutenberg-blocks-card-flip-to-modal {
 	&.gb-flip-card-modal--editor {
 		padding: 1rem;
 		border: 1px dashed #b8b8b8;
@@ -14,20 +10,31 @@
 		.gb-flip-card-modal {
 			&__preview {
 				display: block;
-				min-height: auto;
+				min-height: var(--gb-flip-card-preview-min-height, 220px);
 				padding: 1.5rem;
 				background: transparent;
 				cursor: default;
 				transform: none;
-				box-shadow: none;
 			}
-		
+
 			&__preview:hover,
 			&__preview:focus,
 			&__preview:focus-visible {
 				background: transparent;
 				transform: none;
-				box-shadow: none;
+			}
+
+			&__preview-inner {
+				width: 100%;
+				text-align: center;
+			}
+		}
+
+		&.gb-flip-card-modal--preview-shadow {
+			.gb-flip-card-modal {
+				&__preview {
+					box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+				}
 			}
 		}
 	}
@@ -46,7 +53,6 @@
 		margin-bottom: 1rem;
 		padding: 0.75rem 1rem;
 		border: 1px solid #dcdcde;
-		border-radius: 6px;
 		background: #f6f7f7;
 		text-align: left;
 

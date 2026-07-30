@@ -30,6 +30,18 @@ return array(
 			'customModalWidth' => array(
 				'type' => 'string',
 				'default' => '720px'
+			),
+			'previewMinHeight' => array(
+				'type' => 'number',
+				'default' => 220
+			),
+			'previewHasShadow' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'previewHasHoverLift' => array(
+				'type' => 'boolean',
+				'default' => true
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',

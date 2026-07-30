@@ -11,11 +11,17 @@ import {
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCustomModalWidth,
+	DEFAULT_PREVIEW_MIN_HEIGHT,
+	getPreviewCardClassNames,
+	getPreviewCardStyle,
 } from './constants';
 
 interface SaveAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
+	previewMinHeight?: number;
+	previewHasShadow?: boolean;
+	previewHasHoverLift?: boolean;
 }
 
 interface SaveProps {
@@ -31,18 +37,30 @@ export default function save( { attributes }: SaveProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+		previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
+		previewHasShadow = true,
+		previewHasHoverLift = true,
 	} = attributes;
 
 	const safeCustomModalWidth =
 		getSafeCustomModalWidth( customModalWidth );
 
-	const blockProps = useBlockProps.save( {
-		className: [
-			'gb-flip-card-modal',
-			getModalSizeClassName( modalSize ),
-		].join( ' ' ),
-		style: getModalWidthStyle( modalSize, safeCustomModalWidth ),
-	} );
+		const blockProps = useBlockProps.save( {
+			className: [
+				'gb-flip-card-modal',
+				getModalSizeClassName( modalSize ),
+				...getPreviewCardClassNames( {
+					previewHasShadow,
+					previewHasHoverLift,
+				} ),
+			].join( ' ' ),
+			style: {
+				...getModalWidthStyle( modalSize, safeCustomModalWidth ),
+				...getPreviewCardStyle( {
+					previewMinHeight,
+				} ),
+			},
+		} );
 
 	return (
 		<div { ...blockProps }>
