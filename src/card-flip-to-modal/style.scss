@@ -45,8 +45,9 @@
 		align-items: center;
 		justify-content: center;
 		padding: 1.5rem;
-		border: 1px solid #d0d0d0;
-		background: #f7f7f7;
+		border: 1px solid var(--gb-flip-card-preview-border-color, #d0d0d0);
+		background: var(--gb-flip-card-preview-background-color, #f7f7f7);
+		color: var(--gb-flip-card-preview-text-color, #111111);
 		cursor: pointer;
 		transition:
 			transform 180ms ease,

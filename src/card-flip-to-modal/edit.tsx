@@ -4,11 +4,15 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import {
+	Button,
+	ColorIndicator,
+	ColorPicker,
+	Dropdown,
 	Notice,
 	PanelBody,
+	RangeControl,
 	SelectControl,
 	TextControl,
-	RangeControl,
 	ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -29,6 +33,9 @@ import {
 	MAX_PREVIEW_MIN_HEIGHT,
 	MIN_PREVIEW_MIN_HEIGHT,
 	PREVIEW_MIN_HEIGHT_STEP,
+	DEFAULT_PREVIEW_BACKGROUND_COLOR,
+	DEFAULT_PREVIEW_BORDER_COLOR,
+	DEFAULT_PREVIEW_TEXT_COLOR,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
 	getSafeNumber,
@@ -52,6 +59,9 @@ interface EditAttributes {
 	previewMinHeight?: number;
 	previewHasShadow?: boolean;
 	previewHasHoverLift?: boolean;
+	previewBackgroundColor?: string;
+	previewBorderColor?: string;
+	previewTextColor?: string;
 }
 
 interface EditProps {
@@ -78,6 +88,60 @@ function getModalSizeOptions() {
 	} ) );
 }
 
+interface CompactColorControlProps {
+	label: string;
+	value: string;
+	defaultValue: string;
+	onChange: ( value: string ) => void;
+}
+
+function CompactColorControl( {
+	label,
+	value,
+	defaultValue,
+	onChange,
+}: CompactColorControlProps ) {
+	return (
+		<div className="gb-flip-card-modal__compact-color-control">
+			<div className="gb-flip-card-modal__compact-color-control-header">
+				<span>{ label }</span>
+
+				<ColorIndicator colorValue={ value } />
+			</div>
+
+			<div className="gb-flip-card-modal__compact-color-control-actions">
+				<Dropdown
+					renderToggle={ ( { isOpen, onToggle } ) => (
+						<Button
+							variant="secondary"
+							onClick={ onToggle }
+							aria-expanded={ isOpen }
+						>
+							{ __( 'Choose color', 'card-flip-to-modal' ) }
+						</Button>
+					) }
+					renderContent={ () => (
+						<ColorPicker
+							color={ value }
+							onChange={ ( color ) =>
+								onChange( color || defaultValue )
+							}
+							enableAlpha={ false }
+						/>
+					) }
+				/>
+
+				<Button
+					variant="tertiary"
+					onClick={ () => onChange( defaultValue ) }
+				>
+					{ __( 'Reset', 'card-flip-to-modal' ) }
+				</Button>
+			</div>
+		</div>
+	);
+}
+
 export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
@@ -85,6 +149,9 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
 		previewHasShadow = true,
 		previewHasHoverLift = true,
+		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
+		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
+		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 	} = attributes;
 
 	const safePreviewMinHeight = getSafeNumber(
@@ -112,6 +179,9 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 				...getModalWidthStyle( modalSize, safeCustomModalWidth ),
 				...getPreviewCardStyle( {
 					previewMinHeight: safePreviewMinHeight,
+					previewBackgroundColor,
+					previewBorderColor,
+					previewTextColor,
 				} ),
 			},
 		} );
@@ -213,6 +283,39 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						checked={ previewHasHoverLift }
 						onChange={ ( value ) =>
 							setAttributes( { previewHasHoverLift: value } )
+						}
+					/>
+
+					<CompactColorControl
+						label={ __( 'Background color', 'card-flip-to-modal' ) }
+						value={ previewBackgroundColor }
+						defaultValue={ DEFAULT_PREVIEW_BACKGROUND_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								previewBackgroundColor: value,
+							} )
+						}
+					/>
+
+					<CompactColorControl
+						label={ __( 'Border color', 'card-flip-to-modal' ) }
+						value={ previewBorderColor }
+						defaultValue={ DEFAULT_PREVIEW_BORDER_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								previewBorderColor: value,
+							} )
+						}
+					/>
+
+					<CompactColorControl
+						label={ __( 'Text color', 'card-flip-to-modal' ) }
+						value={ previewTextColor }
+						defaultValue={ DEFAULT_PREVIEW_TEXT_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								previewTextColor: value,
+							} )
 						}
 					/>
 				</PanelBody>

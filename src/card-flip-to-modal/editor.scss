@@ -12,7 +12,8 @@
 				display: block;
 				min-height: var(--gb-flip-card-preview-min-height, 220px);
 				padding: 1.5rem;
-				background: transparent;
+				background: var(--gb-flip-card-preview-background-color, #f7f7f7);
+				color: var(--gb-flip-card-preview-text-color, #111111);
 				cursor: default;
 				transform: none;
 			}
@@ -20,7 +21,7 @@
 			&__preview:hover,
 			&__preview:focus,
 			&__preview:focus-visible {
-				background: transparent;
+				background: var(--gb-flip-card-preview-background-color, #f7f7f7);
 				transform: none;
 			}
 
@@ -41,6 +42,25 @@
 }
 
 .gb-flip-card-modal {
+	&__compact-color-control {
+		margin-top: 1rem;
+	}
+
+	&__compact-color-control-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+		font-size: 0.8rem;
+		font-weight: 500;
+	}
+
+	&__compact-color-control-actions {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
 	&__editor-modal-preview {
 		margin-top: 1rem;
 		padding: 1.5rem;

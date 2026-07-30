@@ -14,6 +14,9 @@ import {
 	DEFAULT_PREVIEW_MIN_HEIGHT,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
+	DEFAULT_PREVIEW_BACKGROUND_COLOR,
+	DEFAULT_PREVIEW_BORDER_COLOR,
+	DEFAULT_PREVIEW_TEXT_COLOR,
 } from './constants';
 
 interface SaveAttributes {
@@ -22,6 +25,9 @@ interface SaveAttributes {
 	previewMinHeight?: number;
 	previewHasShadow?: boolean;
 	previewHasHoverLift?: boolean;
+	previewBackgroundColor?: string;
+	previewBorderColor?: string;
+	previewTextColor?: string;
 }
 
 interface SaveProps {
@@ -40,6 +46,9 @@ export default function save( { attributes }: SaveProps ) {
 		previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
 		previewHasShadow = true,
 		previewHasHoverLift = true,
+		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
+		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
+		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 	} = attributes;
 
 	const safeCustomModalWidth =
@@ -58,6 +67,9 @@ export default function save( { attributes }: SaveProps ) {
 				...getModalWidthStyle( modalSize, safeCustomModalWidth ),
 				...getPreviewCardStyle( {
 					previewMinHeight,
+					previewBackgroundColor,
+					previewBorderColor,
+					previewTextColor,
 				} ),
 			},
 		} );

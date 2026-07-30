@@ -49,6 +49,9 @@ export const DEFAULT_PREVIEW_MIN_HEIGHT = 220;
 export const MIN_PREVIEW_MIN_HEIGHT = 120;
 export const MAX_PREVIEW_MIN_HEIGHT = 600;
 export const PREVIEW_MIN_HEIGHT_STEP = 10;
+export const DEFAULT_PREVIEW_BACKGROUND_COLOR = '#f7f7f7';
+export const DEFAULT_PREVIEW_BORDER_COLOR = '#d0d0d0';
+export const DEFAULT_PREVIEW_TEXT_COLOR = '#111111';
 
 export function isModalSizeValue( value: unknown ): value is ModalSizeValue {
 	return (
@@ -101,6 +104,9 @@ export function getModalWidthStyle(
 
 export interface PreviewCardStyleOptions {
 	previewMinHeight?: number;
+	previewBackgroundColor?: string;
+	previewBorderColor?: string;
+	previewTextColor?: string;
 }
 
 export interface PreviewCardClassNameOptions {
@@ -125,6 +131,9 @@ export function getSafeNumber(
 
 export function getPreviewCardStyle( {
 	previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
+	previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
+	previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
+	previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 }: PreviewCardStyleOptions ): CSSVariableStyle {
 	const safeMinHeight = getSafeNumber(
 		previewMinHeight,
@@ -135,6 +144,9 @@ export function getPreviewCardStyle( {
 
 	return {
 		'--gb-flip-card-preview-min-height': `${ safeMinHeight }px`,
+		'--gb-flip-card-preview-background-color': previewBackgroundColor,
+		'--gb-flip-card-preview-border-color': previewBorderColor,
+		'--gb-flip-card-preview-text-color': previewTextColor,
 	};
 }
 

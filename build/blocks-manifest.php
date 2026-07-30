@@ -42,6 +42,18 @@ return array(
 			'previewHasHoverLift' => array(
 				'type' => 'boolean',
 				'default' => true
+			),
+			'previewBackgroundColor' => array(
+				'type' => 'string',
+				'default' => '#f7f7f7'
+			),
+			'previewBorderColor' => array(
+				'type' => 'string',
+				'default' => '#d0d0d0'
+			),
+			'previewTextColor' => array(
+				'type' => 'string',
+				'default' => '#111111'
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',
