@@ -31,6 +31,18 @@ return array(
 				'type' => 'string',
 				'default' => '720px'
 			),
+			'modalCloseOnBackdropClick' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'modalShowCloseButton' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'modalLockPageScroll' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
 			'previewMinHeight' => array(
 				'type' => 'number',
 				'default' => 220

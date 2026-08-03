@@ -53,6 +53,14 @@ export const DEFAULT_PREVIEW_BACKGROUND_COLOR = '#f7f7f7';
 export const DEFAULT_PREVIEW_BORDER_COLOR = '#d0d0d0';
 export const DEFAULT_PREVIEW_TEXT_COLOR = '#111111';
 
+export const DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK = false;
+export const DEFAULT_MODAL_SHOW_CLOSE_BUTTON = true;
+export const DEFAULT_MODAL_LOCK_PAGE_SCROLL = true;
+
+export function getBooleanDataAttribute( value: boolean ): string {
+	return value ? 'true' : 'false';
+}
+
 export function isModalSizeValue( value: unknown ): value is ModalSizeValue {
 	return (
 		typeof value === 'string' &&

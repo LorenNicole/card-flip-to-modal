@@ -46,6 +46,50 @@ interface BlockParts {
 	closeButton: HTMLButtonElement | null;
 }
 
+interface BlockSettings {
+	modalCloseOnBackdropClick: boolean;
+	modalShowCloseButton: boolean;
+	modalLockPageScroll: boolean;
+}
+
+function getBooleanDataAttribute(
+	element: HTMLElement,
+	attributeName: string,
+	defaultValue: boolean
+): boolean {
+	const value = element.dataset[ attributeName ];
+
+	if ( value === 'true' ) {
+		return true;
+	}
+
+	if ( value === 'false' ) {
+		return false;
+	}
+
+	return defaultValue;
+}
+
+function getBlockSettings( block: HTMLElement ): BlockSettings {
+	return {
+		modalCloseOnBackdropClick: getBooleanDataAttribute(
+			block,
+			'modalCloseOnBackdropClick',
+			false
+		),
+		modalShowCloseButton: getBooleanDataAttribute(
+			block,
+			'modalShowCloseButton',
+			true
+		),
+		modalLockPageScroll: getBooleanDataAttribute(
+			block,
+			'modalLockPageScroll',
+			true
+		),
+	};
+}
+
 function getBlockParts( block: HTMLElement ): BlockParts {
 	return {
 		preview: block.querySelector< HTMLElement >(
@@ -76,6 +120,7 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 		return;
 	}
 
+	const settings = getBlockSettings( block );
 	const { preview, backdrop, dialog } = getBlockParts( block );
 
 	block.classList.remove( OPEN_CLASS );
@@ -92,7 +137,9 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 		dialog.hidden = true;
 	}
 
-	unlockPageScroll();
+	if ( settings.modalLockPageScroll ) {
+		unlockPageScroll();
+	}
 
 	if ( activeTrigger ) {
 		activeTrigger.focus();
@@ -112,6 +159,7 @@ function closeAnyOpenModal(): void {
 
 function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	const { preview, backdrop, dialog, closeButton } = getBlockParts( block );
+	const settings = getBlockSettings( block );
 
 	if ( ! preview || ! backdrop || ! dialog ) {
 		return;
@@ -128,9 +176,11 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	backdrop.hidden = false;
 	dialog.hidden = false;
 
-	lockPageScroll();
+	if ( settings.modalLockPageScroll ) {
+		lockPageScroll();
+	}
 
-	if ( closeButton ) {
+	if ( settings.modalShowCloseButton && closeButton ) {
 		closeButton.focus();
 	} else {
 		dialog.setAttribute( 'tabindex', '-1' );
@@ -162,11 +212,18 @@ function handleDocumentKeydown( event: KeyboardEvent ): void {
 	}
 
 	const { dialog, closeButton } = getBlockParts( activeBlock );
-	modalFocus( event, dialog, closeButton );
+	const settings = getBlockSettings( activeBlock );
+
+	modalFocus( 
+		event, 
+		dialog, 
+		settings.modalShowCloseButton ? closeButton : dialog
+	);
 }
 
 function initCardFlipToModalBlock( block: HTMLElement ): void {
-	const { preview, closeButton } = getBlockParts( block );
+	const { preview, closeButton, backdrop } = getBlockParts( block );
+	const settings = getBlockSettings( block );
 
 	if ( ! preview ) {
 		return;
@@ -184,6 +241,12 @@ function initCardFlipToModalBlock( block: HTMLElement ): void {
 	// but it is still part of the same block instance.
 	if ( closeButton ) {
 		closeButton.addEventListener( 'click', () => {
+			closeModal( block );
+		} );
+	}
+
+	if ( backdrop && settings.modalCloseOnBackdropClick ) {
+		backdrop.addEventListener( 'click', () => {
 			closeModal( block );
 		} );
 	}

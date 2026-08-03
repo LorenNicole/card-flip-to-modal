@@ -17,6 +17,10 @@ import {
 	DEFAULT_PREVIEW_BACKGROUND_COLOR,
 	DEFAULT_PREVIEW_BORDER_COLOR,
 	DEFAULT_PREVIEW_TEXT_COLOR,
+	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
+	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
+	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
+	getBooleanDataAttribute,
 } from './constants';
 
 interface SaveAttributes {
@@ -28,6 +32,9 @@ interface SaveAttributes {
 	previewBackgroundColor?: string;
 	previewBorderColor?: string;
 	previewTextColor?: string;
+	modalCloseOnBackdropClick?: boolean;
+	modalShowCloseButton?: boolean;
+	modalLockPageScroll?: boolean;
 }
 
 interface SaveProps {
@@ -49,6 +56,9 @@ export default function save( { attributes }: SaveProps ) {
 		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
 		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
+		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
+		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
+		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	} = attributes;
 
 	const safeCustomModalWidth =
@@ -72,6 +82,15 @@ export default function save( { attributes }: SaveProps ) {
 					previewTextColor,
 				} ),
 			},
+			'data-modal-close-on-backdrop-click': getBooleanDataAttribute(
+				modalCloseOnBackdropClick
+			),
+			'data-modal-show-close-button': getBooleanDataAttribute(
+				modalShowCloseButton
+			),
+			'data-modal-lock-page-scroll': getBooleanDataAttribute(
+				modalLockPageScroll
+			),
 		} );
 
 	return (
