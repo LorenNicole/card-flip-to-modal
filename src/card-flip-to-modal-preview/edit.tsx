@@ -13,6 +13,8 @@ const ALLOWED_BLOCKS = [
 	'core/group',
 	'core/columns',
 	'core/column',
+	'core/shortcode',
+	'core/latest-posts',
 ];
 
 const TEMPLATE: [ string, Record< string, unknown >? ][] = [
