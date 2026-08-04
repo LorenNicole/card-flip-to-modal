@@ -167,3 +167,21 @@ export function getPreviewCardClassNames( {
 		previewHasHoverLift ? 'gb-flip-card-modal--preview-hover-lift' : '',
 	].filter( ( className ) => className !== '' );
 }
+
+export const DEFAULT_MODAL_ARIA_LABEL = 'Card modal content';
+
+export function getSafeModalAriaLabel(
+	modalAriaLabel: unknown = DEFAULT_MODAL_ARIA_LABEL
+): string {
+	if ( typeof modalAriaLabel !== 'string' ) {
+		return DEFAULT_MODAL_ARIA_LABEL;
+	}
+
+	const trimmedModalAriaLabel = modalAriaLabel.trim();
+
+	if ( ! trimmedModalAriaLabel ) {
+		return DEFAULT_MODAL_ARIA_LABEL;
+	}
+
+	return trimmedModalAriaLabel;
+}

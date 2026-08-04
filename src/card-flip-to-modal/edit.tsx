@@ -42,6 +42,7 @@ import {
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
 	getSafeNumber,
+	DEFAULT_MODAL_ARIA_LABEL,
 } from './constants';
 
 /**
@@ -68,6 +69,7 @@ interface EditAttributes {
 	previewBackgroundColor?: string;
 	previewBorderColor?: string;
 	previewTextColor?: string;
+	modalAriaLabel?: string;
 }
 
 interface EditProps {
@@ -161,6 +163,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
 		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
+		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 	} = attributes;
 
 	const safePreviewMinHeight = getSafeNumber(
@@ -251,6 +254,25 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							) }
 						</>
 					) }
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Accessibility Settings', 'card-flip-to-modal' ) }
+					initialOpen={ false }
+				>
+					<TextControl
+						label={ __( 'Modal label', 'card-flip-to-modal' ) }
+						value={ modalAriaLabel }
+						onChange={ ( value ) =>
+							setAttributes( {
+								modalAriaLabel: value || DEFAULT_MODAL_ARIA_LABEL,
+							} )
+						}
+						help={ __(
+							'Describe the purpose of the modal for screen readers. If left blank, the default label will be used.',
+							'card-flip-to-modal'
+						) }
+					/>
 				</PanelBody>
 
 				<PanelBody

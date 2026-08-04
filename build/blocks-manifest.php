@@ -43,6 +43,10 @@ return array(
 				'type' => 'boolean',
 				'default' => true
 			),
+			'modalAriaLabel' => array(
+				'type' => 'string',
+				'default' => 'Card modal content'
+			),
 			'previewMinHeight' => array(
 				'type' => 'number',
 				'default' => 220

@@ -38,6 +38,10 @@
       "type": "boolean",
       "default": true
     },
+    "modalAriaLabel": {
+      "type": "string",
+      "default": "Card modal content"
+    },
     "previewMinHeight": {
       "type": "number",
       "default": 220

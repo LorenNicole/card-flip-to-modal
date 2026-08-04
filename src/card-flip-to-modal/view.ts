@@ -32,6 +32,11 @@
 
 import { modalFocus } from './modal-focus';
 
+import {
+	DEFAULT_MODAL_ARIA_LABEL,
+	getSafeModalAriaLabel,
+} from './constants';
+
 const BLOCK_SELECTOR = '.wp-block-fun-gutenberg-blocks-card-flip-to-modal';
 const OPEN_CLASS = 'gb-flip-card-modal--is-open';
 const BODY_LOCK_CLASS = 'gb-flip-card-modal-lock-scroll';
@@ -50,6 +55,7 @@ interface BlockSettings {
 	modalCloseOnBackdropClick: boolean;
 	modalShowCloseButton: boolean;
 	modalLockPageScroll: boolean;
+	modalAriaLabel: string;
 }
 
 function getBooleanDataAttribute(
@@ -70,6 +76,16 @@ function getBooleanDataAttribute(
 	return defaultValue;
 }
 
+function getStringDataAttribute(
+	element: HTMLElement,
+	attributeName: string,
+	defaultValue: string
+): string {
+	return getSafeModalAriaLabel(
+		element.dataset[ attributeName ] || defaultValue
+	);
+}
+
 function getBlockSettings( block: HTMLElement ): BlockSettings {
 	return {
 		modalCloseOnBackdropClick: getBooleanDataAttribute(
@@ -86,6 +102,11 @@ function getBlockSettings( block: HTMLElement ): BlockSettings {
 			block,
 			'modalLockPageScroll',
 			true
+		),
+		modalAriaLabel: getStringDataAttribute(
+			block,
+			'modalAriaLabel',
+			DEFAULT_MODAL_ARIA_LABEL
 		),
 	};
 }
@@ -172,6 +193,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 
 	block.classList.add( OPEN_CLASS );
 	preview.setAttribute( 'aria-expanded', 'true' );
+	dialog.setAttribute( 'aria-label', settings.modalAriaLabel );
 
 	backdrop.hidden = false;
 	dialog.hidden = false;

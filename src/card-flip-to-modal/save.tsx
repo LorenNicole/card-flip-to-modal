@@ -5,22 +5,24 @@
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
 import {
-	DEFAULT_CUSTOM_MODAL_WIDTH,
-	DEFAULT_MODAL_SIZE,
 	type ModalSizeValue,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCustomModalWidth,
-	DEFAULT_PREVIEW_MIN_HEIGHT,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
+	getSafeModalAriaLabel,
+	getBooleanDataAttribute,
+	DEFAULT_PREVIEW_MIN_HEIGHT,
 	DEFAULT_PREVIEW_BACKGROUND_COLOR,
 	DEFAULT_PREVIEW_BORDER_COLOR,
 	DEFAULT_PREVIEW_TEXT_COLOR,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
-	getBooleanDataAttribute,
+	DEFAULT_CUSTOM_MODAL_WIDTH,
+	DEFAULT_MODAL_SIZE,
+	DEFAULT_MODAL_ARIA_LABEL,
 } from './constants';
 
 interface SaveAttributes {
@@ -35,6 +37,7 @@ interface SaveAttributes {
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
 	modalLockPageScroll?: boolean;
+	modalAriaLabel?: string;
 }
 
 interface SaveProps {
@@ -59,39 +62,43 @@ export default function save( { attributes }: SaveProps ) {
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
+		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 	} = attributes;
 
 	const safeCustomModalWidth =
 		getSafeCustomModalWidth( customModalWidth );
 
-		const blockProps = useBlockProps.save( {
-			className: [
-				'gb-flip-card-modal',
-				getModalSizeClassName( modalSize ),
-				...getPreviewCardClassNames( {
-					previewHasShadow,
-					previewHasHoverLift,
-				} ),
-			].join( ' ' ),
-			style: {
-				...getModalWidthStyle( modalSize, safeCustomModalWidth ),
-				...getPreviewCardStyle( {
-					previewMinHeight,
-					previewBackgroundColor,
-					previewBorderColor,
-					previewTextColor,
-				} ),
-			},
-			'data-modal-close-on-backdrop-click': getBooleanDataAttribute(
-				modalCloseOnBackdropClick
-			),
-			'data-modal-show-close-button': getBooleanDataAttribute(
-				modalShowCloseButton
-			),
-			'data-modal-lock-page-scroll': getBooleanDataAttribute(
-				modalLockPageScroll
-			),
-		} );
+	const safeModalAriaLabel = getSafeModalAriaLabel( modalAriaLabel );
+
+	const blockProps = useBlockProps.save( {
+		className: [
+			'gb-flip-card-modal',
+			getModalSizeClassName( modalSize ),
+			...getPreviewCardClassNames( {
+				previewHasShadow,
+				previewHasHoverLift,
+			} ),
+		].join( ' ' ),
+		style: {
+			...getModalWidthStyle( modalSize, safeCustomModalWidth ),
+			...getPreviewCardStyle( {
+				previewMinHeight,
+				previewBackgroundColor,
+				previewBorderColor,
+				previewTextColor,
+			} ),
+		},
+		'data-modal-close-on-backdrop-click': getBooleanDataAttribute(
+			modalCloseOnBackdropClick
+		),
+		'data-modal-show-close-button': getBooleanDataAttribute(
+			modalShowCloseButton
+		),
+		'data-modal-lock-page-scroll': getBooleanDataAttribute(
+			modalLockPageScroll
+		),
+		'aria-label': safeModalAriaLabel,
+} );
 
 	return (
 		<div { ...blockProps }>
