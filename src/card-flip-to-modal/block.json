@@ -60,6 +60,14 @@
 		"previewTextColor": {
 			"type": "string",
 			"default": "#111111"
+		},
+		"flipAnimationEnabled": {
+			"type": "boolean",
+			"default": true
+		},
+		"flipAnimationDuration": {
+			"type": "number",
+			"default": 700
 		}
 	},
 	"textdomain": "card-flip-to-modal",

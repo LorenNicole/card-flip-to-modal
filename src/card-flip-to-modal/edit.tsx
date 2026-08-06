@@ -43,6 +43,12 @@ import {
 	getPreviewCardStyle,
 	getSafeNumber,
 	DEFAULT_MODAL_ARIA_LABEL,
+	DEFAULT_FLIP_ANIMATION_DURATION_MS,
+	DEFAULT_FLIP_ANIMATION_ENABLED,
+	FLIP_ANIMATION_DURATION_STEP_MS,
+	MAX_FLIP_ANIMATION_DURATION_MS,
+	MIN_FLIP_ANIMATION_DURATION_MS,
+	getSafeFlipAnimationDuration,
 } from './constants';
 
 /**
@@ -70,6 +76,8 @@ interface EditAttributes {
 	previewBorderColor?: string;
 	previewTextColor?: string;
 	modalAriaLabel?: string;
+	flipAnimationEnabled?: boolean;
+	flipAnimationDuration?: number;
 }
 
 interface EditProps {
@@ -164,6 +172,8 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
+		flipAnimationEnabled = DEFAULT_FLIP_ANIMATION_ENABLED,
+		flipAnimationDuration = DEFAULT_FLIP_ANIMATION_DURATION_MS,
 	} = attributes;
 
 	const safePreviewMinHeight = getSafeNumber(
@@ -174,29 +184,29 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	);
 
 	const customWidthIsValid = isValidCssSize( customModalWidth );
-	const safeCustomModalWidth =
-		getSafeCustomModalWidth( customModalWidth );
+	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
+	const safeFlipAnimationDuration = getSafeFlipAnimationDuration( flipAnimationDuration );
 
-		const blockProps = useBlockProps( {
-			className: [
-				'gb-flip-card-modal',
-				'gb-flip-card-modal--editor',
-				getModalSizeClassName( modalSize ),
-				...getPreviewCardClassNames( {
-					previewHasShadow,
-					previewHasHoverLift,
-				} ),
-			].join( ' ' ),
-			style: {
-				...getModalWidthStyle( modalSize, safeCustomModalWidth ),
-				...getPreviewCardStyle( {
-					previewMinHeight: safePreviewMinHeight,
-					previewBackgroundColor,
-					previewBorderColor,
-					previewTextColor,
-				} ),
-			},
-		} );
+	const blockProps = useBlockProps( {
+		className: [
+			'gb-flip-card-modal',
+			'gb-flip-card-modal--editor',
+			getModalSizeClassName( modalSize ),
+			...getPreviewCardClassNames( {
+				previewHasShadow,
+				previewHasHoverLift,
+			} ),
+		].join( ' ' ),
+		style: {
+			...getModalWidthStyle( modalSize, safeCustomModalWidth ),
+			...getPreviewCardStyle( {
+				previewMinHeight: safePreviewMinHeight,
+				previewBackgroundColor,
+				previewBorderColor,
+				previewTextColor,
+			} ),
+		},
+	} );
 
 	return (
 		<>
@@ -387,6 +397,44 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						}
 						help={ __(
 							'Prevent the page behind the modal from scrolling while the modal is open.',
+							'card-flip-to-modal'
+						) }
+					/>
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Animation Settings', 'card-flip-to-modal' ) }
+					initialOpen={ false }
+				>
+					<ToggleControl
+						label={ __( 'Enable flip animation', 'card-flip-to-modal' ) }
+						checked={ flipAnimationEnabled }
+						onChange={ ( value ) =>
+							setAttributes( {
+								flipAnimationEnabled: value,
+							} )
+						}
+						help={ __(
+							'When enabled, the preview card flips and grows into the modal.',
+							'card-flip-to-modal'
+						) }
+					/>
+
+					<RangeControl
+						label={ __( 'Animation duration', 'card-flip-to-modal' ) }
+						value={ safeFlipAnimationDuration }
+						onChange={ ( value ) =>
+							setAttributes( {
+								flipAnimationDuration:
+									value || DEFAULT_FLIP_ANIMATION_DURATION_MS,
+							} )
+						}
+						min={ MIN_FLIP_ANIMATION_DURATION_MS }
+						max={ MAX_FLIP_ANIMATION_DURATION_MS }
+						step={ FLIP_ANIMATION_DURATION_STEP_MS }
+						disabled={ ! flipAnimationEnabled }
+						help={ __(
+							'Controls how long the flip/grow animation takes in milliseconds.',
 							'card-flip-to-modal'
 						) }
 					/>

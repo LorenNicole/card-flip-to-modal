@@ -23,6 +23,12 @@ export type ModalWidthStyle = CSSVariableStyle | undefined;
 export const DEFAULT_MODAL_SIZE: ModalSizeValue = ModalSize.MEDIUM;
 export const DEFAULT_CUSTOM_MODAL_WIDTH = '720px';
 
+export const DEFAULT_FLIP_ANIMATION_ENABLED = true;
+export const DEFAULT_FLIP_ANIMATION_DURATION_MS = 700;
+export const MIN_FLIP_ANIMATION_DURATION_MS = 300;
+export const MAX_FLIP_ANIMATION_DURATION_MS = 10000;
+export const FLIP_ANIMATION_DURATION_STEP_MS = 50;
+
 export const MODAL_SIZE_OPTIONS: ModalSizeOption[] = [
 	{
 		label: 'Small',
@@ -184,4 +190,15 @@ export function getSafeModalAriaLabel(
 	}
 
 	return trimmedModalAriaLabel;
+}
+
+export function getSafeFlipAnimationDuration(
+	value: unknown = DEFAULT_FLIP_ANIMATION_DURATION_MS
+): number {
+	return getSafeNumber(
+		value,
+		DEFAULT_FLIP_ANIMATION_DURATION_MS,
+		MIN_FLIP_ANIMATION_DURATION_MS,
+		MAX_FLIP_ANIMATION_DURATION_MS
+	);
 }

@@ -23,6 +23,9 @@ import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
 	DEFAULT_MODAL_SIZE,
 	DEFAULT_MODAL_ARIA_LABEL,
+	DEFAULT_FLIP_ANIMATION_DURATION_MS,
+	DEFAULT_FLIP_ANIMATION_ENABLED,
+	getSafeFlipAnimationDuration,
 } from './constants';
 
 interface SaveAttributes {
@@ -38,6 +41,8 @@ interface SaveAttributes {
 	modalShowCloseButton?: boolean;
 	modalLockPageScroll?: boolean;
 	modalAriaLabel?: string;
+	flipAnimationEnabled?: boolean;
+	flipAnimationDuration?: number;
 }
 
 interface SaveProps {
@@ -63,12 +68,13 @@ export default function save( { attributes }: SaveProps ) {
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
+		flipAnimationEnabled = DEFAULT_FLIP_ANIMATION_ENABLED,
+		flipAnimationDuration = DEFAULT_FLIP_ANIMATION_DURATION_MS,
 	} = attributes;
 
-	const safeCustomModalWidth =
-		getSafeCustomModalWidth( customModalWidth );
-
+	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
 	const safeModalAriaLabel = getSafeModalAriaLabel( modalAriaLabel );
+	const safeFlipAnimationDuration = getSafeFlipAnimationDuration( flipAnimationDuration );
 
 	const blockProps = useBlockProps.save( {
 		className: [
@@ -88,17 +94,13 @@ export default function save( { attributes }: SaveProps ) {
 				previewTextColor,
 			} ),
 		},
-		'data-modal-close-on-backdrop-click': getBooleanDataAttribute(
-			modalCloseOnBackdropClick
-		),
-		'data-modal-show-close-button': getBooleanDataAttribute(
-			modalShowCloseButton
-		),
-		'data-modal-lock-page-scroll': getBooleanDataAttribute(
-			modalLockPageScroll
-		),
+		'data-modal-close-on-backdrop-click': getBooleanDataAttribute(modalCloseOnBackdropClick),
+		'data-modal-show-close-button': getBooleanDataAttribute(modalShowCloseButton),
+		'data-modal-lock-page-scroll': getBooleanDataAttribute(modalLockPageScroll),
 		'aria-label': safeModalAriaLabel,
-} );
+		'data-flip-animation-enabled': getBooleanDataAttribute(flipAnimationEnabled),
+		'data-flip-animation-duration': safeFlipAnimationDuration,
+		} );
 
 	return (
 		<div { ...blockProps }>

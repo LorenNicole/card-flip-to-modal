@@ -70,6 +70,14 @@ return array(
 			'previewTextColor' => array(
 				'type' => 'string',
 				'default' => '#111111'
+			),
+			'flipAnimationEnabled' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'flipAnimationDuration' => array(
+				'type' => 'number',
+				'default' => 700
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',

@@ -33,7 +33,10 @@
 import { modalFocus } from './modal-focus';
 
 import {
+	DEFAULT_FLIP_ANIMATION_DURATION_MS,
+	DEFAULT_FLIP_ANIMATION_ENABLED,
 	DEFAULT_MODAL_ARIA_LABEL,
+	getSafeFlipAnimationDuration,
 	getSafeModalAriaLabel,
 } from './constants';
 
@@ -41,7 +44,6 @@ const BLOCK_SELECTOR = '.wp-block-fun-gutenberg-blocks-card-flip-to-modal';
 const OPEN_CLASS = 'gb-flip-card-modal--is-open';
 const BODY_LOCK_CLASS = 'gb-flip-card-modal-lock-scroll';
 
-const FLIP_ANIMATION_DURATION_MS = 8000;
 const PREVIEW_FLIPPED_CLASS = 'gb-flip-card-modal__preview--flipped-open';
 const ANIMATION_CLONE_CLASS = 'gb-flip-card-modal__animation-clone';
 const ANIMATION_INNER_CLASS = 'gb-flip-card-modal__animation-inner';
@@ -65,6 +67,8 @@ interface BlockSettings {
 	modalShowCloseButton: boolean;
 	modalLockPageScroll: boolean;
 	modalAriaLabel: string;
+	flipAnimationEnabled: boolean;
+	flipAnimationDuration: number;
 }
 
 interface AnimationRect {
@@ -76,6 +80,20 @@ interface AnimationRect {
 
 function shouldReduceMotion(): boolean {
 	return window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+}
+
+function getNumberDataAttribute(
+	element: HTMLElement,
+	attributeName: string,
+	defaultValue: number
+): number {
+	const value = element.dataset[ attributeName ];
+
+	if ( typeof value !== 'string' ) {
+		return defaultValue;
+	}
+
+	return getSafeFlipAnimationDuration( value );
 }
 
 function getRectFromElement( element: HTMLElement ): AnimationRect {
@@ -184,7 +202,8 @@ function animateClone(
 	clone: HTMLElement,
 	fromRect: AnimationRect,
 	toRect: AnimationRect,
-	direction: 'open' | 'close'
+	direction: 'open' | 'close',
+	duration: number
 ): Promise< void > {
 	const inner = clone.querySelector< HTMLElement >(
 		`.${ ANIMATION_INNER_CLASS }`
@@ -219,7 +238,7 @@ function animateClone(
 			},
 		],
 		{
-			duration: FLIP_ANIMATION_DURATION_MS,
+			duration,
 			easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
 			fill: 'forwards',
 		}
@@ -241,7 +260,7 @@ function animateClone(
 			},
 		],
 		{
-			duration: FLIP_ANIMATION_DURATION_MS,
+			duration,
 			easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
 			fill: 'forwards',
 		}
@@ -291,7 +310,7 @@ function animateClone(
 				  ];
 	
 		const contentAnimation = backContent.animate( contentKeyframes, {
-			duration: FLIP_ANIMATION_DURATION_MS,
+			duration,
 			easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
 			fill: 'forwards',
 		} );
@@ -351,6 +370,16 @@ function getBlockSettings( block: HTMLElement ): BlockSettings {
 			block,
 			'modalAriaLabel',
 			DEFAULT_MODAL_ARIA_LABEL
+		),
+		flipAnimationEnabled: getBooleanDataAttribute(
+			block,
+			'flipAnimationEnabled',
+			DEFAULT_FLIP_ANIMATION_ENABLED
+		),
+		flipAnimationDuration: getNumberDataAttribute(
+			block,
+			'flipAnimationDuration',
+			DEFAULT_FLIP_ANIMATION_DURATION_MS
 		),
 	};
 }
@@ -428,7 +457,7 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 		}
 	}
 
-	if ( shouldReduceMotion() ) {
+	if ( shouldReduceMotion() || ! settings.flipAnimationEnabled ) {
 		finishClose();
 		return;
 	}
@@ -441,7 +470,7 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 
 	safeDialog.hidden = true;
 
-	animateClone( clone, startRect, finalRect, 'close' )
+	animateClone( clone, startRect, finalRect, 'close', settings.flipAnimationDuration )
 		.then( () => {
 			clone.remove();
 			finishClose();
@@ -481,7 +510,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 		lockPageScroll();
 	}
 
-	if ( shouldReduceMotion() ) {
+	if ( shouldReduceMotion() || ! settings.flipAnimationEnabled ) {
 		dialog.hidden = false;
 
 		if ( settings.modalShowCloseButton && closeButton ) {
@@ -501,7 +530,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	const finalRect = getFinalModalRect( dialog );
 	const clone = createAnimationClone( block, preview, startRect );
 
-	animateClone( clone, startRect, finalRect, 'open' )
+	animateClone( clone, startRect, finalRect, 'open', settings.flipAnimationDuration )
 		.then( () => {
 			clone.remove();
 			dialog.hidden = false;
