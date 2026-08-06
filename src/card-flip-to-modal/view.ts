@@ -141,12 +141,14 @@ function getFinalModalRect( dialog: HTMLElement ): AnimationRect {
 function createAnimationClone(
 	block: HTMLElement,
 	preview: HTMLElement,
-	startRect: AnimationRect
+	startRect: AnimationRect,
+	settings: BlockSettings
 ): HTMLElement {
 	const clone = document.createElement( 'div' );
 	const inner = document.createElement( 'div' );
 	const front = document.createElement( 'div' );
 	const back = document.createElement( 'div' );
+	const backCloseButton = document.createElement( 'button' );
 	const backContent = document.createElement( 'div' );
 
 	const modalContent = block.querySelector< HTMLElement >(
@@ -158,8 +160,14 @@ function createAnimationClone(
 	front.className = ANIMATION_FRONT_CLASS;
 	back.className = ANIMATION_BACK_CLASS;
 	backContent.className = ANIMATION_BACK_CONTENT_CLASS;
+	backCloseButton.className = 'gb-flip-card-modal__animation-close';
+	backCloseButton.type = 'button';
+	backCloseButton.setAttribute( 'aria-hidden', 'true' );
+	backCloseButton.tabIndex = -1;
+	backCloseButton.textContent = '×';
 
 	front.innerHTML = preview.innerHTML;
+	copyPreviewTypographyStyles( preview, front );
 
 	if ( modalContent ) {
 		backContent.innerHTML = modalContent.innerHTML;
@@ -167,8 +175,12 @@ function createAnimationClone(
 		backContent.textContent = 'Back';
 	}
 
-	back.append( backContent );
-	inner.append( front, back );
+	if ( settings.modalShowCloseButton ) {
+		back.append( backCloseButton );
+	}
+	
+	back.append( backContent );	inner.append( front, back );
+
 	clone.append( inner );
 
 	clone.style.top = `${ startRect.top }px`;
@@ -196,6 +208,20 @@ function createAnimationClone(
 	document.body.appendChild( clone );
 
 	return clone;
+}
+
+function copyPreviewTypographyStyles(
+	source: HTMLElement,
+	target: HTMLElement
+): void {
+	const sourceStyles = window.getComputedStyle( source );
+
+	target.style.fontFamily = sourceStyles.fontFamily;
+	target.style.fontSize = sourceStyles.fontSize;
+	target.style.fontWeight = sourceStyles.fontWeight;
+	target.style.lineHeight = sourceStyles.lineHeight;
+	target.style.letterSpacing = sourceStyles.letterSpacing;
+	target.style.textAlign = sourceStyles.textAlign;
 }
 
 function animateClone(
@@ -466,7 +492,7 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 
 	const startRect = getFinalModalRect( safeDialog );
 	const finalRect = getRectFromElement( safePreview );
-	const clone = createAnimationClone( safeBlock, safePreview, startRect );
+	const clone = createAnimationClone( safeBlock, safePreview, startRect, settings );
 
 	safeDialog.hidden = true;
 
@@ -528,12 +554,17 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 
 	const startRect = getRectFromElement( preview );
 	const finalRect = getFinalModalRect( dialog );
-	const clone = createAnimationClone( block, preview, startRect );
+	const clone = createAnimationClone( block, preview, startRect, settings );
 
 	animateClone( clone, startRect, finalRect, 'open', settings.flipAnimationDuration )
 		.then( () => {
-			clone.remove();
+			dialog.style.opacity = '0';
 			dialog.hidden = false;
+			
+			window.requestAnimationFrame( () => {
+				dialog.style.opacity = '';
+				clone.remove();
+			} );
 
 			if ( settings.modalShowCloseButton && closeButton ) {
 				closeButton.focus();

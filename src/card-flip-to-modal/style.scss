@@ -225,26 +225,45 @@
 	position: absolute;
 	inset: 0;
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 1.5rem;
 	overflow: hidden;
 	border: 1px solid var(--gb-flip-card-animation-border-color, #d0d0d0);
-	background: var(--gb-flip-card-animation-background-color, #f7f7f7);
-	color: var(--gb-flip-card-animation-text-color, #111111);
 	backface-visibility: hidden;
 }
 
 .gb-flip-card-modal__animation-front {
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+	background: var(--gb-flip-card-animation-background-color, #f7f7f7);
+	color: var(--gb-flip-card-animation-text-color, #111111);
 	transform: rotateY(0deg);
 }
 
 .gb-flip-card-modal__animation-back {
 	align-items: flex-start;
 	justify-content: flex-start;
+	padding: 2rem;
 	background: #ffffff;
 	color: #111111;
 	transform: rotateY(180deg);
+}
+
+.gb-flip-card-modal__animation-close {
+	position: absolute;
+	top: 0.75rem;
+	right: 0.75rem;
+	width: 2.25rem;
+	height: 2.25rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #d0d0d0;
+	border-radius: 999px;
+	background: #ffffff;
+	color: #111111;
+	font-size: 1.5rem;
+	line-height: 1;
+	pointer-events: none;
 }
 
 .gb-flip-card-modal__animation-back-content {
@@ -267,6 +286,11 @@
 		max-width: 100%;
 		height: auto;
 	}
+}
+
+.gb-flip-card-modal__backdrop[hidden],
+.gb-flip-card-modal__dialog[hidden] {
+	display: none !important;
 }
 
 body {
