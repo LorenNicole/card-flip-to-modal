@@ -47,6 +47,7 @@ const ANIMATION_CLONE_CLASS = 'gb-flip-card-modal__animation-clone';
 const ANIMATION_INNER_CLASS = 'gb-flip-card-modal__animation-inner';
 const ANIMATION_FRONT_CLASS = 'gb-flip-card-modal__animation-front';
 const ANIMATION_BACK_CLASS = 'gb-flip-card-modal__animation-back';
+const ANIMATION_BACK_CONTENT_CLASS = 'gb-flip-card-modal__animation-back-content';
 
 let activeBlock: HTMLElement | null = null;
 let activeTrigger: HTMLElement | null = null;
@@ -109,6 +110,7 @@ function getFinalModalRect( block: HTMLElement ): AnimationRect {
 }
 
 function createAnimationClone(
+	block: HTMLElement,
 	preview: HTMLElement,
 	startRect: AnimationRect
 ): HTMLElement {
@@ -116,15 +118,27 @@ function createAnimationClone(
 	const inner = document.createElement( 'div' );
 	const front = document.createElement( 'div' );
 	const back = document.createElement( 'div' );
+	const backContent = document.createElement( 'div' );
+
+	const modalContent = block.querySelector< HTMLElement >(
+		'.gb-flip-card-modal__content'
+	);
 
 	clone.className = ANIMATION_CLONE_CLASS;
 	inner.className = ANIMATION_INNER_CLASS;
 	front.className = ANIMATION_FRONT_CLASS;
 	back.className = ANIMATION_BACK_CLASS;
+	backContent.className = ANIMATION_BACK_CONTENT_CLASS;
 
 	front.innerHTML = preview.innerHTML;
-	back.textContent = 'Back';
 
+	if ( modalContent ) {
+		backContent.innerHTML = modalContent.innerHTML;
+	} else {
+		backContent.textContent = 'Back';
+	}
+
+	back.append( backContent );
 	inner.append( front, back );
 	clone.append( inner );
 
@@ -163,6 +177,10 @@ function animateClone(
 ): Promise< void > {
 	const inner = clone.querySelector< HTMLElement >(
 		`.${ ANIMATION_INNER_CLASS }`
+	);
+
+	const backContent = clone.querySelector< HTMLElement >(
+		`.${ ANIMATION_BACK_CONTENT_CLASS }`
 	);
 
 	if ( ! inner ) {
@@ -218,10 +236,40 @@ function animateClone(
 		}
 	);
 
-	return Promise.all( [
+	const animations: Promise< Animation >[] = [
 		cloneAnimation.finished,
 		flipAnimation.finished,
-	] ).then( () => undefined );
+	];
+
+	if ( backContent ) {
+		const contentAnimation = backContent.animate(
+			[
+				{
+					opacity: direction === 'open' ? '0.15' : '1',
+					transform:
+						direction === 'open'
+							? 'scale(0.72)'
+							: 'scale(1)',
+				},
+				{
+					opacity: direction === 'open' ? '1' : '0.15',
+					transform:
+						direction === 'open'
+							? 'scale(1)'
+							: 'scale(0.72)',
+				},
+			],
+			{
+				duration: FLIP_ANIMATION_DURATION_MS,
+				easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+				fill: 'forwards',
+			}
+		);
+
+		animations.push( contentAnimation.finished );
+	}
+
+	return Promise.all( animations ).then( () => undefined );
 }
 
 function getBooleanDataAttribute(
@@ -359,8 +407,8 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 
 	const startRect = getFinalModalRect( safeBlock );
 	const finalRect = getRectFromElement( safePreview );
-	const clone = createAnimationClone( safePreview, startRect );
-
+	const clone = createAnimationClone( safeBlock, safePreview, startRect );
+	
 	safeDialog.hidden = true;
 
 	animateClone( clone, startRect, finalRect, 'close' )
@@ -421,7 +469,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 
 	const startRect = getRectFromElement( preview );
 	const finalRect = getFinalModalRect( block );
-	const clone = createAnimationClone( preview, startRect );
+	const clone = createAnimationClone( block, preview, startRect );
 
 	animateClone( clone, startRect, finalRect, 'open' )
 		.then( () => {
