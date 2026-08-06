@@ -39,6 +39,7 @@
 	}
 
 	&__preview {
+		position: relative;
 		width: 100%;
 		min-height: var(--gb-flip-card-preview-min-height, 220px);
 		display: flex;
@@ -102,6 +103,27 @@
 		margin: 0;
 		font-size: 1rem;
 		line-height: 1.5;
+	}
+
+	&__preview--flipped-open {
+		opacity: 0.45;
+		filter: blur(1px);
+		pointer-events: none;
+	
+		&::after {
+			position: absolute;
+			inset: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 1rem;
+			background: rgba(255, 255, 255, 0.72);
+			color: currentColor;
+			font-size: 1rem;
+			font-weight: 600;
+			text-align: center;
+			content: "Card has been flipped open";
+		}
 	}
 
 	&__backdrop {
@@ -182,6 +204,45 @@
 			}
 		}
 	}
+}
+
+.gb-flip-card-modal__animation-clone {
+	position: fixed;
+	z-index: 10000;
+	perspective: 1400px;
+	pointer-events: none;
+}
+
+.gb-flip-card-modal__animation-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	transform-style: preserve-3d;
+}
+
+.gb-flip-card-modal__animation-front,
+.gb-flip-card-modal__animation-back {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+	overflow: hidden;
+	border: 1px solid var(--gb-flip-card-animation-border-color, #d0d0d0);
+	background: var(--gb-flip-card-animation-background-color, #f7f7f7);
+	color: var(--gb-flip-card-animation-text-color, #111111);
+	backface-visibility: hidden;
+}
+
+.gb-flip-card-modal__animation-front {
+	transform: rotateY(0deg);
+}
+
+.gb-flip-card-modal__animation-back {
+	transform: rotateY(180deg);
+	font-size: 1.25rem;
+	font-weight: 600;
 }
 
 body {

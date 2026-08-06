@@ -41,8 +41,16 @@ const BLOCK_SELECTOR = '.wp-block-fun-gutenberg-blocks-card-flip-to-modal';
 const OPEN_CLASS = 'gb-flip-card-modal--is-open';
 const BODY_LOCK_CLASS = 'gb-flip-card-modal-lock-scroll';
 
+const FLIP_ANIMATION_DURATION_MS = 8000;
+const PREVIEW_FLIPPED_CLASS = 'gb-flip-card-modal__preview--flipped-open';
+const ANIMATION_CLONE_CLASS = 'gb-flip-card-modal__animation-clone';
+const ANIMATION_INNER_CLASS = 'gb-flip-card-modal__animation-inner';
+const ANIMATION_FRONT_CLASS = 'gb-flip-card-modal__animation-front';
+const ANIMATION_BACK_CLASS = 'gb-flip-card-modal__animation-back';
+
 let activeBlock: HTMLElement | null = null;
 let activeTrigger: HTMLElement | null = null;
+let isAnimating = false;
 
 interface BlockParts {
 	preview: HTMLElement | null;
@@ -56,6 +64,164 @@ interface BlockSettings {
 	modalShowCloseButton: boolean;
 	modalLockPageScroll: boolean;
 	modalAriaLabel: string;
+}
+
+interface AnimationRect {
+	top: number;
+	left: number;
+	width: number;
+	height: number;
+}
+
+function shouldReduceMotion(): boolean {
+	return window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+}
+
+function getRectFromElement( element: HTMLElement ): AnimationRect {
+	const rect = element.getBoundingClientRect();
+
+	return {
+		top: rect.top,
+		left: rect.left,
+		width: rect.width,
+		height: rect.height,
+	};
+}
+
+function getFinalModalRect( block: HTMLElement ): AnimationRect {
+	const modalWidthValue = getComputedStyle( block )
+		.getPropertyValue( '--gb-flip-card-modal-width' )
+		.trim();
+
+	const modalWidth = Math.min(
+		window.innerWidth * 0.9,
+		parseFloat( modalWidthValue ) || 720
+	);
+
+	const modalHeight = Math.min( window.innerHeight * 0.85, 520 );
+
+	return {
+		top: ( window.innerHeight - modalHeight ) / 2,
+		left: ( window.innerWidth - modalWidth ) / 2,
+		width: modalWidth,
+		height: modalHeight,
+	};
+}
+
+function createAnimationClone(
+	preview: HTMLElement,
+	startRect: AnimationRect
+): HTMLElement {
+	const clone = document.createElement( 'div' );
+	const inner = document.createElement( 'div' );
+	const front = document.createElement( 'div' );
+	const back = document.createElement( 'div' );
+
+	clone.className = ANIMATION_CLONE_CLASS;
+	inner.className = ANIMATION_INNER_CLASS;
+	front.className = ANIMATION_FRONT_CLASS;
+	back.className = ANIMATION_BACK_CLASS;
+
+	front.innerHTML = preview.innerHTML;
+	back.textContent = 'Back';
+
+	inner.append( front, back );
+	clone.append( inner );
+
+	clone.style.top = `${ startRect.top }px`;
+	clone.style.left = `${ startRect.left }px`;
+	clone.style.width = `${ startRect.width }px`;
+	clone.style.height = `${ startRect.height }px`;
+
+	const previewStyles = window.getComputedStyle( preview );
+
+	clone.style.setProperty(
+		'--gb-flip-card-animation-background-color',
+		previewStyles.backgroundColor
+	);
+
+	clone.style.setProperty(
+		'--gb-flip-card-animation-border-color',
+		previewStyles.borderColor
+	);
+
+	clone.style.setProperty(
+		'--gb-flip-card-animation-text-color',
+		previewStyles.color
+	);
+
+	document.body.appendChild( clone );
+
+	return clone;
+}
+
+function animateClone(
+	clone: HTMLElement,
+	fromRect: AnimationRect,
+	toRect: AnimationRect,
+	direction: 'open' | 'close'
+): Promise< void > {
+	const inner = clone.querySelector< HTMLElement >(
+		`.${ ANIMATION_INNER_CLASS }`
+	);
+
+	if ( ! inner ) {
+		return Promise.resolve();
+	}
+
+	clone.style.top = `${ fromRect.top }px`;
+	clone.style.left = `${ fromRect.left }px`;
+	clone.style.width = `${ fromRect.width }px`;
+	clone.style.height = `${ fromRect.height }px`;
+
+	const cloneAnimation = clone.animate(
+		[
+			{
+				top: `${ fromRect.top }px`,
+				left: `${ fromRect.left }px`,
+				width: `${ fromRect.width }px`,
+				height: `${ fromRect.height }px`,
+			},
+			{
+				top: `${ toRect.top }px`,
+				left: `${ toRect.left }px`,
+				width: `${ toRect.width }px`,
+				height: `${ toRect.height }px`,
+			},
+		],
+		{
+			duration: FLIP_ANIMATION_DURATION_MS,
+			easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+			fill: 'forwards',
+		}
+	);
+
+	const flipAnimation = inner.animate(
+		[
+			{
+				transform:
+					direction === 'open'
+						? 'rotateY(0deg)'
+						: 'rotateY(-180deg)',
+			},
+			{
+				transform:
+					direction === 'open'
+						? 'rotateY(-180deg)'
+						: 'rotateY(0deg)',
+			},
+		],
+		{
+			duration: FLIP_ANIMATION_DURATION_MS,
+			easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+			fill: 'forwards',
+		}
+	);
+
+	return Promise.all( [
+		cloneAnimation.finished,
+		flipAnimation.finished,
+	] ).then( () => undefined );
 }
 
 function getBooleanDataAttribute(
@@ -137,39 +303,74 @@ function unlockPageScroll(): void {
 }
 
 function closeModal( block: HTMLElement | null = activeBlock ): void {
-	if ( ! block ) {
+	if ( ! block || isAnimating ) {
 		return;
 	}
 
 	const settings = getBlockSettings( block );
 	const { preview, backdrop, dialog } = getBlockParts( block );
 
-	block.classList.remove( OPEN_CLASS );
+	if ( ! preview || ! backdrop || ! dialog ) {
+		block.classList.remove( OPEN_CLASS );
 
-	if ( preview ) {
-		preview.setAttribute( 'aria-expanded', 'false' );
-	}
+		if ( settings.modalLockPageScroll ) {
+			unlockPageScroll();
+		}
 
-	if ( backdrop ) {
-		backdrop.hidden = true;
-	}
-
-	if ( dialog ) {
-		dialog.hidden = true;
-	}
-
-	if ( settings.modalLockPageScroll ) {
-		unlockPageScroll();
-	}
-
-	if ( activeTrigger ) {
-		activeTrigger.focus();
-	}
-
-	if ( block === activeBlock ) {
 		activeBlock = null;
 		activeTrigger = null;
+
+		return;
 	}
+
+	const safePreview = preview;
+	const safeBackdrop = backdrop;
+	const safeDialog = dialog;
+	const safeBlock = block;
+
+	function finishClose(): void {
+		safeBlock.classList.remove( OPEN_CLASS );
+		safePreview.setAttribute( 'aria-expanded', 'false' );
+		safePreview.classList.remove( PREVIEW_FLIPPED_CLASS );
+
+		safeBackdrop.hidden = true;
+		safeDialog.hidden = true;
+
+		if ( settings.modalLockPageScroll ) {
+			unlockPageScroll();
+		}
+
+		if ( activeTrigger ) {
+			activeTrigger.focus();
+		}
+
+		if ( safeBlock === activeBlock ) {
+			activeBlock = null;
+			activeTrigger = null;
+		}
+	}
+
+	if ( shouldReduceMotion() ) {
+		finishClose();
+		return;
+	}
+
+	isAnimating = true;
+
+	const startRect = getFinalModalRect( safeBlock );
+	const finalRect = getRectFromElement( safePreview );
+	const clone = createAnimationClone( safePreview, startRect );
+
+	safeDialog.hidden = true;
+
+	animateClone( clone, startRect, finalRect, 'close' )
+		.then( () => {
+			clone.remove();
+			finishClose();
+		} )
+		.finally( () => {
+			isAnimating = false;
+		} );
 }
 
 function closeAnyOpenModal(): void {
@@ -182,7 +383,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	const { preview, backdrop, dialog, closeButton } = getBlockParts( block );
 	const settings = getBlockSettings( block );
 
-	if ( ! preview || ! backdrop || ! dialog ) {
+	if ( ! preview || ! backdrop || ! dialog || isAnimating ) {
 		return;
 	}
 
@@ -196,18 +397,48 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	dialog.setAttribute( 'aria-label', settings.modalAriaLabel );
 
 	backdrop.hidden = false;
-	dialog.hidden = false;
+	dialog.hidden = true;
 
 	if ( settings.modalLockPageScroll ) {
 		lockPageScroll();
 	}
 
-	if ( settings.modalShowCloseButton && closeButton ) {
-		closeButton.focus();
-	} else {
+	if ( shouldReduceMotion() ) {
+		dialog.hidden = false;
+
+		if ( settings.modalShowCloseButton && closeButton ) {
+			closeButton.focus();
+			return;
+		}
+
 		dialog.setAttribute( 'tabindex', '-1' );
 		dialog.focus();
+		return;
 	}
+
+	isAnimating = true;
+	preview.classList.add( PREVIEW_FLIPPED_CLASS );
+
+	const startRect = getRectFromElement( preview );
+	const finalRect = getFinalModalRect( block );
+	const clone = createAnimationClone( preview, startRect );
+
+	animateClone( clone, startRect, finalRect, 'open' )
+		.then( () => {
+			clone.remove();
+			dialog.hidden = false;
+
+			if ( settings.modalShowCloseButton && closeButton ) {
+				closeButton.focus();
+				return;
+			}
+
+			dialog.setAttribute( 'tabindex', '-1' );
+			dialog.focus();
+		} )
+		.finally( () => {
+			isAnimating = false;
+		} );
 }
 
 function handlePreviewKeydown(
