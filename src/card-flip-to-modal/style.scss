@@ -251,7 +251,7 @@
 	width: 100%;
 	max-height: 100%;
 	overflow: hidden;
-	transform-origin: center center;
+	transform-origin: top center;
 
 	> :first-child {
 		margin-top: 0;
@@ -260,7 +260,15 @@
 	> :last-child {
 		margin-bottom: 0;
 	}
+
+	img,
+	video,
+	iframe {
+		max-width: 100%;
+		height: auto;
+	}
 }
+
 body {
 	&.gb-flip-card-modal-lock-scroll {
 		overflow: hidden;

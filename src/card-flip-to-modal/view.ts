@@ -89,24 +89,35 @@ function getRectFromElement( element: HTMLElement ): AnimationRect {
 	};
 }
 
-function getFinalModalRect( block: HTMLElement ): AnimationRect {
-	const modalWidthValue = getComputedStyle( block )
-		.getPropertyValue( '--gb-flip-card-modal-width' )
-		.trim();
+function getFinalModalRect( dialog: HTMLElement ): AnimationRect {
+	const wasHidden = dialog.hidden;
+	const previousVisibility = dialog.style.visibility;
+	const previousPointerEvents = dialog.style.pointerEvents;
 
-	const modalWidth = Math.min(
-		window.innerWidth * 0.9,
-		parseFloat( modalWidthValue ) || 720
-	);
+	if ( wasHidden ) {
+		dialog.hidden = false;
+	}
 
-	const modalHeight = Math.min( window.innerHeight * 0.85, 520 );
+	dialog.style.visibility = 'hidden';
+	dialog.style.pointerEvents = 'none';
 
-	return {
-		top: ( window.innerHeight - modalHeight ) / 2,
-		left: ( window.innerWidth - modalWidth ) / 2,
-		width: modalWidth,
-		height: modalHeight,
+	const rect = dialog.getBoundingClientRect();
+
+	const finalRect = {
+		top: rect.top,
+		left: rect.left,
+		width: rect.width,
+		height: rect.height,
 	};
+
+	dialog.style.visibility = previousVisibility;
+	dialog.style.pointerEvents = previousPointerEvents;
+
+	if ( wasHidden ) {
+		dialog.hidden = true;
+	}
+
+	return finalRect;
 }
 
 function createAnimationClone(
@@ -242,30 +253,49 @@ function animateClone(
 	];
 
 	if ( backContent ) {
-		const contentAnimation = backContent.animate(
-			[
-				{
-					opacity: direction === 'open' ? '0.15' : '1',
-					transform:
-						direction === 'open'
-							? 'scale(0.72)'
-							: 'scale(1)',
-				},
-				{
-					opacity: direction === 'open' ? '1' : '0.15',
-					transform:
-						direction === 'open'
-							? 'scale(1)'
-							: 'scale(0.72)',
-				},
-			],
-			{
-				duration: FLIP_ANIMATION_DURATION_MS,
-				easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-				fill: 'forwards',
-			}
-		);
-
+		const contentKeyframes =
+			direction === 'open'
+				? [
+						{
+							offset: 0,
+							opacity: '0',
+							transform: 'scale(0.68) translateY(16px)',
+						},
+						{
+							offset: 0.42,
+							opacity: '0',
+							transform: 'scale(0.74) translateY(12px)',
+						},
+						{
+							offset: 1,
+							opacity: '1',
+							transform: 'scale(1) translateY(0)',
+						},
+				  ]
+				: [
+						{
+							offset: 0,
+							opacity: '1',
+							transform: 'scale(1) translateY(0)',
+						},
+						{
+							offset: 0.58,
+							opacity: '0',
+							transform: 'scale(0.74) translateY(12px)',
+						},
+						{
+							offset: 1,
+							opacity: '0',
+							transform: 'scale(0.68) translateY(16px)',
+						},
+				  ];
+	
+		const contentAnimation = backContent.animate( contentKeyframes, {
+			duration: FLIP_ANIMATION_DURATION_MS,
+			easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+			fill: 'forwards',
+		} );
+	
 		animations.push( contentAnimation.finished );
 	}
 
@@ -405,10 +435,10 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 
 	isAnimating = true;
 
-	const startRect = getFinalModalRect( safeBlock );
+	const startRect = getFinalModalRect( safeDialog );
 	const finalRect = getRectFromElement( safePreview );
 	const clone = createAnimationClone( safeBlock, safePreview, startRect );
-	
+
 	safeDialog.hidden = true;
 
 	animateClone( clone, startRect, finalRect, 'close' )
@@ -468,7 +498,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	preview.classList.add( PREVIEW_FLIPPED_CLASS );
 
 	const startRect = getRectFromElement( preview );
-	const finalRect = getFinalModalRect( block );
+	const finalRect = getFinalModalRect( dialog );
 	const clone = createAnimationClone( block, preview, startRect );
 
 	animateClone( clone, startRect, finalRect, 'open' )
