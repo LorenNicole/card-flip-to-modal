@@ -138,6 +138,28 @@ function getFinalModalRect( dialog: HTMLElement ): AnimationRect {
 	return finalRect;
 }
 
+function fadeOutAndRemoveClone( clone: HTMLElement ): Promise< void > {
+	const fadeAnimation = clone.animate(
+		[
+			{
+				opacity: '1',
+			},
+			{
+				opacity: '0',
+			},
+		],
+		{
+			duration: 120,
+			easing: 'ease-out',
+			fill: 'forwards',
+		}
+	);
+
+	return fadeAnimation.finished.then( () => {
+		clone.remove();
+	} );
+}
+
 function createAnimationClone(
 	block: HTMLElement,
 	preview: HTMLElement,
@@ -496,10 +518,21 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 
 	safeDialog.hidden = true;
 
-	animateClone( clone, startRect, finalRect, 'close', settings.flipAnimationDuration )
+	animateClone(
+		clone,
+		startRect,
+		finalRect,
+		'close',
+		settings.flipAnimationDuration
+	)
 		.then( () => {
-			clone.remove();
 			finishClose();
+	
+			return new Promise< void >( ( resolve ) => {
+				window.requestAnimationFrame( () => {
+					fadeOutAndRemoveClone( clone ).then( resolve );
+				} );
+			} );
 		} )
 		.finally( () => {
 			isAnimating = false;
