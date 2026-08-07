@@ -3,9 +3,54 @@
  */
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
-export default function save() {
+import {
+	DEFAULT_PREVIEW_BACKGROUND_COLOR,
+	DEFAULT_PREVIEW_BORDER_COLOR,
+	DEFAULT_PREVIEW_MIN_HEIGHT,
+	DEFAULT_PREVIEW_TEXT_COLOR,
+	getPreviewCardClassNames,
+	getPreviewCardStyle,
+} from '../card-flip-to-modal/constants';
+
+interface SaveAttributes {
+	previewMinHeight?: number;
+	previewHasShadow?: boolean;
+	previewHasHoverLift?: boolean;
+	previewBackgroundColor?: string;
+	previewBorderColor?: string;
+	previewTextColor?: string;
+}
+
+interface SaveProps {
+	attributes: SaveAttributes;
+}
+
+export default function save( { attributes }: SaveProps ) {
+	const {
+		previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
+		previewHasShadow = true,
+		previewHasHoverLift = true,
+		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
+		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
+		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
+	} = attributes;
+
 	const blockProps = useBlockProps.save( {
-		className: 'gb-flip-card-modal__preview',
+		className: [
+			'gb-flip-card-modal__preview',
+			...getPreviewCardClassNames( {
+				previewHasShadow,
+				previewHasHoverLift,
+			} ),
+		].join( ' ' ),
+		style: {
+			...getPreviewCardStyle( {
+				previewMinHeight,
+				previewBackgroundColor,
+				previewBorderColor,
+				previewTextColor,
+			} ),
+		},
 		role: 'button',
 		tabIndex: 0,
 		'aria-haspopup': 'dialog',

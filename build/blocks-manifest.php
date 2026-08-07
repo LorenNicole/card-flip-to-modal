@@ -17,30 +17,6 @@ return array(
 			'html' => false
 		),
 		'attributes' => array(
-			'previewMinHeight' => array(
-				'type' => 'number',
-				'default' => 220
-			),
-			'previewHasShadow' => array(
-				'type' => 'boolean',
-				'default' => true
-			),
-			'previewHasHoverLift' => array(
-				'type' => 'boolean',
-				'default' => true
-			),
-			'previewBackgroundColor' => array(
-				'type' => 'string',
-				'default' => '#f7f7f7'
-			),
-			'previewBorderColor' => array(
-				'type' => 'string',
-				'default' => '#d0d0d0'
-			),
-			'previewTextColor' => array(
-				'type' => 'string',
-				'default' => '#111111'
-			),
 			'flipAnimationEnabled' => array(
 				'type' => 'boolean',
 				'default' => true
@@ -122,6 +98,32 @@ return array(
 		'supports' => array(
 			'html' => false,
 			'reusable' => false
+		),
+		'attributes' => array(
+			'previewMinHeight' => array(
+				'type' => 'number',
+				'default' => 220
+			),
+			'previewHasShadow' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'previewHasHoverLift' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'previewBackgroundColor' => array(
+				'type' => 'string',
+				'default' => '#f7f7f7'
+			),
+			'previewBorderColor' => array(
+				'type' => 'string',
+				'default' => '#d0d0d0'
+			),
+			'previewTextColor' => array(
+				'type' => 'string',
+				'default' => '#111111'
+			)
 		),
 		'textdomain' => 'card-flip-to-modal',
 		'editorScript' => 'file:./index.js'

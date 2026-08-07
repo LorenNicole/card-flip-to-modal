@@ -12,6 +12,32 @@
 		"html": false,
 		"reusable": false
 	},
+	"attributes": {
+		"previewMinHeight": {
+			"type": "number",
+			"default": 220
+		},
+		"previewHasShadow": {
+			"type": "boolean",
+			"default": true
+		},
+		"previewHasHoverLift": {
+			"type": "boolean",
+			"default": true
+		},
+		"previewBackgroundColor": {
+			"type": "string",
+			"default": "#f7f7f7"
+		},
+		"previewBorderColor": {
+			"type": "string",
+			"default": "#d0d0d0"
+		},
+		"previewTextColor": {
+			"type": "string",
+			"default": "#111111"
+		}
+	},
 	"textdomain": "card-flip-to-modal",
 	"editorScript": "file:./index.js"
 }

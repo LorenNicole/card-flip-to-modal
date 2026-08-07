@@ -16,6 +16,10 @@
 				color: var(--gb-flip-card-preview-text-color, #111111);
 				cursor: default;
 				transform: none;
+
+				&.gb-flip-card-modal--preview-shadow {
+					box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+				}
 			}
 
 			&__preview:hover,

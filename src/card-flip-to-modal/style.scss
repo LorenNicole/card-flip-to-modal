@@ -63,6 +63,21 @@
 			outline: 3px solid currentColor;
 			outline-offset: 4px;
 		}
+
+		&.gb-flip-card-modal--preview-hover-lift {
+			&:hover,
+			&:focus {
+				transform: translateY(-2px);
+				border-color: #8a8a8a;
+			}
+		}
+
+		&.gb-flip-card-modal--preview-shadow {
+			&:hover,
+			&:focus {
+				box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+			}
+		}
 	}
 
 	&--preview-hover-lift {
