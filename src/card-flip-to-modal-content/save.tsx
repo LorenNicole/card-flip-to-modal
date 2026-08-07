@@ -3,8 +3,37 @@
  */
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
-export default function save() {
-	const blockProps = useBlockProps.save();
+import {
+	DEFAULT_CUSTOM_MODAL_WIDTH,
+	DEFAULT_MODAL_SIZE,
+	type ModalSizeValue,
+	getModalSizeClassName,
+	getModalWidthStyle,
+	getSafeCustomModalWidth,
+} from '../card-flip-to-modal/constants';
+
+interface SaveAttributes {
+	modalSize?: ModalSizeValue;
+	customModalWidth?: string;
+}
+
+interface SaveProps {
+	attributes: SaveAttributes;
+}
+
+export default function save( { attributes }: SaveProps ) {
+	const {
+		modalSize = DEFAULT_MODAL_SIZE,
+		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+	} = attributes;
+
+	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
+	
+	const blockProps = useBlockProps.save( {
+		className: getModalSizeClassName( modalSize ),
+		style: getModalWidthStyle( modalSize, safeCustomModalWidth ),
+	} );
+
 
 	return (
 		<div { ...blockProps }>

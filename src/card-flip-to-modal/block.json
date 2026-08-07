@@ -12,15 +12,6 @@
 		"html": false
 	},
 	"attributes": {
-		"modalSize": {
-			"type": "string",
-			"enum": [ "small", "medium", "large", "custom" ],
-			"default": "medium"
-		},
-		"customModalWidth": {
-			"type": "string",
-			"default": "720px"
-		},
 		"modalCloseOnBackdropClick": {
 			"type": "boolean",
 			"default": false

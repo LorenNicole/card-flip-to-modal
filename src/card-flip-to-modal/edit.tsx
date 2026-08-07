@@ -8,29 +8,20 @@ import {
 	ColorIndicator,
 	ColorPicker,
 	Dropdown,
-	Notice,
 	PanelBody,
 	RangeControl,
-	SelectControl,
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import {
-	DEFAULT_CUSTOM_MODAL_WIDTH,
-	DEFAULT_MODAL_SIZE,
-	MODAL_SIZE_OPTIONS,
 	ModalSize,
 	type ModalSizeOption,
 	type ModalSizeValue,
-	getModalSizeClassName,
-	getModalWidthStyle,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
-	getSafeCustomModalWidth,
-	isValidCssSize,
 	isModalSizeValue,
 	DEFAULT_PREVIEW_MIN_HEIGHT,
 	MAX_PREVIEW_MIN_HEIGHT,
@@ -64,8 +55,6 @@ import './editor.scss';
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  */
 interface EditAttributes {
-	modalSize?: ModalSizeValue;
-	customModalWidth?: string;
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
 	modalLockPageScroll?: boolean;
@@ -96,13 +85,6 @@ const ALLOWED_BLOCKS = [
 	'fun-gutenberg-blocks/card-flip-to-modal-preview',
 	'fun-gutenberg-blocks/card-flip-to-modal-content',
 ];
-
-function getModalSizeOptions() {
-	return MODAL_SIZE_OPTIONS.map( ( option: ModalSizeOption ) => ( {
-		label: __( option.label, 'card-flip-to-modal' ),
-		value: option.value,
-	} ) );
-}
 
 interface CompactColorControlProps {
 	label: string;
@@ -160,8 +142,6 @@ function CompactColorControl( {
 
 export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const {
-		modalSize = DEFAULT_MODAL_SIZE,
-		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
@@ -183,22 +163,14 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		MAX_PREVIEW_MIN_HEIGHT
 	);
 
-	const customWidthIsValid = isValidCssSize( customModalWidth );
-	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
 	const safeFlipAnimationDuration = getSafeFlipAnimationDuration( flipAnimationDuration );
 
 	const blockProps = useBlockProps( {
 		className: [
 			'gb-flip-card-modal',
 			'gb-flip-card-modal--editor',
-			getModalSizeClassName( modalSize ),
-			...getPreviewCardClassNames( {
-				previewHasShadow,
-				previewHasHoverLift,
-			} ),
 		].join( ' ' ),
 		style: {
-			...getModalWidthStyle( modalSize, safeCustomModalWidth ),
 			...getPreviewCardStyle( {
 				previewMinHeight: safePreviewMinHeight,
 				previewBackgroundColor,
@@ -211,61 +183,6 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Modal Settings', 'card-flip-to-modal' ) }
-					initialOpen={ true }
-				>
-					<SelectControl
-						label={ __( 'Modal width', 'card-flip-to-modal' ) }
-						value={ modalSize }
-						options={ getModalSizeOptions() }
-						onChange={ ( value ) => {
-							if ( ! isModalSizeValue( value ) ) {
-								return;
-							}
-
-							setAttributes( { modalSize: value } );
-						} }
-						help={ __(
-							'Choose how wide the modal appears on the front end.',
-							'card-flip-to-modal'
-						) }
-					/>
-
-					{ modalSize === ModalSize.CUSTOM && (
-						<>
-							<TextControl
-								label={ __(
-									'Custom modal width',
-									'card-flip-to-modal'
-								) }
-								value={ customModalWidth }
-								onChange={ ( value ) =>
-									setAttributes( {
-										customModalWidth: value,
-									} )
-								}
-								help={ __(
-									'Use a valid CSS width such as 720px, 80vw, 45rem, 60%, or clamp(320px, 80vw, 1000px).',
-									'card-flip-to-modal'
-								) }
-							/>
-
-							{ ! customWidthIsValid && (
-								<Notice
-									status="warning"
-									isDismissible={ false }
-								>
-									{ __(
-										'Enter a valid CSS size. The modal will use 720px until this value is valid.',
-										'card-flip-to-modal'
-									) }
-								</Notice>
-							) }
-						</>
-					) }
-				</PanelBody>
-
 				<PanelBody
 					title={ __( 'Accessibility Settings', 'card-flip-to-modal' ) }
 					initialOpen={ false }
