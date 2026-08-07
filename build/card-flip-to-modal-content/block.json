@@ -28,6 +28,10 @@
     "customModalWidth": {
       "type": "string",
       "default": "720px"
+    },
+    "modalAriaLabel": {
+      "type": "string",
+      "default": "Card modal content"
     }
   },
   "textdomain": "card-flip-to-modal",

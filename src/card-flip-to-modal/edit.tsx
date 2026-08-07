@@ -10,7 +10,6 @@ import {
 	Dropdown,
 	PanelBody,
 	RangeControl,
-	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -33,7 +32,6 @@ import {
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
 	getSafeNumber,
-	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_FLIP_ANIMATION_DURATION_MS,
 	DEFAULT_FLIP_ANIMATION_ENABLED,
 	FLIP_ANIMATION_DURATION_STEP_MS,
@@ -64,7 +62,6 @@ interface EditAttributes {
 	previewBackgroundColor?: string;
 	previewBorderColor?: string;
 	previewTextColor?: string;
-	modalAriaLabel?: string;
 	flipAnimationEnabled?: boolean;
 	flipAnimationDuration?: number;
 }
@@ -151,7 +148,6 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
 		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
-		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		flipAnimationEnabled = DEFAULT_FLIP_ANIMATION_ENABLED,
 		flipAnimationDuration = DEFAULT_FLIP_ANIMATION_DURATION_MS,
 	} = attributes;
@@ -183,25 +179,6 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Accessibility Settings', 'card-flip-to-modal' ) }
-					initialOpen={ false }
-				>
-					<TextControl
-						label={ __( 'Modal label', 'card-flip-to-modal' ) }
-						value={ modalAriaLabel }
-						onChange={ ( value ) =>
-							setAttributes( {
-								modalAriaLabel: value || DEFAULT_MODAL_ARIA_LABEL,
-							} )
-						}
-						help={ __(
-							'Describe the purpose of the modal for screen readers. If left blank, the default label will be used.',
-							'card-flip-to-modal'
-						) }
-					/>
-				</PanelBody>
-
 				<PanelBody
 					title={ __( 'Preview Card Settings', 'card-flip-to-modal' ) }
 					initialOpen={ false }

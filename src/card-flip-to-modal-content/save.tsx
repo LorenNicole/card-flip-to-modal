@@ -5,16 +5,19 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
+	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_MODAL_SIZE,
 	type ModalSizeValue,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCustomModalWidth,
+	getSafeModalAriaLabel,
 } from '../card-flip-to-modal/constants';
 
 interface SaveAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
+	modalAriaLabel?: string;
 }
 
 interface SaveProps {
@@ -25,9 +28,11 @@ export default function save( { attributes }: SaveProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 	} = attributes;
 
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
+	const safeModalAriaLabel = getSafeModalAriaLabel( modalAriaLabel );
 	
 	const blockProps = useBlockProps.save( {
 		className: getModalSizeClassName( modalSize ),
@@ -43,7 +48,7 @@ export default function save( { attributes }: SaveProps ) {
 				className="gb-flip-card-modal__dialog"
 				role="dialog"
 				aria-modal="true"
-				aria-label="Card modal content"
+				aria-label={ safeModalAriaLabel }
 				tabIndex={ -1 }
 				hidden
 			>

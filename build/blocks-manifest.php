@@ -29,10 +29,6 @@ return array(
 				'type' => 'boolean',
 				'default' => true
 			),
-			'modalAriaLabel' => array(
-				'type' => 'string',
-				'default' => 'Card modal content'
-			),
 			'previewMinHeight' => array(
 				'type' => 'number',
 				'default' => 220
@@ -102,6 +98,10 @@ return array(
 			'customModalWidth' => array(
 				'type' => 'string',
 				'default' => '720px'
+			),
+			'modalAriaLabel' => array(
+				'type' => 'string',
+				'default' => 'Card modal content'
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',

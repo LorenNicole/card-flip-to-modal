@@ -18,6 +18,7 @@ import { __ } from '@wordpress/i18n';
 
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
+	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_MODAL_SIZE,
 	MODAL_SIZE_OPTIONS,
 	type ModalSizeValue,
@@ -60,6 +61,7 @@ const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 interface EditAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
+	modalAriaLabel?: string;
 }
 
 interface EditProps {
@@ -71,6 +73,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 	} = attributes;
 	
 	const customWidthIsValid = isValidCssSize( customModalWidth );
@@ -135,6 +138,25 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							) }
 						</>
 					) }
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Accessibility Settings', 'card-flip-to-modal' ) }
+					initialOpen={ false }
+				>
+					<TextControl
+						label={ __( 'Modal label', 'card-flip-to-modal' ) }
+						value={ modalAriaLabel }
+						onChange={ ( value ) =>
+							setAttributes( {
+								modalAriaLabel: value || DEFAULT_MODAL_ARIA_LABEL,
+							} )
+						}
+						help={ __(
+							'Describe the purpose of the modal for screen readers. If left blank, the default label will be used.',
+							'card-flip-to-modal'
+						) }
+					/>
 				</PanelBody>
 			</InspectorControls>
 

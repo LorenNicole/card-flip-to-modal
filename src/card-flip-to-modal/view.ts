@@ -387,14 +387,27 @@ function getBooleanDataAttribute(
 	return defaultValue;
 }
 
-function getStringDataAttribute(
-	element: HTMLElement,
-	attributeName: string,
-	defaultValue: string
-): string {
-	return getSafeModalAriaLabel(
-		element.dataset[ attributeName ] || defaultValue
+function getModalAriaLabel( block: HTMLElement ): string {
+	const dialog = block.querySelector< HTMLElement >(
+		'.gb-flip-card-modal__dialog'
 	);
+
+	if ( dialog ) {
+		const fromDialog =
+			dialog.getAttribute( 'aria-label' ) ||
+			dialog.dataset.modalAriaLabel;
+
+		if ( fromDialog ) {
+			return getSafeModalAriaLabel( fromDialog );
+		}
+	}
+
+	// Legacy: label stored on parent before attribute move
+	const fromParent =
+		block.getAttribute( 'aria-label' ) ||
+		block.dataset.modalAriaLabel;
+
+	return getSafeModalAriaLabel( fromParent || DEFAULT_MODAL_ARIA_LABEL );
 }
 
 function getBlockSettings( block: HTMLElement ): BlockSettings {
@@ -414,11 +427,7 @@ function getBlockSettings( block: HTMLElement ): BlockSettings {
 			'modalLockPageScroll',
 			true
 		),
-		modalAriaLabel: getStringDataAttribute(
-			block,
-			'modalAriaLabel',
-			DEFAULT_MODAL_ARIA_LABEL
-		),
+		modalAriaLabel: getModalAriaLabel( block ),
 		flipAnimationEnabled: getBooleanDataAttribute(
 			block,
 			'flipAnimationEnabled',

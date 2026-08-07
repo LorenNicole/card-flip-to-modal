@@ -6,7 +6,6 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
 import {
 	getPreviewCardStyle,
-	getSafeModalAriaLabel,
 	getBooleanDataAttribute,
 	getSafeFlipAnimationDuration,
 	getPreviewCardClassNames,
@@ -17,7 +16,6 @@ import {
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
-	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_FLIP_ANIMATION_DURATION_MS,
 	DEFAULT_FLIP_ANIMATION_ENABLED,
 } from './constants';
@@ -32,7 +30,6 @@ interface SaveAttributes {
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
 	modalLockPageScroll?: boolean;
-	modalAriaLabel?: string;
 	flipAnimationEnabled?: boolean;
 	flipAnimationDuration?: number;
 }
@@ -57,12 +54,10 @@ export default function save( { attributes }: SaveProps ) {
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
-		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		flipAnimationEnabled = DEFAULT_FLIP_ANIMATION_ENABLED,
 		flipAnimationDuration = DEFAULT_FLIP_ANIMATION_DURATION_MS,
 	} = attributes;
 
-	const safeModalAriaLabel = getSafeModalAriaLabel( modalAriaLabel );
 	const safeFlipAnimationDuration = getSafeFlipAnimationDuration( flipAnimationDuration );
 
 	const blockProps = useBlockProps.save( {
@@ -84,7 +79,6 @@ export default function save( { attributes }: SaveProps ) {
 		'data-modal-close-on-backdrop-click': getBooleanDataAttribute(modalCloseOnBackdropClick),
 		'data-modal-show-close-button': getBooleanDataAttribute(modalShowCloseButton),
 		'data-modal-lock-page-scroll': getBooleanDataAttribute(modalLockPageScroll),
-		'aria-label': safeModalAriaLabel,
 		'data-flip-animation-enabled': getBooleanDataAttribute(flipAnimationEnabled),
 		'data-flip-animation-duration': safeFlipAnimationDuration,
 		} );
