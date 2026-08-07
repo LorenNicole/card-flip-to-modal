@@ -66,10 +66,15 @@
 	}
 
 	&__editor-modal-preview {
+		position: relative;
 		margin-top: 1rem;
 		padding: 1.5rem;
 		border: 1px solid #d0d0d0;
 		background: #ffffff;
+	}
+
+	&__editor-close-preview {
+		pointer-events: none;
 	}
 
 	&__editor-section-header {

@@ -212,6 +212,16 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
+				
+				<button
+					className="gb-flip-card-modal__close gb-flip-card-modal__editor-close-preview"
+					type="button"
+					aria-label={ __( 'Close modal preview', 'card-flip-to-modal' ) }
+					tabIndex={ -1 }
+				>
+					x
+				</button>
+
 				<div className="gb-flip-card-modal__editor-section-header">
 					<strong>Expanded Modal Content</strong>
 					<p>
