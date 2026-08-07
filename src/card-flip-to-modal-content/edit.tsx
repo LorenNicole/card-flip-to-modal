@@ -12,6 +12,7 @@ import {
 	PanelBody,
 	SelectControl,
 	TextControl,
+	ToggleControl,
 } from '@wordpress/components';
 
 import { __ } from '@wordpress/i18n';
@@ -19,6 +20,9 @@ import { __ } from '@wordpress/i18n';
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
 	DEFAULT_MODAL_ARIA_LABEL,
+	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
+	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
+	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
 	MODAL_SIZE_OPTIONS,
 	type ModalSizeValue,
@@ -62,6 +66,9 @@ interface EditAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
 	modalAriaLabel?: string;
+	modalCloseOnBackdropClick?: boolean;
+	modalShowCloseButton?: boolean;
+	modalLockPageScroll?: boolean;
 }
 
 interface EditProps {
@@ -74,6 +81,9 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
+		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
+		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
+		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	} = attributes;
 	
 	const customWidthIsValid = isValidCssSize( customModalWidth );
@@ -138,6 +148,47 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							) }
 						</>
 					) }
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Modal Behavior Settings', 'card-flip-to-modal' ) }
+					initialOpen={ false }
+				>
+					<ToggleControl
+						label={ __( 'Close when clicking backdrop', 'card-flip-to-modal' ) }
+						checked={ modalCloseOnBackdropClick }
+						onChange={ ( value ) =>
+							setAttributes( { modalCloseOnBackdropClick: value } )
+						}
+						help={ __(
+							'Allow visitors to close the modal by clicking outside the modal content.',
+							'card-flip-to-modal'
+						) }
+					/>
+
+					<ToggleControl
+						label={ __( 'Show close button', 'card-flip-to-modal' ) }
+						checked={ modalShowCloseButton }
+						onChange={ ( value ) =>
+							setAttributes( { modalShowCloseButton: value } )
+						}
+						help={ __(
+							'Display the close button inside the modal.',
+							'card-flip-to-modal'
+						) }
+					/>
+
+					<ToggleControl
+						label={ __( 'Lock page scroll while modal is open', 'card-flip-to-modal' ) }
+						checked={ modalLockPageScroll }
+						onChange={ ( value ) =>
+							setAttributes( { modalLockPageScroll: value } )
+						}
+						help={ __(
+							'Prevent the page behind the modal from scrolling while the modal is open.',
+							'card-flip-to-modal'
+						) }
+					/>
 				</PanelBody>
 
 				<PanelBody

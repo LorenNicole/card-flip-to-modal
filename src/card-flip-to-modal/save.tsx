@@ -13,9 +13,6 @@ import {
 	DEFAULT_PREVIEW_BACKGROUND_COLOR,
 	DEFAULT_PREVIEW_BORDER_COLOR,
 	DEFAULT_PREVIEW_TEXT_COLOR,
-	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
-	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
-	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_FLIP_ANIMATION_DURATION_MS,
 	DEFAULT_FLIP_ANIMATION_ENABLED,
 } from './constants';
@@ -27,9 +24,6 @@ interface SaveAttributes {
 	previewBackgroundColor?: string;
 	previewBorderColor?: string;
 	previewTextColor?: string;
-	modalCloseOnBackdropClick?: boolean;
-	modalShowCloseButton?: boolean;
-	modalLockPageScroll?: boolean;
 	flipAnimationEnabled?: boolean;
 	flipAnimationDuration?: number;
 }
@@ -51,9 +45,6 @@ export default function save( { attributes }: SaveProps ) {
 		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
 		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
-		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
-		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
-		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 		flipAnimationEnabled = DEFAULT_FLIP_ANIMATION_ENABLED,
 		flipAnimationDuration = DEFAULT_FLIP_ANIMATION_DURATION_MS,
 	} = attributes;
@@ -76,9 +67,6 @@ export default function save( { attributes }: SaveProps ) {
 				previewTextColor,
 			} ),
 		},
-		'data-modal-close-on-backdrop-click': getBooleanDataAttribute(modalCloseOnBackdropClick),
-		'data-modal-show-close-button': getBooleanDataAttribute(modalShowCloseButton),
-		'data-modal-lock-page-scroll': getBooleanDataAttribute(modalLockPageScroll),
 		'data-flip-animation-enabled': getBooleanDataAttribute(flipAnimationEnabled),
 		'data-flip-animation-duration': safeFlipAnimationDuration,
 		} );

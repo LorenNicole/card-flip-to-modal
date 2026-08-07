@@ -17,18 +17,6 @@ return array(
 			'html' => false
 		),
 		'attributes' => array(
-			'modalCloseOnBackdropClick' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'modalShowCloseButton' => array(
-				'type' => 'boolean',
-				'default' => true
-			),
-			'modalLockPageScroll' => array(
-				'type' => 'boolean',
-				'default' => true
-			),
 			'previewMinHeight' => array(
 				'type' => 'number',
 				'default' => 220
@@ -102,6 +90,18 @@ return array(
 			'modalAriaLabel' => array(
 				'type' => 'string',
 				'default' => 'Card modal content'
+			),
+			'modalCloseOnBackdropClick' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'modalShowCloseButton' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'modalLockPageScroll' => array(
+				'type' => 'boolean',
+				'default' => true
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',

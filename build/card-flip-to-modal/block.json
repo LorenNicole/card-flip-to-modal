@@ -12,18 +12,6 @@
     "html": false
   },
   "attributes": {
-    "modalCloseOnBackdropClick": {
-      "type": "boolean",
-      "default": false
-    },
-    "modalShowCloseButton": {
-      "type": "boolean",
-      "default": true
-    },
-    "modalLockPageScroll": {
-      "type": "boolean",
-      "default": true
-    },
     "previewMinHeight": {
       "type": "number",
       "default": 220

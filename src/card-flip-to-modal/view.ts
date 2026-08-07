@@ -410,20 +410,39 @@ function getModalAriaLabel( block: HTMLElement ): string {
 	return getSafeModalAriaLabel( fromParent || DEFAULT_MODAL_ARIA_LABEL );
 }
 
+function getModalBehaviorSettingsElement( block: HTMLElement ): HTMLElement {
+	const contentBlock = block.querySelector< HTMLElement >(
+		'.wp-block-fun-gutenberg-blocks-card-flip-to-modal-content'
+	);
+
+	if ( ! contentBlock ) {
+		return block;
+	}
+
+	const hasBehaviorOnContent =
+		contentBlock.dataset.modalCloseOnBackdropClick !== undefined ||
+		contentBlock.dataset.modalShowCloseButton !== undefined ||
+		contentBlock.dataset.modalLockPageScroll !== undefined;
+
+	return hasBehaviorOnContent ? contentBlock : block;
+}
+
 function getBlockSettings( block: HTMLElement ): BlockSettings {
+	const behaviorElement = getModalBehaviorSettingsElement( block );
+
 	return {
 		modalCloseOnBackdropClick: getBooleanDataAttribute(
-			block,
+			behaviorElement,
 			'modalCloseOnBackdropClick',
 			false
 		),
 		modalShowCloseButton: getBooleanDataAttribute(
-			block,
+			behaviorElement,
 			'modalShowCloseButton',
 			true
 		),
 		modalLockPageScroll: getBooleanDataAttribute(
-			block,
+			behaviorElement,
 			'modalLockPageScroll',
 			true
 		),

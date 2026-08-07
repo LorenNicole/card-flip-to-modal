@@ -6,8 +6,12 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
 	DEFAULT_MODAL_ARIA_LABEL,
+	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
+	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
+	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
 	type ModalSizeValue,
+	getBooleanDataAttribute,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCustomModalWidth,
@@ -18,6 +22,9 @@ interface SaveAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
 	modalAriaLabel?: string;
+	modalCloseOnBackdropClick?: boolean;
+	modalShowCloseButton?: boolean;
+	modalLockPageScroll?: boolean;
 }
 
 interface SaveProps {
@@ -29,6 +36,9 @@ export default function save( { attributes }: SaveProps ) {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
+		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
+		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
+		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	} = attributes;
 
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
@@ -37,6 +47,12 @@ export default function save( { attributes }: SaveProps ) {
 	const blockProps = useBlockProps.save( {
 		className: getModalSizeClassName( modalSize ),
 		style: getModalWidthStyle( modalSize, safeCustomModalWidth ),
+		'data-modal-close-on-backdrop-click':
+			getBooleanDataAttribute( modalCloseOnBackdropClick ),
+		'data-modal-show-close-button':
+			getBooleanDataAttribute( modalShowCloseButton ),
+		'data-modal-lock-page-scroll':
+			getBooleanDataAttribute( modalLockPageScroll ),
 	} );
 
 

@@ -18,9 +18,6 @@ import {
 	ModalSize,
 	type ModalSizeOption,
 	type ModalSizeValue,
-	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
-	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
-	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	isModalSizeValue,
 	DEFAULT_PREVIEW_MIN_HEIGHT,
 	MAX_PREVIEW_MIN_HEIGHT,
@@ -53,9 +50,6 @@ import './editor.scss';
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  */
 interface EditAttributes {
-	modalCloseOnBackdropClick?: boolean;
-	modalShowCloseButton?: boolean;
-	modalLockPageScroll?: boolean;
 	previewMinHeight?: number;
 	previewHasShadow?: boolean;
 	previewHasHoverLift?: boolean;
@@ -139,9 +133,6 @@ function CompactColorControl( {
 
 export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const {
-		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
-		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
-		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 		previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
 		previewHasShadow = true,
 		previewHasHoverLift = true,
@@ -252,47 +243,6 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 								previewTextColor: value,
 							} )
 						}
-					/>
-				</PanelBody>
-
-				<PanelBody
-					title={ __( 'Modal Behavior Settings', 'card-flip-to-modal' ) }
-					initialOpen={ false }
-				>
-					<ToggleControl
-						label={ __( 'Close when clicking backdrop', 'card-flip-to-modal' ) }
-						checked={ modalCloseOnBackdropClick }
-						onChange={ ( value ) =>
-							setAttributes( { modalCloseOnBackdropClick: value } )
-						}
-						help={ __(
-							'Allow visitors to close the modal by clicking outside the modal content.',
-							'card-flip-to-modal'
-						) }
-					/>
-
-					<ToggleControl
-						label={ __( 'Show close button', 'card-flip-to-modal' ) }
-						checked={ modalShowCloseButton }
-						onChange={ ( value ) =>
-							setAttributes( { modalShowCloseButton: value } )
-						}
-						help={ __(
-							'Display the close button inside the modal.',
-							'card-flip-to-modal'
-						) }
-					/>
-
-					<ToggleControl
-						label={ __( 'Lock page scroll while modal is open', 'card-flip-to-modal' ) }
-						checked={ modalLockPageScroll }
-						onChange={ ( value ) =>
-							setAttributes( { modalLockPageScroll: value } )
-						}
-						help={ __(
-							'Prevent the page behind the modal from scrolling while the modal is open.',
-							'card-flip-to-modal'
-						) }
 					/>
 				</PanelBody>
 

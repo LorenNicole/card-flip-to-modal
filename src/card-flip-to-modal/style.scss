@@ -206,6 +206,10 @@
 	}
 }
 
+[data-modal-show-close-button="false"] .gb-flip-card-modal__close {
+	display: none;
+}
+
 .gb-flip-card-modal__animation-clone {
 	position: fixed;
 	z-index: 10000;

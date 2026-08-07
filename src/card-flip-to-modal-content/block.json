@@ -25,6 +25,18 @@
 		"modalAriaLabel": {
 			"type": "string",
 			"default": "Card modal content"
+		},
+		"modalCloseOnBackdropClick": {
+			"type": "boolean",
+			"default": false
+		},
+		"modalShowCloseButton": {
+			"type": "boolean",
+			"default": true
+		},
+		"modalLockPageScroll": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"textdomain": "card-flip-to-modal",
