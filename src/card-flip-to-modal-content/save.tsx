@@ -21,7 +21,6 @@ import {
 	type CloseButtonPositionValue,
 	type ModalSizeValue,
 	getBooleanDataAttribute,
-	getCloseButtonPositionClassName,
 	getCloseButtonStyle,
 	getModalSizeClassName,
 	getModalWidthStyle,
@@ -31,6 +30,7 @@ import {
 	getSafeCustomModalWidth,
 	getSafeModalAriaLabel,
 } from '../card-flip-to-modal/constants';
+import { ModalCloseButton } from '../card-flip-to-modal/close-button';
 
 interface SaveAttributes {
 	modalSize?: ModalSizeValue;
@@ -110,17 +110,12 @@ export default function save( { attributes }: SaveProps ) {
 				tabIndex={ -1 }
 				hidden
 			>
-				<button
-					className={ [
-						'gb-flip-card-modal__close',
-						getCloseButtonPositionClassName( safeCloseButtonPosition ),
-					].join( ' ' ) }
-					type="button"
-					aria-label={ safeCloseButtonAriaLabel }
+				<ModalCloseButton
+					closeButtonPosition={ safeCloseButtonPosition }
+					text={ safeCloseButtonText }
+					ariaLabel={ safeCloseButtonAriaLabel }
 					style={ closeButtonStyle }
-				>
-					{ safeCloseButtonText }
-				</button>
+				/>
 
 				<div className="gb-flip-card-modal__content">
 					<InnerBlocks.Content />

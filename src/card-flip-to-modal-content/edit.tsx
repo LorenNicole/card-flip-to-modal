@@ -47,7 +47,6 @@ import {
 	MODAL_SIZE_OPTIONS,
 	type CloseButtonPositionValue,
 	type ModalSizeValue,
-	getCloseButtonPositionClassName,
 	getCloseButtonStyle,
 	getModalSizeClassName,
 	getModalWidthStyle,
@@ -57,6 +56,7 @@ import {
 	getSafeCustomModalWidth,
 	isValidCssSize,
 } from '../card-flip-to-modal/constants';
+import { ModalCloseButton } from '../card-flip-to-modal/close-button';
 
 const ALLOWED_BLOCKS = [
 	'core/image',
@@ -199,10 +199,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	} );
 
 	const blockProps = useBlockProps( {
-		className: [
-			'gb-flip-card-modal__editor-modal-preview',
-			getModalSizeClassName( modalSize ),
-		].join( ' ' ),
+		className: getModalSizeClassName( modalSize ),
 		style: getModalWidthStyle( modalSize, safeCustomModalWidth ),
 	} );
 
@@ -427,37 +424,33 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 				</PanelBody>
 			</InspectorControls>
 
+			<p className="gb-flip-card-modal__editor-preview-label">
+				{ __(
+					'Below is the Modal preview (not actual size).',
+					'card-flip-to-modal'
+				) }
+			</p>
+
 			<div { ...blockProps }>
-				
-				<button
-					className={ [
-						'gb-flip-card-modal__close',
-						'gb-flip-card-modal__editor-close-preview',
-						getCloseButtonPositionClassName( safeCloseButtonPosition ),
-					].join( ' ' ) }
-					type="button"
-					aria-label={ safeCloseButtonAriaLabel }
-					tabIndex={ -1 }
-					style={ closeButtonStyle }
-				>
-					{ safeCloseButtonText }
-				</button>
+				<div className="gb-flip-card-modal__editor-dialog-preview">
+					{ modalShowCloseButton && (
+						<ModalCloseButton
+							closeButtonPosition={ safeCloseButtonPosition }
+							text={ safeCloseButtonText }
+							ariaLabel={ safeCloseButtonAriaLabel }
+							style={ closeButtonStyle }
+							className="gb-flip-card-modal__editor-close-preview"
+							tabIndex={ -1 }
+						/>
+					) }
 
-				<div className="gb-flip-card-modal__editor-section-header">
-					<strong>Expanded Modal Content</strong>
-					<p>
-						This content appears inside the modal after the preview area is
-						clicked. Add longer text, images, buttons, lists, or other
-						supported content here.
-					</p>
-				</div>
-
-				<div className="gb-flip-card-modal__content">
-					<InnerBlocks
-						allowedBlocks={ ALLOWED_BLOCKS }
-						template={ TEMPLATE }
-						templateLock={ false }
-					/>
+					<div className="gb-flip-card-modal__content">
+						<InnerBlocks
+							allowedBlocks={ ALLOWED_BLOCKS }
+							template={ TEMPLATE }
+							templateLock={ false }
+						/>
+					</div>
 				</div>
 			</div>
 		</>

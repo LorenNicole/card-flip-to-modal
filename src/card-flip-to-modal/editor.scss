@@ -7,6 +7,10 @@
 		padding: 1rem;
 		border: 1px dashed #b8b8b8;
 
+		.wp-block-fun-gutenberg-blocks-card-flip-to-modal-preview {
+			margin-bottom: 1.5rem;
+		}
+
 		.gb-flip-card-modal {
 			&__preview {
 				display: block;
@@ -65,38 +69,22 @@
 		align-items: center;
 	}
 
-	&__editor-modal-preview {
+	&__editor-preview-label {
+		margin: 0 0 0.5rem;
+		font-size: 0.85rem;
+		color: #50575e;
+	}
+
+	&__editor-dialog-preview {
 		position: relative;
-		margin-top: 1rem;
-		padding: 1.5rem;
-		border: 1px solid #d0d0d0;
+		width: min(100%, var(--gb-flip-card-modal-width, 720px));
+		padding: 2rem;
+		overflow: visible;
 		background: #ffffff;
+		box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
 	}
 
 	&__editor-close-preview {
 		pointer-events: none;
-	}
-
-	&__editor-section-header {
-		width: 100%;
-		margin-bottom: 1rem;
-		padding: 0.75rem 1rem;
-		border: 1px solid #dcdcde;
-		background: #f6f7f7;
-		text-align: left;
-
-		strong {
-			display: block;
-			margin-bottom: 0.25rem;
-			font-size: 0.9rem;
-			font-weight: 600;
-		}
-
-		p {
-			margin: 0;
-			font-size: 0.8rem;
-			line-height: 1.4;
-			color: #50575e;
-		}
 	}
 }
