@@ -44,6 +44,14 @@
     "modalLockPageScroll": {
       "type": "boolean",
       "default": true
+    },
+    "closeButtonText": {
+      "type": "string",
+      "default": "×"
+    },
+    "closeButtonAriaLabel": {
+      "type": "string",
+      "default": "Close modal"
     }
   },
   "textdomain": "card-flip-to-modal",

@@ -78,6 +78,14 @@ return array(
 			'modalLockPageScroll' => array(
 				'type' => 'boolean',
 				'default' => true
+			),
+			'closeButtonText' => array(
+				'type' => 'string',
+				'default' => '×'
+			),
+			'closeButtonAriaLabel' => array(
+				'type' => 'string',
+				'default' => 'Close modal'
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',

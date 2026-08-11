@@ -5,6 +5,8 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
+	DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
+	DEFAULT_CLOSE_BUTTON_TEXT,
 	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
@@ -14,6 +16,8 @@ import {
 	getBooleanDataAttribute,
 	getModalSizeClassName,
 	getModalWidthStyle,
+	getSafeCloseButtonAriaLabel,
+	getSafeCloseButtonText,
 	getSafeCustomModalWidth,
 	getSafeModalAriaLabel,
 } from '../card-flip-to-modal/constants';
@@ -25,6 +29,8 @@ interface SaveAttributes {
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
 	modalLockPageScroll?: boolean;
+	closeButtonText?: string;
+	closeButtonAriaLabel?: string;
 }
 
 interface SaveProps {
@@ -39,10 +45,15 @@ export default function save( { attributes }: SaveProps ) {
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
+		closeButtonText = DEFAULT_CLOSE_BUTTON_TEXT,
+		closeButtonAriaLabel = DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
 	} = attributes;
 
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
 	const safeModalAriaLabel = getSafeModalAriaLabel( modalAriaLabel );
+	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
+	const safeCloseButtonAriaLabel =
+		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
 	
 	const blockProps = useBlockProps.save( {
 		className: getModalSizeClassName( modalSize ),
@@ -71,9 +82,9 @@ export default function save( { attributes }: SaveProps ) {
 				<button
 					className="gb-flip-card-modal__close"
 					type="button"
-					aria-label="Close modal"
+					aria-label={ safeCloseButtonAriaLabel }
 				>
-					×
+					{ safeCloseButtonText }
 				</button>
 
 				<div className="gb-flip-card-modal__content">

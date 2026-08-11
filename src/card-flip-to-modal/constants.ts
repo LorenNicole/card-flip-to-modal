@@ -192,6 +192,41 @@ export function getSafeModalAriaLabel(
 	return trimmedModalAriaLabel;
 }
 
+export const DEFAULT_CLOSE_BUTTON_TEXT = '×';
+export const DEFAULT_CLOSE_BUTTON_ARIA_LABEL = 'Close modal';
+
+export function getSafeCloseButtonText(
+	closeButtonText: unknown = DEFAULT_CLOSE_BUTTON_TEXT
+): string {
+	if ( typeof closeButtonText !== 'string' ) {
+		return DEFAULT_CLOSE_BUTTON_TEXT;
+	}
+
+	const trimmedCloseButtonText = closeButtonText.trim();
+
+	if ( ! trimmedCloseButtonText ) {
+		return DEFAULT_CLOSE_BUTTON_TEXT;
+	}
+
+	return trimmedCloseButtonText;
+}
+
+export function getSafeCloseButtonAriaLabel(
+	closeButtonAriaLabel: unknown = DEFAULT_CLOSE_BUTTON_ARIA_LABEL
+): string {
+	if ( typeof closeButtonAriaLabel !== 'string' ) {
+		return DEFAULT_CLOSE_BUTTON_ARIA_LABEL;
+	}
+
+	const trimmedCloseButtonAriaLabel = closeButtonAriaLabel.trim();
+
+	if ( ! trimmedCloseButtonAriaLabel ) {
+		return DEFAULT_CLOSE_BUTTON_ARIA_LABEL;
+	}
+
+	return trimmedCloseButtonAriaLabel;
+}
+
 export function getSafeFlipAnimationDuration(
 	value: unknown = DEFAULT_FLIP_ANIMATION_DURATION_MS
 ): number {

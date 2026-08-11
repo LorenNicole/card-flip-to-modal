@@ -186,7 +186,13 @@ function createAnimationClone(
 	backCloseButton.type = 'button';
 	backCloseButton.setAttribute( 'aria-hidden', 'true' );
 	backCloseButton.tabIndex = -1;
-	backCloseButton.textContent = '×';
+
+	const realCloseButton = block.querySelector< HTMLButtonElement >(
+		'.gb-flip-card-modal__close'
+	);
+
+	backCloseButton.textContent =
+		realCloseButton?.textContent?.trim() || '×';
 
 	front.innerHTML = preview.innerHTML;
 	copyPreviewTypographyStyles( preview, front );

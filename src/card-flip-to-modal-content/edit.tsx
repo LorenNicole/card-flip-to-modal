@@ -19,6 +19,8 @@ import { __ } from '@wordpress/i18n';
 
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
+	DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
+	DEFAULT_CLOSE_BUTTON_TEXT,
 	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
@@ -28,6 +30,8 @@ import {
 	type ModalSizeValue,
 	getModalSizeClassName,
 	getModalWidthStyle,
+	getSafeCloseButtonAriaLabel,
+	getSafeCloseButtonText,
 	getSafeCustomModalWidth,
 	isValidCssSize,
 } from '../card-flip-to-modal/constants';
@@ -69,6 +73,8 @@ interface EditAttributes {
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
 	modalLockPageScroll?: boolean;
+	closeButtonText?: string;
+	closeButtonAriaLabel?: string;
 }
 
 interface EditProps {
@@ -84,11 +90,16 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
+		closeButtonText = DEFAULT_CLOSE_BUTTON_TEXT,
+		closeButtonAriaLabel = DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
 	} = attributes;
 	
 	const customWidthIsValid = isValidCssSize( customModalWidth );
 	
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
+	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
+	const safeCloseButtonAriaLabel =
+		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
 
 	const blockProps = useBlockProps( {
 		className: [
@@ -209,6 +220,39 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						) }
 					/>
 				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Close Button Settings', 'card-flip-to-modal' ) }
+					initialOpen={ false }
+				>
+					<TextControl
+						label={ __( 'Close button text', 'card-flip-to-modal' ) }
+						value={ closeButtonText }
+						onChange={ ( value ) =>
+							setAttributes( {
+								closeButtonText: value,
+							} )
+						}
+						help={ __(
+							'Controls the visible close button text or symbol. If left blank, the default symbol will be used.',
+							'card-flip-to-modal'
+						) }
+					/>
+
+					<TextControl
+						label={ __( 'Close button accessible label', 'card-flip-to-modal' ) }
+						value={ closeButtonAriaLabel }
+						onChange={ ( value ) =>
+							setAttributes( {
+								closeButtonAriaLabel: value,
+							} )
+						}
+						help={ __(
+							'Describes the close button for screen readers. If left blank, the default label will be used.',
+							'card-flip-to-modal'
+						) }
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<div { ...blockProps }>
@@ -216,10 +260,10 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 				<button
 					className="gb-flip-card-modal__close gb-flip-card-modal__editor-close-preview"
 					type="button"
-					aria-label={ __( 'Close modal preview', 'card-flip-to-modal' ) }
+					aria-label={ safeCloseButtonAriaLabel }
 					tabIndex={ -1 }
 				>
-					x
+					{ safeCloseButtonText }
 				</button>
 
 				<div className="gb-flip-card-modal__editor-section-header">
