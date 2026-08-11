@@ -127,6 +127,7 @@
 		opacity: 0.45;
 		filter: blur(1px);
 		pointer-events: none;
+		border-color: transparent;
 	
 		&::after {
 			position: absolute;
@@ -160,7 +161,7 @@
 		max-height: 85vh;
 		padding: 2rem;
 		overflow-y: auto;
-		background: #ffffff;
+		background: var(--gb-flip-card-modal-background-color, #ffffff);
 		border-width: var(--gb-flip-card-modal-border-width, 1px);
 		border-style: var(--gb-flip-card-modal-border-style, none);
 		border-color: var(--gb-flip-card-modal-border-color, #d0d0d0);
@@ -244,6 +245,18 @@
 			}
 		}
 	}
+
+	> .gb-flip-card-modal__content-root {
+		margin-block: 0;
+	}
+
+	&__content-root {
+		margin: 0;
+		padding: 0;
+		border: none;
+		min-height: 0;
+		overflow: visible;
+	}
 }
 
 [data-modal-show-close-button="false"] .gb-flip-card-modal__close {
@@ -255,6 +268,8 @@
 	z-index: 10000;
 	perspective: 1400px;
 	pointer-events: none;
+	border: none;
+	outline: none;
 }
 
 .gb-flip-card-modal__animation-inner {
@@ -277,9 +292,7 @@
 	align-items: center;
 	justify-content: center;
 	padding: 1.5rem;
-	border-width: var(--gb-flip-card-animation-border-width, 1px);
-	border-style: var(--gb-flip-card-animation-border-style, solid);
-	border-color: var(--gb-flip-card-animation-border-color, #d0d0d0);
+	border: none;
 	border-radius: var(--gb-flip-card-animation-border-radius, 0);
 	background: var(--gb-flip-card-animation-background-color, #ffffff);
 	color: var(--gb-flip-card-animation-text-color, #111111);
@@ -290,11 +303,9 @@
 	align-items: flex-start;
 	justify-content: flex-start;
 	padding: 2rem;
-	border-width: var(--gb-flip-card-modal-animation-border-width, 1px);
-	border-style: var(--gb-flip-card-modal-animation-border-style, none);
-	border-color: var(--gb-flip-card-modal-animation-border-color, #d0d0d0);
+	border: none;
 	border-radius: var(--gb-flip-card-modal-animation-border-radius, 0);
-	background: #ffffff;
+	background: var(--gb-flip-card-modal-animation-background-color, #ffffff);
 	color: #111111;
 	transform: rotateY(180deg);
 }

@@ -18,6 +18,10 @@
 				padding: 1.5rem;
 				background: var(--gb-flip-card-preview-background-color, #ffffff);
 				color: var(--gb-flip-card-preview-text-color, #111111);
+				border-width: var(--gb-flip-card-preview-border-width, 1px);
+				border-style: var(--gb-flip-card-preview-border-style, solid);
+				border-color: var(--gb-flip-card-preview-border-color, #d0d0d0);
+				border-radius: var(--gb-flip-card-preview-border-radius, 0);
 				cursor: default;
 				transform: none;
 
@@ -79,7 +83,7 @@
 		width: min(100%, var(--gb-flip-card-modal-width, 720px));
 		padding: 2rem;
 		overflow: visible;
-		background: #ffffff;
+		background: var(--gb-flip-card-modal-background-color, #ffffff);
 		border-width: var(--gb-flip-card-modal-border-width, 1px);
 		border-style: var(--gb-flip-card-modal-border-style, none);
 		border-color: var(--gb-flip-card-modal-border-color, #d0d0d0);
@@ -91,6 +95,7 @@
 		border-width: var(--gb-flip-card-modal-border-width, 1px);
 		border-style: var(--gb-flip-card-modal-border-style, none);
 		border-color: var(--gb-flip-card-modal-border-color, #d0d0d0);
+		border-radius: var(--gb-flip-card-modal-border-radius, 0);
 	}
 
 	&__editor-close-preview {

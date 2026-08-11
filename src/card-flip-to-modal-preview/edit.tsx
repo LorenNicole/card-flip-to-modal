@@ -140,6 +140,11 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 				previewBorderWidth: safePreviewBorderWidth,
 				previewTextColor,
 			} ),
+			borderWidth: `${ safePreviewBorderWidth }px`,
+			borderStyle: safePreviewBorderStyle,
+			borderColor: previewBorderColor,
+			borderRadius: `${ safePreviewBorderRadius }px`,
+			backgroundColor: previewBackgroundColor,
 		},
 	} );
 

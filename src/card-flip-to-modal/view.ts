@@ -275,6 +275,11 @@ function createAnimationClone(
 
 	if ( dialogStyles ) {
 		clone.style.setProperty(
+			'--gb-flip-card-modal-animation-background-color',
+			dialogStyles.backgroundColor
+		);
+
+		clone.style.setProperty(
 			'--gb-flip-card-modal-animation-border-color',
 			dialogStyles.borderColor
 		);

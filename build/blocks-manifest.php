@@ -86,6 +86,10 @@ return array(
 				'type' => 'number',
 				'default' => 1
 			),
+			'modalBackgroundColor' => array(
+				'type' => 'string',
+				'default' => '#ffffff'
+			),
 			'modalAriaLabel' => array(
 				'type' => 'string',
 				'default' => 'Card modal content'

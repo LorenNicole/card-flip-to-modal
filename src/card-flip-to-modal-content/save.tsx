@@ -14,6 +14,7 @@ import {
 	DEFAULT_CLOSE_BUTTON_TEXT,
 	DEFAULT_CLOSE_BUTTON_TEXT_COLOR,
 	DEFAULT_MODAL_ARIA_LABEL,
+	DEFAULT_MODAL_BACKGROUND_COLOR,
 	DEFAULT_MODAL_BORDER_COLOR,
 	DEFAULT_MODAL_BORDER_RADIUS,
 	DEFAULT_MODAL_BORDER_STYLE,
@@ -45,6 +46,7 @@ interface SaveAttributes {
 	modalBorderStyle?: BorderStyleValue;
 	modalBorderColor?: string;
 	modalBorderWidth?: number;
+	modalBackgroundColor?: string;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
@@ -71,6 +73,7 @@ export default function save( { attributes }: SaveProps ) {
 		modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
 		modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
 		modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
+		modalBackgroundColor = DEFAULT_MODAL_BACKGROUND_COLOR,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
@@ -105,7 +108,10 @@ export default function save( { attributes }: SaveProps ) {
 	} );
 	
 	const blockProps = useBlockProps.save( {
-		className: getModalSizeClassName( modalSize ),
+		className: [
+			'gb-flip-card-modal__content-root',
+			getModalSizeClassName( modalSize ),
+		].join( ' ' ),
 		style: getModalShellStyle( {
 			modalSize,
 			customModalWidth: safeCustomModalWidth,
@@ -113,6 +119,7 @@ export default function save( { attributes }: SaveProps ) {
 			modalBorderStyle: safeModalBorderStyle,
 			modalBorderColor,
 			modalBorderWidth,
+			modalBackgroundColor,
 		} ),
 		'data-modal-close-on-backdrop-click':
 			getBooleanDataAttribute( modalCloseOnBackdropClick ),

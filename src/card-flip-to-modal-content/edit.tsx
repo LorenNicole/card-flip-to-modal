@@ -35,6 +35,7 @@ import {
 	DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
 	DEFAULT_CLOSE_BUTTON_TEXT,
 	DEFAULT_MODAL_ARIA_LABEL,
+	DEFAULT_MODAL_BACKGROUND_COLOR,
 	DEFAULT_MODAL_BORDER_COLOR,
 	DEFAULT_MODAL_BORDER_RADIUS,
 	DEFAULT_MODAL_BORDER_STYLE,
@@ -108,6 +109,7 @@ interface EditAttributes {
 	modalBorderStyle?: BorderStyleValue;
 	modalBorderColor?: string;
 	modalBorderWidth?: number;
+	modalBackgroundColor?: string;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
@@ -135,6 +137,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
 		modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
 		modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
+		modalBackgroundColor = DEFAULT_MODAL_BACKGROUND_COLOR,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
@@ -168,14 +171,22 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		MIN_CARD_MODAL_BORDER_RADIUS,
 		MAX_CARD_MODAL_BORDER_RADIUS
 	);
-	const modalShellStyle = getModalShellStyle( {
-		modalSize,
-		customModalWidth: safeCustomModalWidth,
-		modalBorderRadius: safeModalBorderRadius,
-		modalBorderStyle: safeModalBorderStyle,
-		modalBorderColor,
-		modalBorderWidth: safeModalBorderWidth,
-	} );
+	const modalShellStyle = {
+		...getModalShellStyle( {
+			modalSize,
+			customModalWidth: safeCustomModalWidth,
+			modalBorderRadius: safeModalBorderRadius,
+			modalBorderStyle: safeModalBorderStyle,
+			modalBorderColor,
+			modalBorderWidth: safeModalBorderWidth,
+			modalBackgroundColor,
+		} ),
+		borderWidth: `${ safeModalBorderWidth }px`,
+		borderStyle: safeModalBorderStyle,
+		borderColor: modalBorderColor,
+		borderRadius: `${ safeModalBorderRadius }px`,
+		backgroundColor: modalBackgroundColor,
+	};
 	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
 	const safeCloseButtonAriaLabel =
 		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
@@ -248,6 +259,17 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							) }
 						</>
 					) }
+
+					<CompactColorControl
+						label={ __( 'Background color', 'card-flip-to-modal' ) }
+						value={ modalBackgroundColor }
+						defaultValue={ DEFAULT_MODAL_BACKGROUND_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								modalBackgroundColor: value,
+							} )
+						}
+					/>
 
 					<SelectControl
 						className="gb-flip-card-modal__inspector-control--spaced"

@@ -89,6 +89,7 @@ export interface BorderStyleOption {
 export const DEFAULT_PREVIEW_BORDER_STYLE: BorderStyleValue = BorderStyle.SOLID;
 export const DEFAULT_MODAL_BORDER_STYLE: BorderStyleValue = BorderStyle.NONE;
 export const DEFAULT_MODAL_BORDER_COLOR = '#d0d0d0';
+export const DEFAULT_MODAL_BACKGROUND_COLOR = '#ffffff';
 
 export const BORDER_STYLE_OPTIONS: BorderStyleOption[] = [
 	{
@@ -195,6 +196,7 @@ export interface ModalShellStyleOptions {
 	modalBorderStyle?: BorderStyleValue;
 	modalBorderColor?: string;
 	modalBorderWidth?: number;
+	modalBackgroundColor?: string;
 }
 
 export function getModalShellStyle( {
@@ -204,6 +206,7 @@ export function getModalShellStyle( {
 	modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
 	modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
 	modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
+	modalBackgroundColor = DEFAULT_MODAL_BACKGROUND_COLOR,
 }: ModalShellStyleOptions ): CSSVariableStyle {
 	const safeModalBorderRadius = getSafeNumber(
 		modalBorderRadius,
@@ -227,6 +230,7 @@ export function getModalShellStyle( {
 		),
 		'--gb-flip-card-modal-border-color': modalBorderColor,
 		'--gb-flip-card-modal-border-width': `${ safeModalBorderWidth }px`,
+		'--gb-flip-card-modal-background-color': modalBackgroundColor,
 	};
 
 	if ( modalSize === ModalSize.CUSTOM ) {
