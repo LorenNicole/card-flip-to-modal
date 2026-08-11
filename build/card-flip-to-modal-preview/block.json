@@ -29,11 +29,26 @@
     },
     "previewBackgroundColor": {
       "type": "string",
-      "default": "#f7f7f7"
+      "default": "#ffffff"
     },
     "previewBorderColor": {
       "type": "string",
       "default": "#d0d0d0"
+    },
+    "previewBorderStyle": {
+      "type": "string",
+      "enum": [
+        "solid",
+        "dashed",
+        "dotted",
+        "double",
+        "none"
+      ],
+      "default": "solid"
+    },
+    "previewBorderRadius": {
+      "type": "number",
+      "default": 0
     },
     "previewTextColor": {
       "type": "string",

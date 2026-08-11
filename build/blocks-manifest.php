@@ -63,6 +63,25 @@ return array(
 				'type' => 'string',
 				'default' => '720px'
 			),
+			'modalBorderRadius' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'modalBorderStyle' => array(
+				'type' => 'string',
+				'enum' => array(
+					'solid',
+					'dashed',
+					'dotted',
+					'double',
+					'none'
+				),
+				'default' => 'none'
+			),
+			'modalBorderColor' => array(
+				'type' => 'string',
+				'default' => '#d0d0d0'
+			),
 			'modalAriaLabel' => array(
 				'type' => 'string',
 				'default' => 'Card modal content'
@@ -150,11 +169,26 @@ return array(
 			),
 			'previewBackgroundColor' => array(
 				'type' => 'string',
-				'default' => '#f7f7f7'
+				'default' => '#ffffff'
 			),
 			'previewBorderColor' => array(
 				'type' => 'string',
 				'default' => '#d0d0d0'
+			),
+			'previewBorderStyle' => array(
+				'type' => 'string',
+				'enum' => array(
+					'solid',
+					'dashed',
+					'dotted',
+					'double',
+					'none'
+				),
+				'default' => 'solid'
+			),
+			'previewBorderRadius' => array(
+				'type' => 'number',
+				'default' => 0
 			),
 			'previewTextColor' => array(
 				'type' => 'string',

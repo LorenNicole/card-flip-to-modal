@@ -29,6 +29,25 @@
       "type": "string",
       "default": "720px"
     },
+    "modalBorderRadius": {
+      "type": "number",
+      "default": 0
+    },
+    "modalBorderStyle": {
+      "type": "string",
+      "enum": [
+        "solid",
+        "dashed",
+        "dotted",
+        "double",
+        "none"
+      ],
+      "default": "none"
+    },
+    "modalBorderColor": {
+      "type": "string",
+      "default": "#d0d0d0"
+    },
     "modalAriaLabel": {
       "type": "string",
       "default": "Card modal content"
