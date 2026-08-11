@@ -208,6 +208,13 @@ function createAnimationClone(
 	backCloseButton.textContent =
 		realCloseButton?.textContent?.trim() || '×';
 
+	if ( realCloseButton?.getAttribute( 'style' ) ) {
+		backCloseButton.setAttribute(
+			'style',
+			realCloseButton.getAttribute( 'style' ) || ''
+		);
+	}
+
 	front.innerHTML = preview.innerHTML;
 	copyPreviewTypographyStyles( preview, front );
 

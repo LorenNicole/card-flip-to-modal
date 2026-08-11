@@ -6,8 +6,13 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
 	DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
+	DEFAULT_CLOSE_BUTTON_BACKGROUND_COLOR,
+	DEFAULT_CLOSE_BUTTON_BORDER_COLOR,
+	DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
 	DEFAULT_CLOSE_BUTTON_POSITION,
+	DEFAULT_CLOSE_BUTTON_SIZE,
 	DEFAULT_CLOSE_BUTTON_TEXT,
+	DEFAULT_CLOSE_BUTTON_TEXT_COLOR,
 	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
@@ -17,6 +22,7 @@ import {
 	type ModalSizeValue,
 	getBooleanDataAttribute,
 	getCloseButtonPositionClassName,
+	getCloseButtonStyle,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCloseButtonAriaLabel,
@@ -36,6 +42,11 @@ interface SaveAttributes {
 	closeButtonText?: string;
 	closeButtonAriaLabel?: string;
 	closeButtonPosition?: CloseButtonPositionValue;
+	closeButtonSize?: number;
+	closeButtonBackgroundColor?: string;
+	closeButtonTextColor?: string;
+	closeButtonBorderColor?: string;
+	closeButtonBorderRadius?: number;
 }
 
 interface SaveProps {
@@ -53,6 +64,11 @@ export default function save( { attributes }: SaveProps ) {
 		closeButtonText = DEFAULT_CLOSE_BUTTON_TEXT,
 		closeButtonAriaLabel = DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
 		closeButtonPosition = DEFAULT_CLOSE_BUTTON_POSITION,
+		closeButtonSize = DEFAULT_CLOSE_BUTTON_SIZE,
+		closeButtonBackgroundColor = DEFAULT_CLOSE_BUTTON_BACKGROUND_COLOR,
+		closeButtonTextColor = DEFAULT_CLOSE_BUTTON_TEXT_COLOR,
+		closeButtonBorderColor = DEFAULT_CLOSE_BUTTON_BORDER_COLOR,
+		closeButtonBorderRadius = DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
 	} = attributes;
 
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
@@ -62,6 +78,13 @@ export default function save( { attributes }: SaveProps ) {
 		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
 	const safeCloseButtonPosition =
 		getSafeCloseButtonPosition( closeButtonPosition );
+	const closeButtonStyle = getCloseButtonStyle( {
+		closeButtonSize,
+		closeButtonBackgroundColor,
+		closeButtonTextColor,
+		closeButtonBorderColor,
+		closeButtonBorderRadius,
+	} );
 	
 	const blockProps = useBlockProps.save( {
 		className: getModalSizeClassName( modalSize ),
@@ -94,6 +117,7 @@ export default function save( { attributes }: SaveProps ) {
 					].join( ' ' ) }
 					type="button"
 					aria-label={ safeCloseButtonAriaLabel }
+					style={ closeButtonStyle }
 				>
 					{ safeCloseButtonText }
 				</button>

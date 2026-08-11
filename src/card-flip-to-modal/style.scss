@@ -165,16 +165,19 @@
 	&__close {
 		position: absolute;
 		top: 0.75rem;
-		width: 2.25rem;
-		height: 2.25rem;
+		width: var(--gb-flip-card-close-button-size, 36px);
+		height: var(--gb-flip-card-close-button-size, 36px);
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		border: 1px solid #d0d0d0;
-		border-radius: 999px;
-		background: #ffffff;
-		color: #111111;
-		font-size: 1.5rem;
+		border: 1px solid var(--gb-flip-card-close-button-border-color, #d0d0d0);
+		border-radius: var(--gb-flip-card-close-button-border-radius, 999px);
+		background-color: var(
+			--gb-flip-card-close-button-background-color,
+			#ffffff
+		);
+		color: var(--gb-flip-card-close-button-text-color, #111111);
+		font-size: calc(var(--gb-flip-card-close-button-size, 36px) * 0.65);
 		line-height: 1;
 		cursor: pointer;
 
@@ -188,8 +191,15 @@
 
 		&:hover,
 		&:focus {
-			background: #f0f0f0;
+			background-color: var(
+				--gb-flip-card-close-button-background-color,
+				#ffffff
+			);
 			outline: none;
+		}
+
+		&:hover {
+			filter: brightness(0.94);
 		}
 
 		&:focus-visible {
@@ -277,16 +287,19 @@
 .gb-flip-card-modal__animation-close {
 	position: absolute;
 	top: 0.75rem;
-	width: 2.25rem;
-	height: 2.25rem;
+	width: var(--gb-flip-card-close-button-size, 36px);
+	height: var(--gb-flip-card-close-button-size, 36px);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	border: 1px solid #d0d0d0;
-	border-radius: 999px;
-	background: #ffffff;
-	color: #111111;
-	font-size: 1.5rem;
+	border: 1px solid var(--gb-flip-card-close-button-border-color, #d0d0d0);
+	border-radius: var(--gb-flip-card-close-button-border-radius, 999px);
+	background-color: var(
+		--gb-flip-card-close-button-background-color,
+		#ffffff
+	);
+	color: var(--gb-flip-card-close-button-text-color, #111111);
+	font-size: calc(var(--gb-flip-card-close-button-size, 36px) * 0.65);
 	line-height: 1;
 	pointer-events: none;
 

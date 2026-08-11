@@ -60,6 +60,26 @@
         "top-left"
       ],
       "default": "top-right"
+    },
+    "closeButtonSize": {
+      "type": "number",
+      "default": 36
+    },
+    "closeButtonBackgroundColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "closeButtonTextColor": {
+      "type": "string",
+      "default": "#111111"
+    },
+    "closeButtonBorderColor": {
+      "type": "string",
+      "default": "#d0d0d0"
+    },
+    "closeButtonBorderRadius": {
+      "type": "number",
+      "default": 999
     }
   },
   "textdomain": "card-flip-to-modal",

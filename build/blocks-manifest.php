@@ -94,6 +94,26 @@ return array(
 					'top-left'
 				),
 				'default' => 'top-right'
+			),
+			'closeButtonSize' => array(
+				'type' => 'number',
+				'default' => 36
+			),
+			'closeButtonBackgroundColor' => array(
+				'type' => 'string',
+				'default' => '#ffffff'
+			),
+			'closeButtonTextColor' => array(
+				'type' => 'string',
+				'default' => '#111111'
+			),
+			'closeButtonBorderColor' => array(
+				'type' => 'string',
+				'default' => '#d0d0d0'
+			),
+			'closeButtonBorderRadius' => array(
+				'type' => 'number',
+				'default' => 999
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',

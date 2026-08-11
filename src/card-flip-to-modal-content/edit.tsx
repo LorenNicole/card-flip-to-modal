@@ -8,8 +8,13 @@ import {
 } from '@wordpress/block-editor';
 
 import {
+	Button,
+	ColorIndicator,
+	ColorPicker,
+	Dropdown,
 	Notice,
 	PanelBody,
+	RangeControl,
 	SelectControl,
 	TextControl,
 	ToggleControl,
@@ -18,8 +23,15 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import {
+	CLOSE_BUTTON_BORDER_RADIUS_STEP,
 	CLOSE_BUTTON_POSITION_OPTIONS,
+	CLOSE_BUTTON_SIZE_STEP,
+	DEFAULT_CLOSE_BUTTON_BACKGROUND_COLOR,
+	DEFAULT_CLOSE_BUTTON_BORDER_COLOR,
+	DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
 	DEFAULT_CLOSE_BUTTON_POSITION,
+	DEFAULT_CLOSE_BUTTON_SIZE,
+	DEFAULT_CLOSE_BUTTON_TEXT_COLOR,
 	DEFAULT_CUSTOM_MODAL_WIDTH,
 	DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
 	DEFAULT_CLOSE_BUTTON_TEXT,
@@ -28,10 +40,15 @@ import {
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
+	MAX_CLOSE_BUTTON_BORDER_RADIUS,
+	MAX_CLOSE_BUTTON_SIZE,
+	MIN_CLOSE_BUTTON_BORDER_RADIUS,
+	MIN_CLOSE_BUTTON_SIZE,
 	MODAL_SIZE_OPTIONS,
 	type CloseButtonPositionValue,
 	type ModalSizeValue,
 	getCloseButtonPositionClassName,
+	getCloseButtonStyle,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCloseButtonAriaLabel,
@@ -81,6 +98,65 @@ interface EditAttributes {
 	closeButtonText?: string;
 	closeButtonAriaLabel?: string;
 	closeButtonPosition?: CloseButtonPositionValue;
+	closeButtonSize?: number;
+	closeButtonBackgroundColor?: string;
+	closeButtonTextColor?: string;
+	closeButtonBorderColor?: string;
+	closeButtonBorderRadius?: number;
+}
+
+interface CompactColorControlProps {
+	label: string;
+	value: string;
+	defaultValue: string;
+	onChange: ( value: string ) => void;
+}
+
+function CompactColorControl( {
+	label,
+	value,
+	defaultValue,
+	onChange,
+}: CompactColorControlProps ) {
+	return (
+		<div className="gb-flip-card-modal__compact-color-control">
+			<div className="gb-flip-card-modal__compact-color-control-header">
+				<span>{ label }</span>
+
+				<ColorIndicator colorValue={ value } />
+			</div>
+
+			<div className="gb-flip-card-modal__compact-color-control-actions">
+				<Dropdown
+					renderToggle={ ( { isOpen, onToggle } ) => (
+						<Button
+							variant="secondary"
+							onClick={ onToggle }
+							aria-expanded={ isOpen }
+						>
+							{ __( 'Choose color', 'card-flip-to-modal' ) }
+						</Button>
+					) }
+					renderContent={ () => (
+						<ColorPicker
+							color={ value }
+							onChange={ ( color ) =>
+								onChange( color || defaultValue )
+							}
+							enableAlpha={ false }
+						/>
+					) }
+				/>
+
+				<Button
+					variant="tertiary"
+					onClick={ () => onChange( defaultValue ) }
+				>
+					{ __( 'Reset', 'card-flip-to-modal' ) }
+				</Button>
+			</div>
+		</div>
+	);
 }
 
 interface EditProps {
@@ -99,6 +175,11 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		closeButtonText = DEFAULT_CLOSE_BUTTON_TEXT,
 		closeButtonAriaLabel = DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
 		closeButtonPosition = DEFAULT_CLOSE_BUTTON_POSITION,
+		closeButtonSize = DEFAULT_CLOSE_BUTTON_SIZE,
+		closeButtonBackgroundColor = DEFAULT_CLOSE_BUTTON_BACKGROUND_COLOR,
+		closeButtonTextColor = DEFAULT_CLOSE_BUTTON_TEXT_COLOR,
+		closeButtonBorderColor = DEFAULT_CLOSE_BUTTON_BORDER_COLOR,
+		closeButtonBorderRadius = DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
 	} = attributes;
 	
 	const customWidthIsValid = isValidCssSize( customModalWidth );
@@ -109,6 +190,13 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
 	const safeCloseButtonPosition =
 		getSafeCloseButtonPosition( closeButtonPosition );
+	const closeButtonStyle = getCloseButtonStyle( {
+		closeButtonSize,
+		closeButtonBackgroundColor,
+		closeButtonTextColor,
+		closeButtonBorderColor,
+		closeButtonBorderRadius,
+	} );
 
 	const blockProps = useBlockProps( {
 		className: [
@@ -276,6 +364,66 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							'card-flip-to-modal'
 						) }
 					/>
+
+					<RangeControl
+						label={ __( 'Close button size', 'card-flip-to-modal' ) }
+						value={ closeButtonSize }
+						onChange={ ( value ) =>
+							setAttributes( {
+								closeButtonSize: value || DEFAULT_CLOSE_BUTTON_SIZE,
+							} )
+						}
+						min={ MIN_CLOSE_BUTTON_SIZE }
+						max={ MAX_CLOSE_BUTTON_SIZE }
+						step={ CLOSE_BUTTON_SIZE_STEP }
+					/>
+
+					<RangeControl
+						label={ __( 'Close button border radius', 'card-flip-to-modal' ) }
+						value={ closeButtonBorderRadius }
+						onChange={ ( value ) =>
+							setAttributes( {
+								closeButtonBorderRadius:
+									value ?? DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
+							} )
+						}
+						min={ MIN_CLOSE_BUTTON_BORDER_RADIUS }
+						max={ MAX_CLOSE_BUTTON_BORDER_RADIUS }
+						step={ CLOSE_BUTTON_BORDER_RADIUS_STEP }
+					/>
+
+					<CompactColorControl
+						label={ __( 'Background color', 'card-flip-to-modal' ) }
+						value={ closeButtonBackgroundColor }
+						defaultValue={ DEFAULT_CLOSE_BUTTON_BACKGROUND_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								closeButtonBackgroundColor: value,
+							} )
+						}
+					/>
+
+					<CompactColorControl
+						label={ __( 'Text color', 'card-flip-to-modal' ) }
+						value={ closeButtonTextColor }
+						defaultValue={ DEFAULT_CLOSE_BUTTON_TEXT_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								closeButtonTextColor: value,
+							} )
+						}
+					/>
+
+					<CompactColorControl
+						label={ __( 'Border color', 'card-flip-to-modal' ) }
+						value={ closeButtonBorderColor }
+						defaultValue={ DEFAULT_CLOSE_BUTTON_BORDER_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								closeButtonBorderColor: value,
+							} )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -290,6 +438,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					type="button"
 					aria-label={ safeCloseButtonAriaLabel }
 					tabIndex={ -1 }
+					style={ closeButtonStyle }
 				>
 					{ safeCloseButtonText }
 				</button>

@@ -282,6 +282,59 @@ export function getCloseButtonPositionClassName(
 	return `gb-flip-card-modal__close--${ safeCloseButtonPosition }`;
 }
 
+export const DEFAULT_CLOSE_BUTTON_SIZE = 36;
+export const MIN_CLOSE_BUTTON_SIZE = 24;
+export const MAX_CLOSE_BUTTON_SIZE = 72;
+export const CLOSE_BUTTON_SIZE_STEP = 2;
+
+export const DEFAULT_CLOSE_BUTTON_BACKGROUND_COLOR = '#ffffff';
+export const DEFAULT_CLOSE_BUTTON_TEXT_COLOR = '#111111';
+export const DEFAULT_CLOSE_BUTTON_BORDER_COLOR = '#d0d0d0';
+
+export const DEFAULT_CLOSE_BUTTON_BORDER_RADIUS = 999;
+export const MIN_CLOSE_BUTTON_BORDER_RADIUS = 0;
+export const MAX_CLOSE_BUTTON_BORDER_RADIUS = 999;
+export const CLOSE_BUTTON_BORDER_RADIUS_STEP = 1;
+
+export interface CloseButtonStyleOptions {
+	closeButtonSize?: number;
+	closeButtonBackgroundColor?: string;
+	closeButtonTextColor?: string;
+	closeButtonBorderColor?: string;
+	closeButtonBorderRadius?: number;
+}
+
+export function getCloseButtonStyle( {
+	closeButtonSize = DEFAULT_CLOSE_BUTTON_SIZE,
+	closeButtonBackgroundColor = DEFAULT_CLOSE_BUTTON_BACKGROUND_COLOR,
+	closeButtonTextColor = DEFAULT_CLOSE_BUTTON_TEXT_COLOR,
+	closeButtonBorderColor = DEFAULT_CLOSE_BUTTON_BORDER_COLOR,
+	closeButtonBorderRadius = DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
+}: CloseButtonStyleOptions ): CSSVariableStyle {
+	const safeCloseButtonSize = getSafeNumber(
+		closeButtonSize,
+		DEFAULT_CLOSE_BUTTON_SIZE,
+		MIN_CLOSE_BUTTON_SIZE,
+		MAX_CLOSE_BUTTON_SIZE
+	);
+
+	const safeCloseButtonBorderRadius = getSafeNumber(
+		closeButtonBorderRadius,
+		DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
+		MIN_CLOSE_BUTTON_BORDER_RADIUS,
+		MAX_CLOSE_BUTTON_BORDER_RADIUS
+	);
+
+	return {
+		'--gb-flip-card-close-button-size': `${ safeCloseButtonSize }px`,
+		'--gb-flip-card-close-button-background-color':
+			closeButtonBackgroundColor,
+		'--gb-flip-card-close-button-text-color': closeButtonTextColor,
+		'--gb-flip-card-close-button-border-color': closeButtonBorderColor,
+		'--gb-flip-card-close-button-border-radius': `${ safeCloseButtonBorderRadius }px`,
+	};
+}
+
 export function getSafeFlipAnimationDuration(
 	value: unknown = DEFAULT_FLIP_ANIMATION_DURATION_MS
 ): number {
