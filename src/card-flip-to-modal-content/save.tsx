@@ -17,6 +17,7 @@ import {
 	DEFAULT_MODAL_BORDER_COLOR,
 	DEFAULT_MODAL_BORDER_RADIUS,
 	DEFAULT_MODAL_BORDER_STYLE,
+	DEFAULT_MODAL_BORDER_WIDTH,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
@@ -43,6 +44,7 @@ interface SaveAttributes {
 	modalBorderRadius?: number;
 	modalBorderStyle?: BorderStyleValue;
 	modalBorderColor?: string;
+	modalBorderWidth?: number;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
@@ -68,6 +70,7 @@ export default function save( { attributes }: SaveProps ) {
 		modalBorderRadius = DEFAULT_MODAL_BORDER_RADIUS,
 		modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
 		modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
+		modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
@@ -109,6 +112,7 @@ export default function save( { attributes }: SaveProps ) {
 			modalBorderRadius,
 			modalBorderStyle: safeModalBorderStyle,
 			modalBorderColor,
+			modalBorderWidth,
 		} ),
 		'data-modal-close-on-backdrop-click':
 			getBooleanDataAttribute( modalCloseOnBackdropClick ),

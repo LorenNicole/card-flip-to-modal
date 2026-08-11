@@ -35,6 +35,10 @@
 			"type": "string",
 			"default": "#d0d0d0"
 		},
+		"modalBorderWidth": {
+			"type": "number",
+			"default": 1
+		},
 		"modalAriaLabel": {
 			"type": "string",
 			"default": "Card modal content"

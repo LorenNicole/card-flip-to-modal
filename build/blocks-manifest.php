@@ -82,6 +82,10 @@ return array(
 				'type' => 'string',
 				'default' => '#d0d0d0'
 			),
+			'modalBorderWidth' => array(
+				'type' => 'number',
+				'default' => 1
+			),
 			'modalAriaLabel' => array(
 				'type' => 'string',
 				'default' => 'Card modal content'
@@ -189,6 +193,10 @@ return array(
 			'previewBorderRadius' => array(
 				'type' => 'number',
 				'default' => 0
+			),
+			'previewBorderWidth' => array(
+				'type' => 'number',
+				'default' => 1
 			),
 			'previewTextColor' => array(
 				'type' => 'string',

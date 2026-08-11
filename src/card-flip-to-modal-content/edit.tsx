@@ -8,10 +8,6 @@ import {
 } from '@wordpress/block-editor';
 
 import {
-	Button,
-	ColorIndicator,
-	ColorPicker,
-	Dropdown,
 	Notice,
 	PanelBody,
 	RangeControl,
@@ -25,6 +21,7 @@ import { __ } from '@wordpress/i18n';
 import {
 	BORDER_STYLE_OPTIONS,
 	CARD_MODAL_BORDER_RADIUS_STEP,
+	CARD_MODAL_BORDER_WIDTH_STEP,
 	CLOSE_BUTTON_BORDER_RADIUS_STEP,
 	CLOSE_BUTTON_POSITION_OPTIONS,
 	CLOSE_BUTTON_SIZE_STEP,
@@ -41,14 +38,17 @@ import {
 	DEFAULT_MODAL_BORDER_COLOR,
 	DEFAULT_MODAL_BORDER_RADIUS,
 	DEFAULT_MODAL_BORDER_STYLE,
+	DEFAULT_MODAL_BORDER_WIDTH,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
 	MAX_CARD_MODAL_BORDER_RADIUS,
+	MAX_CARD_MODAL_BORDER_WIDTH,
 	MAX_CLOSE_BUTTON_BORDER_RADIUS,
 	MAX_CLOSE_BUTTON_SIZE,
 	MIN_CARD_MODAL_BORDER_RADIUS,
+	MIN_CARD_MODAL_BORDER_WIDTH,
 	MIN_CLOSE_BUTTON_BORDER_RADIUS,
 	MIN_CLOSE_BUTTON_SIZE,
 	MODAL_SIZE_OPTIONS,
@@ -63,9 +63,11 @@ import {
 	getSafeCloseButtonPosition,
 	getSafeCloseButtonText,
 	getSafeCustomModalWidth,
+	getSafeNumber,
 	isValidCssSize,
 } from '../card-flip-to-modal/constants';
 import { ModalCloseButton } from '../card-flip-to-modal/close-button';
+import { CompactColorControl } from '../card-flip-to-modal/compact-color-control';
 
 const ALLOWED_BLOCKS = [
 	'core/image',
@@ -87,12 +89,14 @@ const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 		{
 			level: 2,
 			content: 'Modal Content',
+			textAlign: 'center',
 		},
 	],
 	[
 		'core/paragraph',
 		{
 			content: 'This is where expanded custom modal content will appear.',
+			align: 'center',
 		},
 	],
 ];
@@ -103,6 +107,7 @@ interface EditAttributes {
 	modalBorderRadius?: number;
 	modalBorderStyle?: BorderStyleValue;
 	modalBorderColor?: string;
+	modalBorderWidth?: number;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
@@ -117,60 +122,6 @@ interface EditAttributes {
 	closeButtonBorderRadius?: number;
 }
 
-interface CompactColorControlProps {
-	label: string;
-	value: string;
-	defaultValue: string;
-	onChange: ( value: string ) => void;
-}
-
-function CompactColorControl( {
-	label,
-	value,
-	defaultValue,
-	onChange,
-}: CompactColorControlProps ) {
-	return (
-		<div className="gb-flip-card-modal__compact-color-control">
-			<div className="gb-flip-card-modal__compact-color-control-header">
-				<span>{ label }</span>
-
-				<ColorIndicator colorValue={ value } />
-			</div>
-
-			<div className="gb-flip-card-modal__compact-color-control-actions">
-				<Dropdown
-					renderToggle={ ( { isOpen, onToggle } ) => (
-						<Button
-							variant="secondary"
-							onClick={ onToggle }
-							aria-expanded={ isOpen }
-						>
-							{ __( 'Choose color', 'card-flip-to-modal' ) }
-						</Button>
-					) }
-					renderContent={ () => (
-						<ColorPicker
-							color={ value }
-							onChange={ ( color ) =>
-								onChange( color || defaultValue )
-							}
-							enableAlpha={ false }
-						/>
-					) }
-				/>
-
-				<Button
-					variant="tertiary"
-					onClick={ () => onChange( defaultValue ) }
-				>
-					{ __( 'Reset', 'card-flip-to-modal' ) }
-				</Button>
-			</div>
-		</div>
-	);
-}
-
 interface EditProps {
 	attributes: EditAttributes;
 	setAttributes: ( attributes: Partial< EditAttributes > ) => void;
@@ -183,6 +134,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		modalBorderRadius = DEFAULT_MODAL_BORDER_RADIUS,
 		modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
 		modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
+		modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
@@ -204,6 +156,26 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		modalBorderStyle,
 		DEFAULT_MODAL_BORDER_STYLE
 	);
+	const safeModalBorderWidth = getSafeNumber(
+		modalBorderWidth,
+		DEFAULT_MODAL_BORDER_WIDTH,
+		MIN_CARD_MODAL_BORDER_WIDTH,
+		MAX_CARD_MODAL_BORDER_WIDTH
+	);
+	const safeModalBorderRadius = getSafeNumber(
+		modalBorderRadius,
+		DEFAULT_MODAL_BORDER_RADIUS,
+		MIN_CARD_MODAL_BORDER_RADIUS,
+		MAX_CARD_MODAL_BORDER_RADIUS
+	);
+	const modalShellStyle = getModalShellStyle( {
+		modalSize,
+		customModalWidth: safeCustomModalWidth,
+		modalBorderRadius: safeModalBorderRadius,
+		modalBorderStyle: safeModalBorderStyle,
+		modalBorderColor,
+		modalBorderWidth: safeModalBorderWidth,
+	} );
 	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
 	const safeCloseButtonAriaLabel =
 		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
@@ -218,14 +190,11 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	} );
 
 	const blockProps = useBlockProps( {
-		className: getModalSizeClassName( modalSize ),
-		style: getModalShellStyle( {
-			modalSize,
-			customModalWidth: safeCustomModalWidth,
-			modalBorderRadius,
-			modalBorderStyle: safeModalBorderStyle,
-			modalBorderColor,
-		} ),
+		className: [
+			'gb-flip-card-modal__editor-dialog-preview',
+			getModalSizeClassName( modalSize ),
+		].join( ' ' ),
+		style: modalShellStyle,
 	} );
 
 	return (
@@ -233,6 +202,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Modal Settings', 'card-flip-to-modal' ) }
+					className="gb-flip-card-modal__inspector-settings-panel"
 					initialOpen={ true }
 				>
 					<SelectControl
@@ -280,6 +250,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					) }
 
 					<SelectControl
+						className="gb-flip-card-modal__inspector-control--spaced"
 						label={ __( 'Border style', 'card-flip-to-modal' ) }
 						value={ safeModalBorderStyle }
 						options={ BORDER_STYLE_OPTIONS }
@@ -302,12 +273,35 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					/>
 
 					<RangeControl
-						label={ __( 'Border radius', 'card-flip-to-modal' ) }
-						value={ modalBorderRadius }
+						className="gb-flip-card-modal__inspector-control--spaced"
+						label={ __( 'Border thickness', 'card-flip-to-modal' ) }
+						value={ safeModalBorderWidth }
 						onChange={ ( value ) =>
 							setAttributes( {
-								modalBorderRadius:
-									value ?? DEFAULT_MODAL_BORDER_RADIUS,
+								modalBorderWidth: getSafeNumber(
+									value,
+									DEFAULT_MODAL_BORDER_WIDTH,
+									MIN_CARD_MODAL_BORDER_WIDTH,
+									MAX_CARD_MODAL_BORDER_WIDTH
+								),
+							} )
+						}
+						min={ MIN_CARD_MODAL_BORDER_WIDTH }
+						max={ MAX_CARD_MODAL_BORDER_WIDTH }
+						step={ CARD_MODAL_BORDER_WIDTH_STEP }
+					/>
+
+					<RangeControl
+						label={ __( 'Border radius', 'card-flip-to-modal' ) }
+						value={ safeModalBorderRadius }
+						onChange={ ( value ) =>
+							setAttributes( {
+								modalBorderRadius: getSafeNumber(
+									value,
+									DEFAULT_MODAL_BORDER_RADIUS,
+									MIN_CARD_MODAL_BORDER_RADIUS,
+									MAX_CARD_MODAL_BORDER_RADIUS
+								),
 							} )
 						}
 						min={ MIN_CARD_MODAL_BORDER_RADIUS }
@@ -318,6 +312,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 
 				<PanelBody
 					title={ __( 'Modal Behavior Settings', 'card-flip-to-modal' ) }
+					className="gb-flip-card-modal__inspector-settings-panel"
 					initialOpen={ false }
 				>
 					<ToggleControl
@@ -359,6 +354,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 
 				<PanelBody
 					title={ __( 'Accessibility Settings', 'card-flip-to-modal' ) }
+					className="gb-flip-card-modal__inspector-settings-panel"
 					initialOpen={ false }
 				>
 					<TextControl
@@ -378,6 +374,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 
 				<PanelBody
 					title={ __( 'Close Button Settings', 'card-flip-to-modal' ) }
+					className="gb-flip-card-modal__inspector-settings-panel"
 					initialOpen={ false }
 				>
 					<TextControl
@@ -493,25 +490,23 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 			</p>
 
 			<div { ...blockProps }>
-				<div className="gb-flip-card-modal__editor-dialog-preview">
-					{ modalShowCloseButton && (
-						<ModalCloseButton
-							closeButtonPosition={ safeCloseButtonPosition }
-							text={ safeCloseButtonText }
-							ariaLabel={ safeCloseButtonAriaLabel }
-							style={ closeButtonStyle }
-							className="gb-flip-card-modal__editor-close-preview"
-							tabIndex={ -1 }
-						/>
-					) }
+				{ modalShowCloseButton && (
+					<ModalCloseButton
+						closeButtonPosition={ safeCloseButtonPosition }
+						text={ safeCloseButtonText }
+						ariaLabel={ safeCloseButtonAriaLabel }
+						style={ closeButtonStyle }
+						className="gb-flip-card-modal__editor-close-preview"
+						tabIndex={ -1 }
+					/>
+				) }
 
-					<div className="gb-flip-card-modal__content">
-						<InnerBlocks
-							allowedBlocks={ ALLOWED_BLOCKS }
-							template={ TEMPLATE }
-							templateLock={ false }
-						/>
-					</div>
+				<div className="gb-flip-card-modal__content">
+					<InnerBlocks
+						allowedBlocks={ ALLOWED_BLOCKS }
+						template={ TEMPLATE }
+						templateLock={ false }
+					/>
 				</div>
 			</div>
 		</>

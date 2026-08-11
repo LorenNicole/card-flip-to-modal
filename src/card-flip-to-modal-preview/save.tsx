@@ -8,6 +8,7 @@ import {
 	DEFAULT_PREVIEW_BORDER_COLOR,
 	DEFAULT_PREVIEW_BORDER_RADIUS,
 	DEFAULT_PREVIEW_BORDER_STYLE,
+	DEFAULT_PREVIEW_BORDER_WIDTH,
 	DEFAULT_PREVIEW_MIN_HEIGHT,
 	DEFAULT_PREVIEW_TEXT_COLOR,
 	getPreviewCardClassNames,
@@ -23,6 +24,7 @@ interface SaveAttributes {
 	previewBorderColor?: string;
 	previewBorderStyle?: BorderStyleValue;
 	previewBorderRadius?: number;
+	previewBorderWidth?: number;
 	previewTextColor?: string;
 }
 
@@ -39,6 +41,7 @@ export default function save( { attributes }: SaveProps ) {
 		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
 		previewBorderStyle = DEFAULT_PREVIEW_BORDER_STYLE,
 		previewBorderRadius = DEFAULT_PREVIEW_BORDER_RADIUS,
+		previewBorderWidth = DEFAULT_PREVIEW_BORDER_WIDTH,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 	} = attributes;
 
@@ -57,6 +60,7 @@ export default function save( { attributes }: SaveProps ) {
 				previewBorderColor,
 				previewBorderStyle,
 				previewBorderRadius,
+				previewBorderWidth,
 				previewTextColor,
 			} ),
 		},

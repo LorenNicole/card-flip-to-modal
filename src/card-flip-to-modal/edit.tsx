@@ -73,6 +73,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Animation Settings', 'card-flip-to-modal' ) }
+					className="gb-flip-card-modal__inspector-settings-panel"
 					initialOpen={ false }
 				>
 					<ToggleControl

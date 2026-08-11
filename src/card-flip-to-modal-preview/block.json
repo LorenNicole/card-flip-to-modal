@@ -42,6 +42,10 @@
 			"type": "number",
 			"default": 0
 		},
+		"previewBorderWidth": {
+			"type": "number",
+			"default": 1
+		},
 		"previewTextColor": {
 			"type": "string",
 			"default": "#111111"

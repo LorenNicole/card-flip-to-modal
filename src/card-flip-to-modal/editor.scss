@@ -52,15 +52,14 @@
 .gb-flip-card-modal {
 	&__compact-color-control {
 		margin-top: 1rem;
-	}
+		margin-bottom: 1rem;
 
-	&__compact-color-control-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 0.5rem;
-		font-size: 0.8rem;
-		font-weight: 500;
+		.components-base-control__label {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+		}
 	}
 
 	&__compact-color-control-actions {
@@ -81,14 +80,31 @@
 		padding: 2rem;
 		overflow: visible;
 		background: #ffffff;
-		border-width: 1px;
+		border-width: var(--gb-flip-card-modal-border-width, 1px);
 		border-style: var(--gb-flip-card-modal-border-style, none);
 		border-color: var(--gb-flip-card-modal-border-color, #d0d0d0);
 		border-radius: var(--gb-flip-card-modal-border-radius, 0);
 		box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
 	}
 
+	.wp-block-fun-gutenberg-blocks-card-flip-to-modal-content.gb-flip-card-modal__editor-dialog-preview {
+		border-width: var(--gb-flip-card-modal-border-width, 1px);
+		border-style: var(--gb-flip-card-modal-border-style, none);
+		border-color: var(--gb-flip-card-modal-border-color, #d0d0d0);
+	}
+
 	&__editor-close-preview {
 		pointer-events: none;
+	}
+
+	&__inspector-control--spaced {
+		margin-top: 1rem;
+	}
+
+	&__inspector-settings-panel {
+		.components-base-control__label,
+		.components-toggle-control__label {
+			text-transform: uppercase;
+		}
 	}
 }

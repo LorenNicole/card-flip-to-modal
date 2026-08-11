@@ -65,6 +65,12 @@ export const MIN_CARD_MODAL_BORDER_RADIUS = 0;
 export const MAX_CARD_MODAL_BORDER_RADIUS = 48;
 export const CARD_MODAL_BORDER_RADIUS_STEP = 1;
 
+export const DEFAULT_PREVIEW_BORDER_WIDTH = 1;
+export const DEFAULT_MODAL_BORDER_WIDTH = 1;
+export const MIN_CARD_MODAL_BORDER_WIDTH = 0;
+export const MAX_CARD_MODAL_BORDER_WIDTH = 12;
+export const CARD_MODAL_BORDER_WIDTH_STEP = 1;
+
 export const BorderStyle = Object.freeze( {
 	SOLID: 'solid',
 	DASHED: 'dashed',
@@ -188,6 +194,7 @@ export interface ModalShellStyleOptions {
 	modalBorderRadius?: number;
 	modalBorderStyle?: BorderStyleValue;
 	modalBorderColor?: string;
+	modalBorderWidth?: number;
 }
 
 export function getModalShellStyle( {
@@ -196,12 +203,20 @@ export function getModalShellStyle( {
 	modalBorderRadius = DEFAULT_MODAL_BORDER_RADIUS,
 	modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
 	modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
+	modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
 }: ModalShellStyleOptions ): CSSVariableStyle {
 	const safeModalBorderRadius = getSafeNumber(
 		modalBorderRadius,
 		DEFAULT_MODAL_BORDER_RADIUS,
 		MIN_CARD_MODAL_BORDER_RADIUS,
 		MAX_CARD_MODAL_BORDER_RADIUS
+	);
+
+	const safeModalBorderWidth = getSafeNumber(
+		modalBorderWidth,
+		DEFAULT_MODAL_BORDER_WIDTH,
+		MIN_CARD_MODAL_BORDER_WIDTH,
+		MAX_CARD_MODAL_BORDER_WIDTH
 	);
 
 	const style: CSSVariableStyle = {
@@ -211,6 +226,7 @@ export function getModalShellStyle( {
 			DEFAULT_MODAL_BORDER_STYLE
 		),
 		'--gb-flip-card-modal-border-color': modalBorderColor,
+		'--gb-flip-card-modal-border-width': `${ safeModalBorderWidth }px`,
 	};
 
 	if ( modalSize === ModalSize.CUSTOM ) {
@@ -227,6 +243,7 @@ export interface PreviewCardStyleOptions {
 	previewBorderColor?: string;
 	previewBorderStyle?: BorderStyleValue;
 	previewBorderRadius?: number;
+	previewBorderWidth?: number;
 	previewTextColor?: string;
 }
 
@@ -256,6 +273,7 @@ export function getPreviewCardStyle( {
 	previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
 	previewBorderStyle = DEFAULT_PREVIEW_BORDER_STYLE,
 	previewBorderRadius = DEFAULT_PREVIEW_BORDER_RADIUS,
+	previewBorderWidth = DEFAULT_PREVIEW_BORDER_WIDTH,
 	previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 }: PreviewCardStyleOptions ): CSSVariableStyle {
 	const safeMinHeight = getSafeNumber(
@@ -272,6 +290,13 @@ export function getPreviewCardStyle( {
 		MAX_CARD_MODAL_BORDER_RADIUS
 	);
 
+	const safePreviewBorderWidth = getSafeNumber(
+		previewBorderWidth,
+		DEFAULT_PREVIEW_BORDER_WIDTH,
+		MIN_CARD_MODAL_BORDER_WIDTH,
+		MAX_CARD_MODAL_BORDER_WIDTH
+	);
+
 	return {
 		'--gb-flip-card-preview-min-height': `${ safeMinHeight }px`,
 		'--gb-flip-card-preview-background-color': previewBackgroundColor,
@@ -279,6 +304,7 @@ export function getPreviewCardStyle( {
 		'--gb-flip-card-preview-border-style':
 			getSafeBorderStyle( previewBorderStyle ),
 		'--gb-flip-card-preview-border-radius': `${ safePreviewBorderRadius }px`,
+		'--gb-flip-card-preview-border-width': `${ safePreviewBorderWidth }px`,
 		'--gb-flip-card-preview-text-color': previewTextColor,
 	};
 }

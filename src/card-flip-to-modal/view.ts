@@ -259,6 +259,11 @@ function createAnimationClone(
 	);
 
 	clone.style.setProperty(
+		'--gb-flip-card-animation-border-width',
+		previewStyles.borderWidth
+	);
+
+	clone.style.setProperty(
 		'--gb-flip-card-animation-border-radius',
 		previewStyles.borderRadius
 	);
@@ -277,6 +282,11 @@ function createAnimationClone(
 		clone.style.setProperty(
 			'--gb-flip-card-modal-animation-border-style',
 			dialogStyles.borderStyle
+		);
+
+		clone.style.setProperty(
+			'--gb-flip-card-modal-animation-border-width',
+			dialogStyles.borderWidth
 		);
 
 		clone.style.setProperty(
