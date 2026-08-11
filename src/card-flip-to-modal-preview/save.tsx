@@ -6,10 +6,13 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 import {
 	DEFAULT_PREVIEW_BACKGROUND_COLOR,
 	DEFAULT_PREVIEW_BORDER_COLOR,
+	DEFAULT_PREVIEW_BORDER_RADIUS,
+	DEFAULT_PREVIEW_BORDER_STYLE,
 	DEFAULT_PREVIEW_MIN_HEIGHT,
 	DEFAULT_PREVIEW_TEXT_COLOR,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
+	type BorderStyleValue,
 } from '../card-flip-to-modal/constants';
 
 interface SaveAttributes {
@@ -18,6 +21,8 @@ interface SaveAttributes {
 	previewHasHoverLift?: boolean;
 	previewBackgroundColor?: string;
 	previewBorderColor?: string;
+	previewBorderStyle?: BorderStyleValue;
+	previewBorderRadius?: number;
 	previewTextColor?: string;
 }
 
@@ -32,6 +37,8 @@ export default function save( { attributes }: SaveProps ) {
 		previewHasHoverLift = true,
 		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
 		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
+		previewBorderStyle = DEFAULT_PREVIEW_BORDER_STYLE,
+		previewBorderRadius = DEFAULT_PREVIEW_BORDER_RADIUS,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 	} = attributes;
 
@@ -48,6 +55,8 @@ export default function save( { attributes }: SaveProps ) {
 				previewMinHeight,
 				previewBackgroundColor,
 				previewBorderColor,
+				previewBorderStyle,
+				previewBorderRadius,
 				previewTextColor,
 			} ),
 		},

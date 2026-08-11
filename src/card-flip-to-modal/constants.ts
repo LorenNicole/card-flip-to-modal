@@ -55,9 +55,57 @@ export const DEFAULT_PREVIEW_MIN_HEIGHT = 220;
 export const MIN_PREVIEW_MIN_HEIGHT = 120;
 export const MAX_PREVIEW_MIN_HEIGHT = 600;
 export const PREVIEW_MIN_HEIGHT_STEP = 10;
-export const DEFAULT_PREVIEW_BACKGROUND_COLOR = '#f7f7f7';
+export const DEFAULT_PREVIEW_BACKGROUND_COLOR = '#ffffff';
 export const DEFAULT_PREVIEW_BORDER_COLOR = '#d0d0d0';
 export const DEFAULT_PREVIEW_TEXT_COLOR = '#111111';
+
+export const DEFAULT_PREVIEW_BORDER_RADIUS = 0;
+export const DEFAULT_MODAL_BORDER_RADIUS = 0;
+export const MIN_CARD_MODAL_BORDER_RADIUS = 0;
+export const MAX_CARD_MODAL_BORDER_RADIUS = 48;
+export const CARD_MODAL_BORDER_RADIUS_STEP = 1;
+
+export const BorderStyle = Object.freeze( {
+	SOLID: 'solid',
+	DASHED: 'dashed',
+	DOTTED: 'dotted',
+	DOUBLE: 'double',
+	NONE: 'none',
+} as const );
+
+export type BorderStyleValue = ( typeof BorderStyle )[ keyof typeof BorderStyle ];
+
+export interface BorderStyleOption {
+	label: string;
+	value: BorderStyleValue;
+}
+
+export const DEFAULT_PREVIEW_BORDER_STYLE: BorderStyleValue = BorderStyle.SOLID;
+export const DEFAULT_MODAL_BORDER_STYLE: BorderStyleValue = BorderStyle.NONE;
+export const DEFAULT_MODAL_BORDER_COLOR = '#d0d0d0';
+
+export const BORDER_STYLE_OPTIONS: BorderStyleOption[] = [
+	{
+		label: 'Solid',
+		value: BorderStyle.SOLID,
+	},
+	{
+		label: 'Dashed',
+		value: BorderStyle.DASHED,
+	},
+	{
+		label: 'Dotted',
+		value: BorderStyle.DOTTED,
+	},
+	{
+		label: 'Double',
+		value: BorderStyle.DOUBLE,
+	},
+	{
+		label: 'None',
+		value: BorderStyle.NONE,
+	},
+];
 
 export const DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK = false;
 export const DEFAULT_MODAL_SHOW_CLOSE_BUTTON = true;
@@ -116,10 +164,69 @@ export function getModalWidthStyle(
 	};
 }
 
+export function isBorderStyleValue( value: unknown ): value is BorderStyleValue {
+	return (
+		typeof value === 'string' &&
+		( Object.values( BorderStyle ) as string[] ).includes( value )
+	);
+}
+
+export function getSafeBorderStyle(
+	borderStyle: unknown = DEFAULT_PREVIEW_BORDER_STYLE,
+	defaultValue: BorderStyleValue = DEFAULT_PREVIEW_BORDER_STYLE
+): BorderStyleValue {
+	if ( isBorderStyleValue( borderStyle ) ) {
+		return borderStyle;
+	}
+
+	return defaultValue;
+}
+
+export interface ModalShellStyleOptions {
+	modalSize?: ModalSizeValue;
+	customModalWidth?: string;
+	modalBorderRadius?: number;
+	modalBorderStyle?: BorderStyleValue;
+	modalBorderColor?: string;
+}
+
+export function getModalShellStyle( {
+	modalSize = DEFAULT_MODAL_SIZE,
+	customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+	modalBorderRadius = DEFAULT_MODAL_BORDER_RADIUS,
+	modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
+	modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
+}: ModalShellStyleOptions ): CSSVariableStyle {
+	const safeModalBorderRadius = getSafeNumber(
+		modalBorderRadius,
+		DEFAULT_MODAL_BORDER_RADIUS,
+		MIN_CARD_MODAL_BORDER_RADIUS,
+		MAX_CARD_MODAL_BORDER_RADIUS
+	);
+
+	const style: CSSVariableStyle = {
+		'--gb-flip-card-modal-border-radius': `${ safeModalBorderRadius }px`,
+		'--gb-flip-card-modal-border-style': getSafeBorderStyle(
+			modalBorderStyle,
+			DEFAULT_MODAL_BORDER_STYLE
+		),
+		'--gb-flip-card-modal-border-color': modalBorderColor,
+	};
+
+	if ( modalSize === ModalSize.CUSTOM ) {
+		style[ '--gb-flip-card-modal-width' ] =
+			getSafeCustomModalWidth( customModalWidth );
+	}
+
+	return style;
+}
+
 export interface PreviewCardStyleOptions {
 	previewMinHeight?: number;
 	previewBackgroundColor?: string;
 	previewBorderColor?: string;
+	previewBorderStyle?: BorderStyleValue;
+	previewBorderRadius?: number;
 	previewTextColor?: string;
 }
 
@@ -147,6 +254,8 @@ export function getPreviewCardStyle( {
 	previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
 	previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
 	previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
+	previewBorderStyle = DEFAULT_PREVIEW_BORDER_STYLE,
+	previewBorderRadius = DEFAULT_PREVIEW_BORDER_RADIUS,
 	previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 }: PreviewCardStyleOptions ): CSSVariableStyle {
 	const safeMinHeight = getSafeNumber(
@@ -156,10 +265,20 @@ export function getPreviewCardStyle( {
 		MAX_PREVIEW_MIN_HEIGHT
 	);
 
+	const safePreviewBorderRadius = getSafeNumber(
+		previewBorderRadius,
+		DEFAULT_PREVIEW_BORDER_RADIUS,
+		MIN_CARD_MODAL_BORDER_RADIUS,
+		MAX_CARD_MODAL_BORDER_RADIUS
+	);
+
 	return {
 		'--gb-flip-card-preview-min-height': `${ safeMinHeight }px`,
 		'--gb-flip-card-preview-background-color': previewBackgroundColor,
 		'--gb-flip-card-preview-border-color': previewBorderColor,
+		'--gb-flip-card-preview-border-style':
+			getSafeBorderStyle( previewBorderStyle ),
+		'--gb-flip-card-preview-border-radius': `${ safePreviewBorderRadius }px`,
 		'--gb-flip-card-preview-text-color': previewTextColor,
 	};
 }

@@ -16,7 +16,7 @@
 				display: block;
 				min-height: var(--gb-flip-card-preview-min-height, 220px);
 				padding: 1.5rem;
-				background: var(--gb-flip-card-preview-background-color, #f7f7f7);
+				background: var(--gb-flip-card-preview-background-color, #ffffff);
 				color: var(--gb-flip-card-preview-text-color, #111111);
 				cursor: default;
 				transform: none;
@@ -29,7 +29,7 @@
 			&__preview:hover,
 			&__preview:focus,
 			&__preview:focus-visible {
-				background: var(--gb-flip-card-preview-background-color, #f7f7f7);
+				background: var(--gb-flip-card-preview-background-color, #ffffff);
 				transform: none;
 			}
 
@@ -81,6 +81,10 @@
 		padding: 2rem;
 		overflow: visible;
 		background: #ffffff;
+		border-width: 1px;
+		border-style: var(--gb-flip-card-modal-border-style, none);
+		border-color: var(--gb-flip-card-modal-border-color, #d0d0d0);
+		border-radius: var(--gb-flip-card-modal-border-radius, 0);
 		box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
 	}
 

@@ -14,22 +14,31 @@ import {
 	Dropdown,
 	PanelBody,
 	RangeControl,
+	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
 
 import { __ } from '@wordpress/i18n';
 
 import {
+	BORDER_STYLE_OPTIONS,
+	CARD_MODAL_BORDER_RADIUS_STEP,
 	DEFAULT_PREVIEW_BACKGROUND_COLOR,
 	DEFAULT_PREVIEW_BORDER_COLOR,
+	DEFAULT_PREVIEW_BORDER_RADIUS,
+	DEFAULT_PREVIEW_BORDER_STYLE,
 	DEFAULT_PREVIEW_MIN_HEIGHT,
 	DEFAULT_PREVIEW_TEXT_COLOR,
+	MAX_CARD_MODAL_BORDER_RADIUS,
+	MIN_CARD_MODAL_BORDER_RADIUS,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
+	getSafeBorderStyle,
 	getSafeNumber,
 	MAX_PREVIEW_MIN_HEIGHT,
 	MIN_PREVIEW_MIN_HEIGHT,
 	PREVIEW_MIN_HEIGHT_STEP,
+	type BorderStyleValue,
 } from '../card-flip-to-modal/constants';
 
 const ALLOWED_BLOCKS = [
@@ -68,6 +77,8 @@ interface EditAttributes {
 	previewHasHoverLift?: boolean;
 	previewBackgroundColor?: string;
 	previewBorderColor?: string;
+	previewBorderStyle?: BorderStyleValue;
+	previewBorderRadius?: number;
 	previewTextColor?: string;
 }
 
@@ -137,6 +148,8 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		previewHasHoverLift = true,
 		previewBackgroundColor = DEFAULT_PREVIEW_BACKGROUND_COLOR,
 		previewBorderColor = DEFAULT_PREVIEW_BORDER_COLOR,
+		previewBorderStyle = DEFAULT_PREVIEW_BORDER_STYLE,
+		previewBorderRadius = DEFAULT_PREVIEW_BORDER_RADIUS,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 	} = attributes;
 
@@ -146,6 +159,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		MIN_PREVIEW_MIN_HEIGHT,
 		MAX_PREVIEW_MIN_HEIGHT
 	);
+	const safePreviewBorderStyle = getSafeBorderStyle( previewBorderStyle );
 
 	const blockProps = useBlockProps( {
 		className: [
@@ -160,6 +174,8 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 				previewMinHeight: safePreviewMinHeight,
 				previewBackgroundColor,
 				previewBorderColor,
+				previewBorderStyle: safePreviewBorderStyle,
+				previewBorderRadius,
 				previewTextColor,
 			} ),
 		},
@@ -169,7 +185,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Preview Card Settings', 'card-flip-to-modal' ) }
+					title={ __( 'Card Settings', 'card-flip-to-modal' ) }
 					initialOpen={ true }
 				>
 					<RangeControl
@@ -230,6 +246,31 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 								previewBorderColor: value,
 							} )
 						}
+					/>
+
+					<SelectControl
+						label={ __( 'Border style', 'card-flip-to-modal' ) }
+						value={ safePreviewBorderStyle }
+						options={ BORDER_STYLE_OPTIONS }
+						onChange={ ( value ) =>
+							setAttributes( {
+								previewBorderStyle: value as BorderStyleValue,
+							} )
+						}
+					/>
+
+					<RangeControl
+						label={ __( 'Border radius', 'card-flip-to-modal' ) }
+						value={ previewBorderRadius }
+						onChange={ ( value ) =>
+							setAttributes( {
+								previewBorderRadius:
+									value ?? DEFAULT_PREVIEW_BORDER_RADIUS,
+							} )
+						}
+						min={ MIN_CARD_MODAL_BORDER_RADIUS }
+						max={ MAX_CARD_MODAL_BORDER_RADIUS }
+						step={ CARD_MODAL_BORDER_RADIUS_STEP }
 					/>
 
 					<CompactColorControl

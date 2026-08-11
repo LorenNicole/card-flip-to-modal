@@ -46,8 +46,11 @@
 		align-items: center;
 		justify-content: center;
 		padding: 1.5rem;
-		border: 1px solid var(--gb-flip-card-preview-border-color, #d0d0d0);
-		background: var(--gb-flip-card-preview-background-color, #f7f7f7);
+		border-width: 1px;
+		border-style: var(--gb-flip-card-preview-border-style, solid);
+		border-color: var(--gb-flip-card-preview-border-color, #d0d0d0);
+		border-radius: var(--gb-flip-card-preview-border-radius, 0);
+		background: var(--gb-flip-card-preview-background-color, #ffffff);
 		color: var(--gb-flip-card-preview-text-color, #111111);
 		cursor: pointer;
 		transition:
@@ -158,6 +161,10 @@
 		padding: 2rem;
 		overflow-y: auto;
 		background: #ffffff;
+		border-width: 1px;
+		border-style: var(--gb-flip-card-modal-border-style, none);
+		border-color: var(--gb-flip-card-modal-border-color, #d0d0d0);
+		border-radius: var(--gb-flip-card-modal-border-radius, 0);
 		box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
 		transform: translate(-50%, -50%);
 	}
@@ -262,7 +269,7 @@
 	inset: 0;
 	display: flex;
 	overflow: hidden;
-	border: 1px solid var(--gb-flip-card-animation-border-color, #d0d0d0);
+	border-width: 1px;
 	backface-visibility: hidden;
 }
 
@@ -270,7 +277,10 @@
 	align-items: center;
 	justify-content: center;
 	padding: 1.5rem;
-	background: var(--gb-flip-card-animation-background-color, #f7f7f7);
+	border-style: var(--gb-flip-card-animation-border-style, solid);
+	border-color: var(--gb-flip-card-animation-border-color, #d0d0d0);
+	border-radius: var(--gb-flip-card-animation-border-radius, 0);
+	background: var(--gb-flip-card-animation-background-color, #ffffff);
 	color: var(--gb-flip-card-animation-text-color, #111111);
 	transform: rotateY(0deg);
 }
@@ -279,6 +289,9 @@
 	align-items: flex-start;
 	justify-content: flex-start;
 	padding: 2rem;
+	border-style: var(--gb-flip-card-modal-animation-border-style, none);
+	border-color: var(--gb-flip-card-modal-animation-border-color, #d0d0d0);
+	border-radius: var(--gb-flip-card-modal-animation-border-radius, 0);
 	background: #ffffff;
 	color: #111111;
 	transform: rotateY(180deg);

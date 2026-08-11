@@ -238,6 +238,10 @@ function createAnimationClone(
 	clone.style.height = `${ startRect.height }px`;
 
 	const previewStyles = window.getComputedStyle( preview );
+	const dialog = block.querySelector< HTMLElement >(
+		'.gb-flip-card-modal__dialog'
+	);
+	const dialogStyles = dialog ? window.getComputedStyle( dialog ) : null;
 
 	clone.style.setProperty(
 		'--gb-flip-card-animation-background-color',
@@ -250,9 +254,36 @@ function createAnimationClone(
 	);
 
 	clone.style.setProperty(
+		'--gb-flip-card-animation-border-style',
+		previewStyles.borderStyle
+	);
+
+	clone.style.setProperty(
+		'--gb-flip-card-animation-border-radius',
+		previewStyles.borderRadius
+	);
+
+	clone.style.setProperty(
 		'--gb-flip-card-animation-text-color',
 		previewStyles.color
 	);
+
+	if ( dialogStyles ) {
+		clone.style.setProperty(
+			'--gb-flip-card-modal-animation-border-color',
+			dialogStyles.borderColor
+		);
+
+		clone.style.setProperty(
+			'--gb-flip-card-modal-animation-border-style',
+			dialogStyles.borderStyle
+		);
+
+		clone.style.setProperty(
+			'--gb-flip-card-modal-animation-border-radius',
+			dialogStyles.borderRadius
+		);
+	}
 
 	document.body.appendChild( clone );
 

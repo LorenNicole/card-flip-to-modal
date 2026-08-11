@@ -23,6 +23,8 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import {
+	BORDER_STYLE_OPTIONS,
+	CARD_MODAL_BORDER_RADIUS_STEP,
 	CLOSE_BUTTON_BORDER_RADIUS_STEP,
 	CLOSE_BUTTON_POSITION_OPTIONS,
 	CLOSE_BUTTON_SIZE_STEP,
@@ -36,20 +38,27 @@ import {
 	DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
 	DEFAULT_CLOSE_BUTTON_TEXT,
 	DEFAULT_MODAL_ARIA_LABEL,
+	DEFAULT_MODAL_BORDER_COLOR,
+	DEFAULT_MODAL_BORDER_RADIUS,
+	DEFAULT_MODAL_BORDER_STYLE,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
+	MAX_CARD_MODAL_BORDER_RADIUS,
 	MAX_CLOSE_BUTTON_BORDER_RADIUS,
 	MAX_CLOSE_BUTTON_SIZE,
+	MIN_CARD_MODAL_BORDER_RADIUS,
 	MIN_CLOSE_BUTTON_BORDER_RADIUS,
 	MIN_CLOSE_BUTTON_SIZE,
 	MODAL_SIZE_OPTIONS,
+	type BorderStyleValue,
 	type CloseButtonPositionValue,
 	type ModalSizeValue,
 	getCloseButtonStyle,
+	getModalShellStyle,
 	getModalSizeClassName,
-	getModalWidthStyle,
+	getSafeBorderStyle,
 	getSafeCloseButtonAriaLabel,
 	getSafeCloseButtonPosition,
 	getSafeCloseButtonText,
@@ -91,6 +100,9 @@ const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 interface EditAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
+	modalBorderRadius?: number;
+	modalBorderStyle?: BorderStyleValue;
+	modalBorderColor?: string;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
@@ -168,6 +180,9 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+		modalBorderRadius = DEFAULT_MODAL_BORDER_RADIUS,
+		modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
+		modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
@@ -185,6 +200,10 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const customWidthIsValid = isValidCssSize( customModalWidth );
 	
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
+	const safeModalBorderStyle = getSafeBorderStyle(
+		modalBorderStyle,
+		DEFAULT_MODAL_BORDER_STYLE
+	);
 	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
 	const safeCloseButtonAriaLabel =
 		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
@@ -200,7 +219,13 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 
 	const blockProps = useBlockProps( {
 		className: getModalSizeClassName( modalSize ),
-		style: getModalWidthStyle( modalSize, safeCustomModalWidth ),
+		style: getModalShellStyle( {
+			modalSize,
+			customModalWidth: safeCustomModalWidth,
+			modalBorderRadius,
+			modalBorderStyle: safeModalBorderStyle,
+			modalBorderColor,
+		} ),
 	} );
 
 	return (
@@ -253,6 +278,42 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							) }
 						</>
 					) }
+
+					<SelectControl
+						label={ __( 'Border style', 'card-flip-to-modal' ) }
+						value={ safeModalBorderStyle }
+						options={ BORDER_STYLE_OPTIONS }
+						onChange={ ( value ) =>
+							setAttributes( {
+								modalBorderStyle: value as BorderStyleValue,
+							} )
+						}
+					/>
+
+					<CompactColorControl
+						label={ __( 'Border color', 'card-flip-to-modal' ) }
+						value={ modalBorderColor }
+						defaultValue={ DEFAULT_MODAL_BORDER_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								modalBorderColor: value,
+							} )
+						}
+					/>
+
+					<RangeControl
+						label={ __( 'Border radius', 'card-flip-to-modal' ) }
+						value={ modalBorderRadius }
+						onChange={ ( value ) =>
+							setAttributes( {
+								modalBorderRadius:
+									value ?? DEFAULT_MODAL_BORDER_RADIUS,
+							} )
+						}
+						min={ MIN_CARD_MODAL_BORDER_RADIUS }
+						max={ MAX_CARD_MODAL_BORDER_RADIUS }
+						step={ CARD_MODAL_BORDER_RADIUS_STEP }
+					/>
 				</PanelBody>
 
 				<PanelBody

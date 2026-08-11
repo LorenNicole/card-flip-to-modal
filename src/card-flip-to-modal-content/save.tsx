@@ -14,16 +14,21 @@ import {
 	DEFAULT_CLOSE_BUTTON_TEXT,
 	DEFAULT_CLOSE_BUTTON_TEXT_COLOR,
 	DEFAULT_MODAL_ARIA_LABEL,
+	DEFAULT_MODAL_BORDER_COLOR,
+	DEFAULT_MODAL_BORDER_RADIUS,
+	DEFAULT_MODAL_BORDER_STYLE,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
+	type BorderStyleValue,
 	type CloseButtonPositionValue,
 	type ModalSizeValue,
 	getBooleanDataAttribute,
 	getCloseButtonStyle,
+	getModalShellStyle,
 	getModalSizeClassName,
-	getModalWidthStyle,
+	getSafeBorderStyle,
 	getSafeCloseButtonAriaLabel,
 	getSafeCloseButtonPosition,
 	getSafeCloseButtonText,
@@ -35,6 +40,9 @@ import { ModalCloseButton } from '../card-flip-to-modal/close-button';
 interface SaveAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
+	modalBorderRadius?: number;
+	modalBorderStyle?: BorderStyleValue;
+	modalBorderColor?: string;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
 	modalShowCloseButton?: boolean;
@@ -57,6 +65,9 @@ export default function save( { attributes }: SaveProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
+		modalBorderRadius = DEFAULT_MODAL_BORDER_RADIUS,
+		modalBorderStyle = DEFAULT_MODAL_BORDER_STYLE,
+		modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
@@ -72,6 +83,10 @@ export default function save( { attributes }: SaveProps ) {
 	} = attributes;
 
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
+	const safeModalBorderStyle = getSafeBorderStyle(
+		modalBorderStyle,
+		DEFAULT_MODAL_BORDER_STYLE
+	);
 	const safeModalAriaLabel = getSafeModalAriaLabel( modalAriaLabel );
 	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
 	const safeCloseButtonAriaLabel =
@@ -88,7 +103,13 @@ export default function save( { attributes }: SaveProps ) {
 	
 	const blockProps = useBlockProps.save( {
 		className: getModalSizeClassName( modalSize ),
-		style: getModalWidthStyle( modalSize, safeCustomModalWidth ),
+		style: getModalShellStyle( {
+			modalSize,
+			customModalWidth: safeCustomModalWidth,
+			modalBorderRadius,
+			modalBorderStyle: safeModalBorderStyle,
+			modalBorderColor,
+		} ),
 		'data-modal-close-on-backdrop-click':
 			getBooleanDataAttribute( modalCloseOnBackdropClick ),
 		'data-modal-show-close-button':
