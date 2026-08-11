@@ -52,6 +52,14 @@
     "closeButtonAriaLabel": {
       "type": "string",
       "default": "Close modal"
+    },
+    "closeButtonPosition": {
+      "type": "string",
+      "enum": [
+        "top-right",
+        "top-left"
+      ],
+      "default": "top-right"
     }
   },
   "textdomain": "card-flip-to-modal",

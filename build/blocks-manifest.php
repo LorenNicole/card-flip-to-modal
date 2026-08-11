@@ -86,6 +86,14 @@ return array(
 			'closeButtonAriaLabel' => array(
 				'type' => 'string',
 				'default' => 'Close modal'
+			),
+			'closeButtonPosition' => array(
+				'type' => 'string',
+				'enum' => array(
+					'top-right',
+					'top-left'
+				),
+				'default' => 'top-right'
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',

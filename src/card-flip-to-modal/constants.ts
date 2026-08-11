@@ -227,6 +227,61 @@ export function getSafeCloseButtonAriaLabel(
 	return trimmedCloseButtonAriaLabel;
 }
 
+export const CloseButtonPosition = Object.freeze( {
+	TOP_RIGHT: 'top-right',
+	TOP_LEFT: 'top-left',
+} as const );
+
+export type CloseButtonPositionValue =
+	( typeof CloseButtonPosition )[ keyof typeof CloseButtonPosition ];
+
+export interface CloseButtonPositionOption {
+	label: string;
+	value: CloseButtonPositionValue;
+}
+
+export const DEFAULT_CLOSE_BUTTON_POSITION: CloseButtonPositionValue =
+	CloseButtonPosition.TOP_RIGHT;
+
+export const CLOSE_BUTTON_POSITION_OPTIONS: CloseButtonPositionOption[] = [
+	{
+		label: 'Top right',
+		value: CloseButtonPosition.TOP_RIGHT,
+	},
+	{
+		label: 'Top left',
+		value: CloseButtonPosition.TOP_LEFT,
+	},
+];
+
+export function isCloseButtonPositionValue(
+	value: unknown
+): value is CloseButtonPositionValue {
+	return (
+		typeof value === 'string' &&
+		( Object.values( CloseButtonPosition ) as string[] ).includes( value )
+	);
+}
+
+export function getSafeCloseButtonPosition(
+	closeButtonPosition: unknown = DEFAULT_CLOSE_BUTTON_POSITION
+): CloseButtonPositionValue {
+	if ( isCloseButtonPositionValue( closeButtonPosition ) ) {
+		return closeButtonPosition;
+	}
+
+	return DEFAULT_CLOSE_BUTTON_POSITION;
+}
+
+export function getCloseButtonPositionClassName(
+	closeButtonPosition: unknown = DEFAULT_CLOSE_BUTTON_POSITION
+): string {
+	const safeCloseButtonPosition =
+		getSafeCloseButtonPosition( closeButtonPosition );
+
+	return `gb-flip-card-modal__close--${ safeCloseButtonPosition }`;
+}
+
 export function getSafeFlipAnimationDuration(
 	value: unknown = DEFAULT_FLIP_ANIMATION_DURATION_MS
 ): number {

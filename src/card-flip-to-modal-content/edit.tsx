@@ -18,6 +18,8 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import {
+	CLOSE_BUTTON_POSITION_OPTIONS,
+	DEFAULT_CLOSE_BUTTON_POSITION,
 	DEFAULT_CUSTOM_MODAL_WIDTH,
 	DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
 	DEFAULT_CLOSE_BUTTON_TEXT,
@@ -27,10 +29,13 @@ import {
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
 	MODAL_SIZE_OPTIONS,
+	type CloseButtonPositionValue,
 	type ModalSizeValue,
+	getCloseButtonPositionClassName,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCloseButtonAriaLabel,
+	getSafeCloseButtonPosition,
 	getSafeCloseButtonText,
 	getSafeCustomModalWidth,
 	isValidCssSize,
@@ -75,6 +80,7 @@ interface EditAttributes {
 	modalLockPageScroll?: boolean;
 	closeButtonText?: string;
 	closeButtonAriaLabel?: string;
+	closeButtonPosition?: CloseButtonPositionValue;
 }
 
 interface EditProps {
@@ -92,6 +98,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 		closeButtonText = DEFAULT_CLOSE_BUTTON_TEXT,
 		closeButtonAriaLabel = DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
+		closeButtonPosition = DEFAULT_CLOSE_BUTTON_POSITION,
 	} = attributes;
 	
 	const customWidthIsValid = isValidCssSize( customModalWidth );
@@ -100,6 +107,8 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
 	const safeCloseButtonAriaLabel =
 		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
+	const safeCloseButtonPosition =
+		getSafeCloseButtonPosition( closeButtonPosition );
 
 	const blockProps = useBlockProps( {
 		className: [
@@ -252,13 +261,32 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							'card-flip-to-modal'
 						) }
 					/>
+
+					<SelectControl
+						label={ __( 'Close button position', 'card-flip-to-modal' ) }
+						value={ safeCloseButtonPosition }
+						options={ CLOSE_BUTTON_POSITION_OPTIONS }
+						onChange={ ( value ) =>
+							setAttributes( {
+								closeButtonPosition: value as CloseButtonPositionValue,
+							} )
+						}
+						help={ __(
+							'Choose where the close button appears inside the modal.',
+							'card-flip-to-modal'
+						) }
+					/>
 				</PanelBody>
 			</InspectorControls>
 
 			<div { ...blockProps }>
 				
 				<button
-					className="gb-flip-card-modal__close gb-flip-card-modal__editor-close-preview"
+					className={ [
+						'gb-flip-card-modal__close',
+						'gb-flip-card-modal__editor-close-preview',
+						getCloseButtonPositionClassName( safeCloseButtonPosition ),
+					].join( ' ' ) }
 					type="button"
 					aria-label={ safeCloseButtonAriaLabel }
 					tabIndex={ -1 }

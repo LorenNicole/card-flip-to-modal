@@ -165,7 +165,6 @@
 	&__close {
 		position: absolute;
 		top: 0.75rem;
-		right: 0.75rem;
 		width: 2.25rem;
 		height: 2.25rem;
 		display: inline-flex;
@@ -178,6 +177,14 @@
 		font-size: 1.5rem;
 		line-height: 1;
 		cursor: pointer;
+
+		&--top-right {
+			right: 0.75rem;
+		}
+
+		&--top-left {
+			left: 0.75rem;
+		}
 
 		&:hover,
 		&:focus {
@@ -270,7 +277,6 @@
 .gb-flip-card-modal__animation-close {
 	position: absolute;
 	top: 0.75rem;
-	right: 0.75rem;
 	width: 2.25rem;
 	height: 2.25rem;
 	display: inline-flex;
@@ -283,6 +289,14 @@
 	font-size: 1.5rem;
 	line-height: 1;
 	pointer-events: none;
+
+	&--top-right {
+		right: 0.75rem;
+	}
+
+	&--top-left {
+		left: 0.75rem;
+	}
 }
 
 .gb-flip-card-modal__animation-back-content {

@@ -191,6 +191,20 @@ function createAnimationClone(
 		'.gb-flip-card-modal__close'
 	);
 
+	if (
+		realCloseButton?.classList.contains(
+			'gb-flip-card-modal__close--top-left'
+		)
+	) {
+		backCloseButton.classList.add(
+			'gb-flip-card-modal__animation-close--top-left'
+		);
+	} else {
+		backCloseButton.classList.add(
+			'gb-flip-card-modal__animation-close--top-right'
+		);
+	}
+
 	backCloseButton.textContent =
 		realCloseButton?.textContent?.trim() || '×';
 

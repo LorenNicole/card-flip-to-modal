@@ -6,17 +6,21 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
 	DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
+	DEFAULT_CLOSE_BUTTON_POSITION,
 	DEFAULT_CLOSE_BUTTON_TEXT,
 	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
+	type CloseButtonPositionValue,
 	type ModalSizeValue,
 	getBooleanDataAttribute,
+	getCloseButtonPositionClassName,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getSafeCloseButtonAriaLabel,
+	getSafeCloseButtonPosition,
 	getSafeCloseButtonText,
 	getSafeCustomModalWidth,
 	getSafeModalAriaLabel,
@@ -31,6 +35,7 @@ interface SaveAttributes {
 	modalLockPageScroll?: boolean;
 	closeButtonText?: string;
 	closeButtonAriaLabel?: string;
+	closeButtonPosition?: CloseButtonPositionValue;
 }
 
 interface SaveProps {
@@ -47,6 +52,7 @@ export default function save( { attributes }: SaveProps ) {
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 		closeButtonText = DEFAULT_CLOSE_BUTTON_TEXT,
 		closeButtonAriaLabel = DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
+		closeButtonPosition = DEFAULT_CLOSE_BUTTON_POSITION,
 	} = attributes;
 
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
@@ -54,6 +60,8 @@ export default function save( { attributes }: SaveProps ) {
 	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
 	const safeCloseButtonAriaLabel =
 		getSafeCloseButtonAriaLabel( closeButtonAriaLabel );
+	const safeCloseButtonPosition =
+		getSafeCloseButtonPosition( closeButtonPosition );
 	
 	const blockProps = useBlockProps.save( {
 		className: getModalSizeClassName( modalSize ),
@@ -80,7 +88,10 @@ export default function save( { attributes }: SaveProps ) {
 				hidden
 			>
 				<button
-					className="gb-flip-card-modal__close"
+					className={ [
+						'gb-flip-card-modal__close',
+						getCloseButtonPositionClassName( safeCloseButtonPosition ),
+					].join( ' ' ) }
 					type="button"
 					aria-label={ safeCloseButtonAriaLabel }
 				>
