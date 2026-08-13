@@ -30,16 +30,19 @@ import {
 	getCloseButtonStyle,
 	getModalShellStyle,
 	getModalSizeClassName,
+	getModalMarginSides,
+	getModalPaddingSides,
 	getSafeBorderStyle,
 	getSafeCloseButtonAriaLabel,
 	getSafeCloseButtonPosition,
 	getSafeCloseButtonText,
 	getSafeCustomModalWidth,
 	getSafeModalAriaLabel,
+	type ModalSpacingAttributes,
 } from '../card-flip-to-modal/constants';
 import { ModalCloseButton } from '../card-flip-to-modal/close-button';
 
-interface SaveAttributes {
+interface SaveAttributes extends ModalSpacingAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
 	modalBorderRadius?: number;
@@ -88,6 +91,9 @@ export default function save( { attributes }: SaveProps ) {
 		closeButtonBorderRadius = DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
 	} = attributes;
 
+	const modalPaddingSides = getModalPaddingSides( attributes );
+	const modalMarginSides = getModalMarginSides( attributes );
+
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
 	const safeModalBorderStyle = getSafeBorderStyle(
 		modalBorderStyle,
@@ -120,6 +126,8 @@ export default function save( { attributes }: SaveProps ) {
 			modalBorderColor,
 			modalBorderWidth,
 			modalBackgroundColor,
+			modalPadding: modalPaddingSides,
+			modalMargin: modalMarginSides,
 		} ),
 		'data-modal-close-on-backdrop-click':
 			getBooleanDataAttribute( modalCloseOnBackdropClick ),

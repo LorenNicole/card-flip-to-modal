@@ -273,6 +273,11 @@ function createAnimationClone(
 		previewStyles.color
 	);
 
+	clone.style.setProperty(
+		'--gb-flip-card-preview-padding',
+		previewStyles.padding
+	);
+
 	if ( dialogStyles ) {
 		clone.style.setProperty(
 			'--gb-flip-card-modal-animation-background-color',
@@ -297,6 +302,11 @@ function createAnimationClone(
 		clone.style.setProperty(
 			'--gb-flip-card-modal-animation-border-radius',
 			dialogStyles.borderRadius
+		);
+
+		clone.style.setProperty(
+			'--gb-flip-card-modal-padding',
+			dialogStyles.padding
 		);
 	}
 

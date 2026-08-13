@@ -91,6 +91,244 @@ export const DEFAULT_MODAL_BORDER_STYLE: BorderStyleValue = BorderStyle.NONE;
 export const DEFAULT_MODAL_BORDER_COLOR = '#d0d0d0';
 export const DEFAULT_MODAL_BACKGROUND_COLOR = '#ffffff';
 
+export interface SpacingSides {
+	top: number;
+	right: number;
+	bottom: number;
+	left: number;
+}
+
+export interface BoxControlSideValues {
+	top?: string;
+	right?: string;
+	bottom?: string;
+	left?: string;
+}
+
+export const MIN_SPACING = 0;
+export const MAX_SPACING = 96;
+export const SPACING_STEP = 4;
+
+export const DEFAULT_PREVIEW_PADDING: SpacingSides = {
+	top: 24,
+	right: 24,
+	bottom: 24,
+	left: 24,
+};
+
+export const DEFAULT_PREVIEW_MARGIN: SpacingSides = {
+	top: 0,
+	right: 0,
+	bottom: 0,
+	left: 0,
+};
+
+export const DEFAULT_MODAL_PADDING: SpacingSides = {
+	top: 32,
+	right: 32,
+	bottom: 32,
+	left: 32,
+};
+
+export const DEFAULT_MODAL_MARGIN: SpacingSides = {
+	top: 0,
+	right: 0,
+	bottom: 0,
+	left: 0,
+};
+
+export const SPACING_BOX_CONTROL_UNITS = [
+	{
+		value: 'px',
+		label: 'px',
+		max: MAX_SPACING,
+		step: SPACING_STEP,
+	},
+];
+
+export function getSafeSpacingSides(
+	sides: Partial< SpacingSides >,
+	defaults: SpacingSides
+): SpacingSides {
+	return {
+		top: getSafeNumber(
+			sides.top,
+			defaults.top,
+			MIN_SPACING,
+			MAX_SPACING
+		),
+		right: getSafeNumber(
+			sides.right,
+			defaults.right,
+			MIN_SPACING,
+			MAX_SPACING
+		),
+		bottom: getSafeNumber(
+			sides.bottom,
+			defaults.bottom,
+			MIN_SPACING,
+			MAX_SPACING
+		),
+		left: getSafeNumber(
+			sides.left,
+			defaults.left,
+			MIN_SPACING,
+			MAX_SPACING
+		),
+	};
+}
+
+export function getSpacingShorthand( sides: SpacingSides ): string {
+	const { top, right, bottom, left } = sides;
+
+	if (
+		top === right &&
+		right === bottom &&
+		bottom === left
+	) {
+		return `${ top }px`;
+	}
+
+	return `${ top }px ${ right }px ${ bottom }px ${ left }px`;
+}
+
+export function spacingSidesToBoxControlValue(
+	sides: SpacingSides
+): BoxControlSideValues {
+	return {
+		top: `${ sides.top }px`,
+		right: `${ sides.right }px`,
+		bottom: `${ sides.bottom }px`,
+		left: `${ sides.left }px`,
+	};
+}
+
+function parseSpacingSideValue(
+	value: string | undefined,
+	defaultValue: number
+): number {
+	if ( typeof value !== 'string' || value.trim() === '' ) {
+		return defaultValue;
+	}
+
+	const parsedValue = Number.parseFloat( value );
+
+	return getSafeNumber(
+		parsedValue,
+		defaultValue,
+		MIN_SPACING,
+		MAX_SPACING
+	);
+}
+
+export function boxControlValueToSpacingSides(
+	value: BoxControlSideValues | undefined,
+	defaults: SpacingSides
+): SpacingSides {
+	return {
+		top: parseSpacingSideValue( value?.top, defaults.top ),
+		right: parseSpacingSideValue( value?.right, defaults.right ),
+		bottom: parseSpacingSideValue( value?.bottom, defaults.bottom ),
+		left: parseSpacingSideValue( value?.left, defaults.left ),
+	};
+}
+
+export type SpacingAttributePrefix =
+	| 'previewPadding'
+	| 'previewMargin'
+	| 'modalPadding'
+	| 'modalMargin';
+
+export function spacingSidesToAttributes(
+	prefix: SpacingAttributePrefix,
+	sides: SpacingSides
+): Record< string, number > {
+	return {
+		[ `${ prefix }Top` ]: sides.top,
+		[ `${ prefix }Right` ]: sides.right,
+		[ `${ prefix }Bottom` ]: sides.bottom,
+		[ `${ prefix }Left` ]: sides.left,
+	};
+}
+
+export interface PreviewSpacingAttributes {
+	previewPaddingTop?: number;
+	previewPaddingRight?: number;
+	previewPaddingBottom?: number;
+	previewPaddingLeft?: number;
+	previewMarginTop?: number;
+	previewMarginRight?: number;
+	previewMarginBottom?: number;
+	previewMarginLeft?: number;
+}
+
+export interface ModalSpacingAttributes {
+	modalPaddingTop?: number;
+	modalPaddingRight?: number;
+	modalPaddingBottom?: number;
+	modalPaddingLeft?: number;
+	modalMarginTop?: number;
+	modalMarginRight?: number;
+	modalMarginBottom?: number;
+	modalMarginLeft?: number;
+}
+
+export function getPreviewPaddingSides(
+	attributes: PreviewSpacingAttributes
+): SpacingSides {
+	return getSafeSpacingSides(
+		{
+			top: attributes.previewPaddingTop,
+			right: attributes.previewPaddingRight,
+			bottom: attributes.previewPaddingBottom,
+			left: attributes.previewPaddingLeft,
+		},
+		DEFAULT_PREVIEW_PADDING
+	);
+}
+
+export function getPreviewMarginSides(
+	attributes: PreviewSpacingAttributes
+): SpacingSides {
+	return getSafeSpacingSides(
+		{
+			top: attributes.previewMarginTop,
+			right: attributes.previewMarginRight,
+			bottom: attributes.previewMarginBottom,
+			left: attributes.previewMarginLeft,
+		},
+		DEFAULT_PREVIEW_MARGIN
+	);
+}
+
+export function getModalPaddingSides(
+	attributes: ModalSpacingAttributes
+): SpacingSides {
+	return getSafeSpacingSides(
+		{
+			top: attributes.modalPaddingTop,
+			right: attributes.modalPaddingRight,
+			bottom: attributes.modalPaddingBottom,
+			left: attributes.modalPaddingLeft,
+		},
+		DEFAULT_MODAL_PADDING
+	);
+}
+
+export function getModalMarginSides(
+	attributes: ModalSpacingAttributes
+): SpacingSides {
+	return getSafeSpacingSides(
+		{
+			top: attributes.modalMarginTop,
+			right: attributes.modalMarginRight,
+			bottom: attributes.modalMarginBottom,
+			left: attributes.modalMarginLeft,
+		},
+		DEFAULT_MODAL_MARGIN
+	);
+}
+
 export const BORDER_STYLE_OPTIONS: BorderStyleOption[] = [
 	{
 		label: 'Solid',
@@ -197,6 +435,8 @@ export interface ModalShellStyleOptions {
 	modalBorderColor?: string;
 	modalBorderWidth?: number;
 	modalBackgroundColor?: string;
+	modalPadding?: Partial< SpacingSides >;
+	modalMargin?: Partial< SpacingSides >;
 }
 
 export function getModalShellStyle( {
@@ -207,6 +447,8 @@ export function getModalShellStyle( {
 	modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
 	modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
 	modalBackgroundColor = DEFAULT_MODAL_BACKGROUND_COLOR,
+	modalPadding = {},
+	modalMargin = {},
 }: ModalShellStyleOptions ): CSSVariableStyle {
 	const safeModalBorderRadius = getSafeNumber(
 		modalBorderRadius,
@@ -222,6 +464,15 @@ export function getModalShellStyle( {
 		MAX_CARD_MODAL_BORDER_WIDTH
 	);
 
+	const safeModalPadding = getSafeSpacingSides(
+		modalPadding,
+		DEFAULT_MODAL_PADDING
+	);
+	const safeModalMargin = getSafeSpacingSides(
+		modalMargin,
+		DEFAULT_MODAL_MARGIN
+	);
+
 	const style: CSSVariableStyle = {
 		'--gb-flip-card-modal-border-radius': `${ safeModalBorderRadius }px`,
 		'--gb-flip-card-modal-border-style': getSafeBorderStyle(
@@ -231,6 +482,12 @@ export function getModalShellStyle( {
 		'--gb-flip-card-modal-border-color': modalBorderColor,
 		'--gb-flip-card-modal-border-width': `${ safeModalBorderWidth }px`,
 		'--gb-flip-card-modal-background-color': modalBackgroundColor,
+		'--gb-flip-card-modal-padding': getSpacingShorthand(
+			safeModalPadding
+		),
+		'--gb-flip-card-modal-margin': getSpacingShorthand(
+			safeModalMargin
+		),
 	};
 
 	if ( modalSize === ModalSize.CUSTOM ) {
@@ -249,6 +506,8 @@ export interface PreviewCardStyleOptions {
 	previewBorderRadius?: number;
 	previewBorderWidth?: number;
 	previewTextColor?: string;
+	previewPadding?: Partial< SpacingSides >;
+	previewMargin?: Partial< SpacingSides >;
 }
 
 export interface PreviewCardClassNameOptions {
@@ -279,6 +538,8 @@ export function getPreviewCardStyle( {
 	previewBorderRadius = DEFAULT_PREVIEW_BORDER_RADIUS,
 	previewBorderWidth = DEFAULT_PREVIEW_BORDER_WIDTH,
 	previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
+	previewPadding = {},
+	previewMargin = {},
 }: PreviewCardStyleOptions ): CSSVariableStyle {
 	const safeMinHeight = getSafeNumber(
 		previewMinHeight,
@@ -300,6 +561,14 @@ export function getPreviewCardStyle( {
 		MIN_CARD_MODAL_BORDER_WIDTH,
 		MAX_CARD_MODAL_BORDER_WIDTH
 	);
+	const safePreviewPadding = getSafeSpacingSides(
+		previewPadding,
+		DEFAULT_PREVIEW_PADDING
+	);
+	const safePreviewMargin = getSafeSpacingSides(
+		previewMargin,
+		DEFAULT_PREVIEW_MARGIN
+	);
 
 	return {
 		'--gb-flip-card-preview-min-height': `${ safeMinHeight }px`,
@@ -310,6 +579,12 @@ export function getPreviewCardStyle( {
 		'--gb-flip-card-preview-border-radius': `${ safePreviewBorderRadius }px`,
 		'--gb-flip-card-preview-border-width': `${ safePreviewBorderWidth }px`,
 		'--gb-flip-card-preview-text-color': previewTextColor,
+		'--gb-flip-card-preview-padding': getSpacingShorthand(
+			safePreviewPadding
+		),
+		'--gb-flip-card-preview-margin': getSpacingShorthand(
+			safePreviewMargin
+		),
 	};
 }
 

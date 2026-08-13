@@ -42,6 +42,8 @@ import {
 	DEFAULT_MODAL_BORDER_WIDTH,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
+	DEFAULT_MODAL_MARGIN,
+	DEFAULT_MODAL_PADDING,
 	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
 	MAX_CARD_MODAL_BORDER_RADIUS,
@@ -57,6 +59,8 @@ import {
 	type CloseButtonPositionValue,
 	type ModalSizeValue,
 	getCloseButtonStyle,
+	getModalMarginSides,
+	getModalPaddingSides,
 	getModalShellStyle,
 	getModalSizeClassName,
 	getSafeBorderStyle,
@@ -65,10 +69,14 @@ import {
 	getSafeCloseButtonText,
 	getSafeCustomModalWidth,
 	getSafeNumber,
+	getSpacingShorthand,
 	isValidCssSize,
+	spacingSidesToAttributes,
+	type ModalSpacingAttributes,
 } from '../card-flip-to-modal/constants';
 import { ModalCloseButton } from '../card-flip-to-modal/close-button';
 import { CompactColorControl } from '../card-flip-to-modal/compact-color-control';
+import { SpacingBoxControl } from '../card-flip-to-modal/spacing-box-control';
 
 const ALLOWED_BLOCKS = [
 	'core/image',
@@ -102,7 +110,7 @@ const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 	],
 ];
 
-interface EditAttributes {
+interface EditAttributes extends ModalSpacingAttributes {
 	modalSize?: ModalSizeValue;
 	customModalWidth?: string;
 	modalBorderRadius?: number;
@@ -171,6 +179,10 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		MIN_CARD_MODAL_BORDER_RADIUS,
 		MAX_CARD_MODAL_BORDER_RADIUS
 	);
+	const modalPaddingSides = getModalPaddingSides( attributes );
+	const modalMarginSides = getModalMarginSides( attributes );
+	const modalPaddingShorthand = getSpacingShorthand( modalPaddingSides );
+	const modalMarginShorthand = getSpacingShorthand( modalMarginSides );
 	const modalShellStyle = {
 		...getModalShellStyle( {
 			modalSize,
@@ -180,12 +192,16 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 			modalBorderColor,
 			modalBorderWidth: safeModalBorderWidth,
 			modalBackgroundColor,
+			modalPadding: modalPaddingSides,
+			modalMargin: modalMarginSides,
 		} ),
 		borderWidth: `${ safeModalBorderWidth }px`,
 		borderStyle: safeModalBorderStyle,
 		borderColor: modalBorderColor,
 		borderRadius: `${ safeModalBorderRadius }px`,
 		backgroundColor: modalBackgroundColor,
+		padding: modalPaddingShorthand,
+		margin: modalMarginShorthand,
 	};
 	const safeCloseButtonText = getSafeCloseButtonText( closeButtonText );
 	const safeCloseButtonAriaLabel =
@@ -268,6 +284,35 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							setAttributes( {
 								modalBackgroundColor: value,
 							} )
+						}
+					/>
+
+					<SpacingBoxControl
+						label={ __( 'Padding', 'card-flip-to-modal' ) }
+						values={ modalPaddingSides }
+						defaults={ DEFAULT_MODAL_PADDING }
+						onChange={ ( sides ) =>
+							setAttributes(
+								spacingSidesToAttributes(
+									'modalPadding',
+									sides
+								)
+							)
+						}
+					/>
+
+					<SpacingBoxControl
+						className="gb-flip-card-modal__inspector-control--spaced"
+						label={ __( 'Margin', 'card-flip-to-modal' ) }
+						values={ modalMarginSides }
+						defaults={ DEFAULT_MODAL_MARGIN }
+						onChange={ ( sides ) =>
+							setAttributes(
+								spacingSidesToAttributes(
+									'modalMargin',
+									sides
+								)
+							)
 						}
 					/>
 

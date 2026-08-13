@@ -57,6 +57,38 @@
     "previewTextColor": {
       "type": "string",
       "default": "#111111"
+    },
+    "previewPaddingTop": {
+      "type": "number",
+      "default": 24
+    },
+    "previewPaddingRight": {
+      "type": "number",
+      "default": 24
+    },
+    "previewPaddingBottom": {
+      "type": "number",
+      "default": 24
+    },
+    "previewPaddingLeft": {
+      "type": "number",
+      "default": 24
+    },
+    "previewMarginTop": {
+      "type": "number",
+      "default": 0
+    },
+    "previewMarginRight": {
+      "type": "number",
+      "default": 0
+    },
+    "previewMarginBottom": {
+      "type": "number",
+      "default": 0
+    },
+    "previewMarginLeft": {
+      "type": "number",
+      "default": 0
     }
   },
   "textdomain": "card-flip-to-modal",

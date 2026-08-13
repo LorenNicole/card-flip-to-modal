@@ -56,6 +56,38 @@
       "type": "string",
       "default": "#ffffff"
     },
+    "modalPaddingTop": {
+      "type": "number",
+      "default": 32
+    },
+    "modalPaddingRight": {
+      "type": "number",
+      "default": 32
+    },
+    "modalPaddingBottom": {
+      "type": "number",
+      "default": 32
+    },
+    "modalPaddingLeft": {
+      "type": "number",
+      "default": 32
+    },
+    "modalMarginTop": {
+      "type": "number",
+      "default": 0
+    },
+    "modalMarginRight": {
+      "type": "number",
+      "default": 0
+    },
+    "modalMarginBottom": {
+      "type": "number",
+      "default": 0
+    },
+    "modalMarginLeft": {
+      "type": "number",
+      "default": 0
+    },
     "modalAriaLabel": {
       "type": "string",
       "default": "Card modal content"

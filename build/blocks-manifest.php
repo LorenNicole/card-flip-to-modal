@@ -90,6 +90,38 @@ return array(
 				'type' => 'string',
 				'default' => '#ffffff'
 			),
+			'modalPaddingTop' => array(
+				'type' => 'number',
+				'default' => 32
+			),
+			'modalPaddingRight' => array(
+				'type' => 'number',
+				'default' => 32
+			),
+			'modalPaddingBottom' => array(
+				'type' => 'number',
+				'default' => 32
+			),
+			'modalPaddingLeft' => array(
+				'type' => 'number',
+				'default' => 32
+			),
+			'modalMarginTop' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'modalMarginRight' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'modalMarginBottom' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'modalMarginLeft' => array(
+				'type' => 'number',
+				'default' => 0
+			),
 			'modalAriaLabel' => array(
 				'type' => 'string',
 				'default' => 'Card modal content'
@@ -205,6 +237,38 @@ return array(
 			'previewTextColor' => array(
 				'type' => 'string',
 				'default' => '#111111'
+			),
+			'previewPaddingTop' => array(
+				'type' => 'number',
+				'default' => 24
+			),
+			'previewPaddingRight' => array(
+				'type' => 'number',
+				'default' => 24
+			),
+			'previewPaddingBottom' => array(
+				'type' => 'number',
+				'default' => 24
+			),
+			'previewPaddingLeft' => array(
+				'type' => 'number',
+				'default' => 24
+			),
+			'previewMarginTop' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'previewMarginRight' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'previewMarginBottom' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'previewMarginLeft' => array(
+				'type' => 'number',
+				'default' => 0
 			)
 		),
 		'textdomain' => 'card-flip-to-modal',

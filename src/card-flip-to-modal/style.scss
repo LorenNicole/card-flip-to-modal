@@ -45,7 +45,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 1.5rem;
+		padding: var(--gb-flip-card-preview-padding, 24px);
+		margin: var(--gb-flip-card-preview-margin, 0);
 		border-width: var(--gb-flip-card-preview-border-width, 1px);
 		border-style: var(--gb-flip-card-preview-border-style, solid);
 		border-color: var(--gb-flip-card-preview-border-color, #d0d0d0);
@@ -159,7 +160,8 @@
 		z-index: 9999;
 		width: min(90vw, var(--gb-flip-card-modal-width));
 		max-height: 85vh;
-		padding: 2rem;
+		padding: var(--gb-flip-card-modal-padding, 32px);
+		margin: var(--gb-flip-card-modal-margin, 0);
 		overflow-y: auto;
 		background: var(--gb-flip-card-modal-background-color, #ffffff);
 		border-width: var(--gb-flip-card-modal-border-width, 1px);
@@ -291,7 +293,7 @@
 .gb-flip-card-modal__animation-front {
 	align-items: center;
 	justify-content: center;
-	padding: 1.5rem;
+	padding: var(--gb-flip-card-preview-padding, 24px);
 	border: none;
 	border-radius: var(--gb-flip-card-animation-border-radius, 0);
 	background: var(--gb-flip-card-animation-background-color, #ffffff);
@@ -302,7 +304,7 @@
 .gb-flip-card-modal__animation-back {
 	align-items: flex-start;
 	justify-content: flex-start;
-	padding: 2rem;
+	padding: var(--gb-flip-card-modal-padding, 32px);
 	border: none;
 	border-radius: var(--gb-flip-card-modal-animation-border-radius, 0);
 	background: var(--gb-flip-card-modal-animation-background-color, #ffffff);

@@ -25,7 +25,9 @@ import {
 	DEFAULT_PREVIEW_BORDER_RADIUS,
 	DEFAULT_PREVIEW_BORDER_STYLE,
 	DEFAULT_PREVIEW_BORDER_WIDTH,
+	DEFAULT_PREVIEW_MARGIN,
 	DEFAULT_PREVIEW_MIN_HEIGHT,
+	DEFAULT_PREVIEW_PADDING,
 	DEFAULT_PREVIEW_TEXT_COLOR,
 	MAX_CARD_MODAL_BORDER_RADIUS,
 	MAX_CARD_MODAL_BORDER_WIDTH,
@@ -33,14 +35,20 @@ import {
 	MIN_CARD_MODAL_BORDER_WIDTH,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
+	getPreviewMarginSides,
+	getPreviewPaddingSides,
 	getSafeBorderStyle,
 	getSafeNumber,
+	getSpacingShorthand,
 	MAX_PREVIEW_MIN_HEIGHT,
 	MIN_PREVIEW_MIN_HEIGHT,
 	PREVIEW_MIN_HEIGHT_STEP,
+	spacingSidesToAttributes,
 	type BorderStyleValue,
+	type PreviewSpacingAttributes,
 } from '../card-flip-to-modal/constants';
 import { CompactColorControl } from '../card-flip-to-modal/compact-color-control';
+import { SpacingBoxControl } from '../card-flip-to-modal/spacing-box-control';
 
 const ALLOWED_BLOCKS = [
 	'core/image',
@@ -72,7 +80,7 @@ const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 	],
 ];
 
-interface EditAttributes {
+interface EditAttributes extends PreviewSpacingAttributes {
 	previewMinHeight?: number;
 	previewHasShadow?: boolean;
 	previewHasHoverLift?: boolean;
@@ -121,6 +129,14 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		MIN_CARD_MODAL_BORDER_RADIUS,
 		MAX_CARD_MODAL_BORDER_RADIUS
 	);
+	const previewPaddingSides = getPreviewPaddingSides( attributes );
+	const previewMarginSides = getPreviewMarginSides( attributes );
+	const previewPaddingShorthand = getSpacingShorthand(
+		previewPaddingSides
+	);
+	const previewMarginShorthand = getSpacingShorthand(
+		previewMarginSides
+	);
 
 	const blockProps = useBlockProps( {
 		className: [
@@ -139,12 +155,16 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 				previewBorderRadius: safePreviewBorderRadius,
 				previewBorderWidth: safePreviewBorderWidth,
 				previewTextColor,
+				previewPadding: previewPaddingSides,
+				previewMargin: previewMarginSides,
 			} ),
 			borderWidth: `${ safePreviewBorderWidth }px`,
 			borderStyle: safePreviewBorderStyle,
 			borderColor: previewBorderColor,
 			borderRadius: `${ safePreviewBorderRadius }px`,
 			backgroundColor: previewBackgroundColor,
+			padding: previewPaddingShorthand,
+			margin: previewMarginShorthand,
 		},
 	} );
 
@@ -176,6 +196,35 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							'Set the minimum height of the preview card in pixels.',
 							'card-flip-to-modal'
 						) }
+					/>
+
+					<SpacingBoxControl
+						label={ __( 'Padding', 'card-flip-to-modal' ) }
+						values={ previewPaddingSides }
+						defaults={ DEFAULT_PREVIEW_PADDING }
+						onChange={ ( sides ) =>
+							setAttributes(
+								spacingSidesToAttributes(
+									'previewPadding',
+									sides
+								)
+							)
+						}
+					/>
+
+					<SpacingBoxControl
+						className="gb-flip-card-modal__inspector-control--spaced"
+						label={ __( 'Margin', 'card-flip-to-modal' ) }
+						values={ previewMarginSides }
+						defaults={ DEFAULT_PREVIEW_MARGIN }
+						onChange={ ( sides ) =>
+							setAttributes(
+								spacingSidesToAttributes(
+									'previewMargin',
+									sides
+								)
+							)
+						}
 					/>
 
 					<ToggleControl

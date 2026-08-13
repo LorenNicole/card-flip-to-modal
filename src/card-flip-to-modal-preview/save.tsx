@@ -13,10 +13,13 @@ import {
 	DEFAULT_PREVIEW_TEXT_COLOR,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
+	getPreviewMarginSides,
+	getPreviewPaddingSides,
 	type BorderStyleValue,
+	type PreviewSpacingAttributes,
 } from '../card-flip-to-modal/constants';
 
-interface SaveAttributes {
+interface SaveAttributes extends PreviewSpacingAttributes {
 	previewMinHeight?: number;
 	previewHasShadow?: boolean;
 	previewHasHoverLift?: boolean;
@@ -45,6 +48,9 @@ export default function save( { attributes }: SaveProps ) {
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 	} = attributes;
 
+	const previewPaddingSides = getPreviewPaddingSides( attributes );
+	const previewMarginSides = getPreviewMarginSides( attributes );
+
 	const blockProps = useBlockProps.save( {
 		className: [
 			'gb-flip-card-modal__preview',
@@ -62,6 +68,8 @@ export default function save( { attributes }: SaveProps ) {
 				previewBorderRadius,
 				previewBorderWidth,
 				previewTextColor,
+				previewPadding: previewPaddingSides,
+				previewMargin: previewMarginSides,
 			} ),
 		},
 		role: 'button',
