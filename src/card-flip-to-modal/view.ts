@@ -30,7 +30,7 @@
  * - Returns focus to the preview card when closed.
  */
 
-import { modalFocus } from './modal-focus';
+import { getBackgroundElementsToInert, modalFocus } from './modal-focus';
 
 import {
 	DEFAULT_FLIP_ANIMATION_DURATION_MS,
@@ -54,6 +54,7 @@ const ANIMATION_BACK_CONTENT_CLASS = 'gb-flip-card-modal__animation-back-content
 let activeBlock: HTMLElement | null = null;
 let activeTrigger: HTMLElement | null = null;
 let isAnimating = false;
+let inertedBackground: HTMLElement[] = [];
 
 interface BlockParts {
 	preview: HTMLElement | null;
@@ -568,6 +569,42 @@ function unlockPageScroll(): void {
 	document.body.classList.remove( BODY_LOCK_CLASS );
 }
 
+function restoreBackgroundInert(): void {
+	inertedBackground.forEach( ( element ) => {
+		element.inert = false;
+	} );
+	inertedBackground = [];
+}
+
+function applyBackgroundInert(
+	dialog: HTMLElement,
+	backdrop: HTMLElement | null
+): void {
+	restoreBackgroundInert();
+
+	inertedBackground = getBackgroundElementsToInert( dialog, backdrop );
+	inertedBackground.forEach( ( element ) => {
+		element.inert = true;
+	} );
+}
+
+function focusOpenDialog(
+	dialog: HTMLElement,
+	backdrop: HTMLElement | null,
+	closeButton: HTMLButtonElement | null,
+	modalShowCloseButton: boolean
+): void {
+	applyBackgroundInert( dialog, backdrop );
+
+	if ( modalShowCloseButton && closeButton ) {
+		closeButton.focus();
+		return;
+	}
+
+	dialog.setAttribute( 'tabindex', '-1' );
+	dialog.focus();
+}
+
 function closeModal( block: HTMLElement | null = activeBlock ): void {
 	if ( ! block || isAnimating ) {
 		return;
@@ -583,6 +620,7 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 			unlockPageScroll();
 		}
 
+		restoreBackgroundInert();
 		activeBlock = null;
 		activeTrigger = null;
 
@@ -605,6 +643,8 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 		if ( settings.modalLockPageScroll ) {
 			unlockPageScroll();
 		}
+
+		restoreBackgroundInert();
 
 		if ( activeTrigger ) {
 			activeTrigger.focus();
@@ -682,14 +722,12 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 
 	if ( shouldReduceMotion() || ! settings.flipAnimationEnabled ) {
 		dialog.hidden = false;
-
-		if ( settings.modalShowCloseButton && closeButton ) {
-			closeButton.focus();
-			return;
-		}
-
-		dialog.setAttribute( 'tabindex', '-1' );
-		dialog.focus();
+		focusOpenDialog(
+			dialog,
+			backdrop,
+			closeButton,
+			settings.modalShowCloseButton
+		);
 		return;
 	}
 
@@ -704,19 +742,18 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 		.then( () => {
 			dialog.style.opacity = '0';
 			dialog.hidden = false;
-			
+
 			window.requestAnimationFrame( () => {
 				dialog.style.opacity = '';
 				clone.remove();
 			} );
 
-			if ( settings.modalShowCloseButton && closeButton ) {
-				closeButton.focus();
-				return;
-			}
-
-			dialog.setAttribute( 'tabindex', '-1' );
-			dialog.focus();
+			focusOpenDialog(
+				dialog,
+				backdrop,
+				closeButton,
+				settings.modalShowCloseButton
+			);
 		} )
 		.finally( () => {
 			isAnimating = false;

@@ -91,3 +91,61 @@ export function modalFocus(
 		firstFocusableElement.focus();
 	}
 }
+
+/**
+ * Returns ancestor-sibling elements that should be inert while a dialog is open.
+ *
+ * Walks up from the dialog and collects each parent's other children, excluding
+ * the dialog, its backdrop, and elements that are already inert.
+ *
+ * @param dialog The open modal dialog.
+ * @param backdrop The modal backdrop, if present.
+ * @return Elements to mark inert.
+ */
+export function getBackgroundElementsToInert(
+	dialog: HTMLElement | null,
+	backdrop: HTMLElement | null = null
+): HTMLElement[] {
+	if ( ! dialog ) {
+		return [];
+	}
+
+	const skip = new Set< HTMLElement >( [ dialog ] );
+
+	if ( backdrop ) {
+		skip.add( backdrop );
+	}
+
+	const elements: HTMLElement[] = [];
+	let current: HTMLElement | null = dialog;
+
+	while ( current && current !== document.documentElement ) {
+		const parent: HTMLElement | null = current.parentElement;
+
+		if ( ! parent ) {
+			break;
+		}
+
+		const ancestor = current;
+
+		Array.from( parent.children ).forEach( ( sibling ) => {
+			if ( ! ( sibling instanceof HTMLElement ) ) {
+				return;
+			}
+
+			if ( sibling === ancestor || skip.has( sibling ) ) {
+				return;
+			}
+
+			if ( sibling.inert ) {
+				return;
+			}
+
+			elements.push( sibling );
+		} );
+
+		current = parent;
+	}
+
+	return elements;
+}
