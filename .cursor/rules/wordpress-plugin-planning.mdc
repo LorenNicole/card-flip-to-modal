@@ -1,0 +1,72 @@
+---
+description: WordPress plugin planning standards for this Gutenberg block plugin.
+alwaysApply: true
+---
+
+# WordPress Plugin Plan Rule
+
+When writing a Plan for this repository, treat this as a custom WordPress Gutenberg block plugin.
+
+Before proposing code changes, review the relevant official WordPress documentation for the type of change being planned. Prefer official WordPress developer documentation over blog posts or general JavaScript/React advice.
+
+Use these documentation sources as standing references:
+
+- WordPress Plugin Developer Handbook: https://developer.wordpress.org/plugins/
+- WordPress Plugin Security / Common APIs Security Handbook: https://developer.wordpress.org/apis/security/
+- WordPress Coding Standards Handbook: https://developer.wordpress.org/coding-standards/
+- WordPress PHP Coding Standards: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/
+- WordPress Block Editor Handbook: https://developer.wordpress.org/block-editor/
+- Block development fundamentals: https://developer.wordpress.org/block-editor/getting-started/fundamentals/
+- Block file structure: https://developer.wordpress.org/block-editor/getting-started/fundamentals/file-structure-of-a-block/
+- block.json fundamentals: https://developer.wordpress.org/block-editor/getting-started/fundamentals/block-json/
+- Block metadata reference: https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/
+- Block registration reference: https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+
+Every Plan must include a short “WordPress best-practice check” section that confirms whether the proposed change affects any of the following:
+
+- block.json metadata or attributes
+- edit.tsx editor behavior
+- save.tsx saved markup
+- view.ts frontend behavior
+- style.scss frontend CSS
+- editor.scss editor-only CSS
+- PHP registration or plugin bootstrap code
+- accessibility: keyboard, focus, ARIA, screen reader labels
+- security: escaping, sanitization, nonces, permissions, direct file access
+- internationalization: __(), _x(), sprintf(), text domain usage
+- backward compatibility or block validation risk
+- build output in /build
+
+For this plugin, follow these project conventions:
+
+- Prefer child-owned attributes when a setting belongs to a child block.
+- Use parent attributes only for settings that control the overall parent block or are shared by multiple children.
+- Use block context only when a parent-owned value must be consumed by descendant blocks.
+- Keep editor-only instructional text outside visual preview containers when it would distort the preview.
+- Avoid hardcoded IDs in reusable block markup. Use BEM-style classes for styling and JavaScript selectors.
+- Do not change saved markup lightly. If saved markup changes, call out possible Gutenberg block validation impact.
+- Prefer small, branch-sized changes with a clear test plan.
+- Do not implement code until the Plan has been reviewed and accepted.
+
+When writing a Plan, include:
+
+1. Goal
+2. Files likely affected
+3. WordPress best-practice check
+4. Proposed implementation steps
+5. Risks / validation concerns
+6. Manual test checklist
+7. Suggested commit message
+
+Example best-practice check:
+
+```markdown
+## WordPress best-practice check
+- block.json: yes — new child attribute `padding`
+- edit.tsx / save.tsx: yes — inspector control + saved class
+- view.ts: no
+- style.scss / editor.scss: yes / no
+- PHP: no
+- a11y / security / i18n: labels via `__()`; no new user input
+- validation /build: saved markup class change — existing blocks may need deprecation
+```
