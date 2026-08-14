@@ -13,6 +13,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
 		"types": [
+			"jest",
 			"wordpress__blocks",
 			"wordpress__block-editor",
 			"wordpress__components",

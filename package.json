@@ -12,7 +12,9 @@
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start --blocks-manifest"
+		"start": "wp-scripts start --blocks-manifest",
+		"test:unit": "wp-scripts test-unit-js",
+		"test:unit:watch": "wp-scripts test-unit-js --watch"
 	},
 	"dependencies": {
 		"@wordpress/block-editor": "latest",
@@ -20,6 +22,7 @@
 		"@wordpress/i18n": "latest"
 	},
 	"devDependencies": {
+		"@types/jest": "^29.5.14",
 		"@types/wordpress__block-editor": "^15.0.6",
 		"@types/wordpress__blocks": "^15.10.2",
 		"@types/wordpress__components": "^23.0.12",

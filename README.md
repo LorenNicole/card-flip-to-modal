@@ -265,6 +265,18 @@ Create a production build:
 npm run build
 ```
 
+Run unit tests:
+
+```bash
+npm run test:unit
+```
+
+Watch unit tests during development:
+
+```bash
+npm run test:unit:watch
+```
+
 ## Screenshots
 
 Editor and front-end screenshots can be added under `docs/screenshots/`.
