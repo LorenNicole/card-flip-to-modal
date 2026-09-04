@@ -23,7 +23,8 @@
  * - Opens modal when preview card is clicked.
  * - Opens modal with Enter or Space when preview card has focus.
  * - Closes modal with close button.
- * - Closes modal with Escape.
+ * - Closes modal with Escape, including while the flip animation is running.
+ * - Keeps Tab on the trigger while the open animation is running.
  * - Does not close on backdrop click.
  * - Allows only one modal open at a time.
  * - Locks page scroll while modal is open.
@@ -54,6 +55,8 @@ const ANIMATION_BACK_CONTENT_CLASS = 'gb-flip-card-modal__animation-back-content
 
 let activeBlock: HTMLElement | null = null;
 let activeTrigger: HTMLElement | null = null;
+let activeClone: HTMLElement | null = null;
+let activeAnimation: { cancelled: boolean } | null = null;
 let isAnimating = false;
 let inertedBackground: HTMLElement[] = [];
 
@@ -454,7 +457,9 @@ function animateClone(
 		animations.push( contentAnimation.finished );
 	}
 
-	return Promise.all( animations ).then( () => undefined );
+	return Promise.all( animations )
+		.then( () => undefined )
+		.catch( () => undefined );
 }
 
 function getBooleanDataAttribute(
@@ -592,6 +597,34 @@ function applyBackgroundInert(
 	} );
 }
 
+function cancelActiveAnimation(): void {
+	if ( activeAnimation ) {
+		activeAnimation.cancelled = true;
+		activeAnimation = null;
+	}
+
+	if ( activeClone ) {
+		if ( typeof activeClone.getAnimations === 'function' ) {
+			activeClone.getAnimations( { subtree: true } ).forEach( ( animation ) => {
+				animation.cancel();
+			} );
+		}
+
+		activeClone.remove();
+		activeClone = null;
+	}
+
+	isAnimating = false;
+}
+
+function beginCloneAnimation( clone: HTMLElement ): { cancelled: boolean } {
+	const animation = { cancelled: false };
+	activeAnimation = animation;
+	activeClone = clone;
+	isAnimating = true;
+	return animation;
+}
+
 function focusOpenDialog(
 	dialog: HTMLElement,
 	backdrop: HTMLElement | null,
@@ -609,10 +642,16 @@ function focusOpenDialog(
 	dialog.focus();
 }
 
-function closeModal( block: HTMLElement | null = activeBlock ): void {
-	if ( ! block || isAnimating ) {
+function closeModal(
+	block: HTMLElement | null = activeBlock,
+	immediate = false
+): void {
+	if ( ! block ) {
 		return;
 	}
+
+	const interruptedAnimation = isAnimating;
+	cancelActiveAnimation();
 
 	const settings = getBlockSettings( block );
 	const { preview, backdrop, dialog } = getBlockParts( block );
@@ -660,16 +699,25 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 		}
 	}
 
-	if ( shouldReduceMotion() || ! settings.flipAnimationEnabled ) {
+	if (
+		immediate ||
+		interruptedAnimation ||
+		shouldReduceMotion() ||
+		! settings.flipAnimationEnabled
+	) {
 		finishClose();
 		return;
 	}
 
-	isAnimating = true;
-
 	const startRect = getFinalModalRect( safeDialog );
 	const finalRect = getRectFromElement( safePreview );
-	const clone = createAnimationClone( safeBlock, safePreview, startRect, settings );
+	const clone = createAnimationClone(
+		safeBlock,
+		safePreview,
+		startRect,
+		settings
+	);
+	const animation = beginCloneAnimation( clone );
 
 	safeDialog.hidden = true;
 
@@ -681,8 +729,12 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 		settings.flipAnimationDuration
 	)
 		.then( () => {
+			if ( animation.cancelled ) {
+				return;
+			}
+
 			finishClose();
-	
+
 			return new Promise< void >( ( resolve ) => {
 				window.requestAnimationFrame( () => {
 					fadeOutAndRemoveClone( clone ).then( resolve );
@@ -690,13 +742,22 @@ function closeModal( block: HTMLElement | null = activeBlock ): void {
 			} );
 		} )
 		.finally( () => {
+			if ( animation.cancelled ) {
+				return;
+			}
+
 			isAnimating = false;
+			activeAnimation = null;
+
+			if ( activeClone === clone ) {
+				activeClone = null;
+			}
 		} );
 }
 
 function closeAnyOpenModal(): void {
 	if ( activeBlock ) {
-		closeModal( activeBlock );
+		closeModal( activeBlock, true );
 	}
 }
 
@@ -704,7 +765,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	const { preview, backdrop, dialog, closeButton } = getBlockParts( block );
 	const settings = getBlockSettings( block );
 
-	if ( ! preview || ! backdrop || ! dialog || isAnimating ) {
+	if ( ! preview || ! backdrop || ! dialog ) {
 		return;
 	}
 
@@ -735,21 +796,33 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 		return;
 	}
 
-	isAnimating = true;
 	preview.classList.add( PREVIEW_FLIPPED_CLASS );
 
 	const startRect = getRectFromElement( preview );
 	const finalRect = getFinalModalRect( dialog );
 	const clone = createAnimationClone( block, preview, startRect, settings );
+	const animation = beginCloneAnimation( clone );
 
 	animateClone( clone, startRect, finalRect, 'open', settings.flipAnimationDuration )
 		.then( () => {
+			if ( animation.cancelled ) {
+				return;
+			}
+
 			dialog.style.opacity = '0';
 			dialog.hidden = false;
 
 			window.requestAnimationFrame( () => {
+				if ( animation.cancelled ) {
+					return;
+				}
+
 				dialog.style.opacity = '';
 				clone.remove();
+
+				if ( activeClone === clone ) {
+					activeClone = null;
+				}
 			} );
 
 			focusOpenDialog(
@@ -760,7 +833,12 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 			);
 		} )
 		.finally( () => {
+			if ( animation.cancelled ) {
+				return;
+			}
+
 			isAnimating = false;
+			activeAnimation = null;
 		} );
 }
 
@@ -787,16 +865,25 @@ function handleDocumentKeydown( event: KeyboardEvent ): void {
 	}
 
 	if ( event.key === 'Escape' ) {
+		event.preventDefault();
 		closeModal( activeBlock );
+		return;
+	}
+
+	if ( isAnimating ) {
+		if ( event.key === 'Tab' ) {
+			event.preventDefault();
+		}
+
 		return;
 	}
 
 	const { dialog, closeButton } = getBlockParts( activeBlock );
 	const settings = getBlockSettings( activeBlock );
 
-	modalFocus( 
-		event, 
-		dialog, 
+	modalFocus(
+		event,
+		dialog,
 		settings.modalShowCloseButton ? closeButton : dialog
 	);
 }
