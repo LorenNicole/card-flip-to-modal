@@ -4,6 +4,10 @@ const NATIVE_OPEN_CONTROL_SELECTOR =
 	'button, summary, input, select, textarea';
 const LINK_SELECTOR = 'a[href]';
 
+export const PREVIEW_HAS_OPEN_ELEMENT_CLASS =
+	'gb-flip-card-modal__preview--has-open-element';
+export const PREVIEW_OPEN_TRIGGER_CLASS = 'gb-flip-card-modal__open-trigger';
+
 /**
  * Escapes an HTML ID for use in a CSS selector.
  *
@@ -78,6 +82,8 @@ export function preparePreviewOpenTrigger(
 	preview.removeAttribute( 'aria-haspopup' );
 	preview.removeAttribute( 'aria-expanded' );
 	preview.removeAttribute( 'aria-controls' );
+	preview.classList.add( PREVIEW_HAS_OPEN_ELEMENT_CLASS );
+	trigger.classList.add( PREVIEW_OPEN_TRIGGER_CLASS );
 
 	trigger.setAttribute( 'aria-haspopup', 'dialog' );
 	trigger.setAttribute( 'aria-expanded', 'false' );

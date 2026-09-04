@@ -2,6 +2,8 @@
  * Tests for resolving and preparing the preview modal open trigger.
  */
 import {
+	PREVIEW_HAS_OPEN_ELEMENT_CLASS,
+	PREVIEW_OPEN_TRIGGER_CLASS,
 	getPreviewOpenTrigger,
 	isNativeOpenControl,
 	preparePreviewOpenTrigger,
@@ -98,6 +100,12 @@ describe( 'preparePreviewOpenTrigger', () => {
 		expect( preview.getAttribute( 'role' ) ).toBe( 'button' );
 		expect( preview.getAttribute( 'tabindex' ) ).toBe( '0' );
 		expect( preview.getAttribute( 'aria-haspopup' ) ).toBe( 'dialog' );
+		expect(
+			preview.classList.contains( PREVIEW_HAS_OPEN_ELEMENT_CLASS )
+		).toBe( false );
+		expect(
+			preview.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
+		).toBe( false );
 	} );
 
 	it( 'moves dialog ARIA onto a native button and demotes the preview', () => {
@@ -116,6 +124,12 @@ describe( 'preparePreviewOpenTrigger', () => {
 		expect( button.getAttribute( 'aria-expanded' ) ).toBe( 'false' );
 		expect( button.getAttribute( 'role' ) ).toBeNull();
 		expect( button.hasAttribute( 'tabindex' ) ).toBe( false );
+		expect(
+			preview.classList.contains( PREVIEW_HAS_OPEN_ELEMENT_CLASS )
+		).toBe( true );
+		expect(
+			button.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
+		).toBe( true );
 	} );
 
 	it( 'adds button semantics to a generic inner trigger', () => {
@@ -129,6 +143,9 @@ describe( 'preparePreviewOpenTrigger', () => {
 		expect( heading.getAttribute( 'role' ) ).toBe( 'button' );
 		expect( heading.getAttribute( 'tabindex' ) ).toBe( '0' );
 		expect( heading.getAttribute( 'aria-haspopup' ) ).toBe( 'dialog' );
+		expect(
+			heading.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
+		).toBe( true );
 	} );
 } );
 
