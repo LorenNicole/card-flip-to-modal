@@ -84,6 +84,38 @@ describe( 'getFocusableElements', () => {
 		] );
 	} );
 
+	it( 'includes media, iframe, summary, and contenteditable elements', () => {
+		const audio = createVisibleControl( 'audio', { controls: '' } );
+		const video = createVisibleControl( 'video', { controls: '' } );
+		const iframe = createVisibleControl( 'iframe' );
+		const summary = createVisibleControl( 'summary' );
+		const editable = createVisibleControl( 'div', {
+			contenteditable: 'true',
+		} );
+		const audioWithoutControls = createVisibleControl( 'audio' );
+		const notEditable = createVisibleControl( 'div', {
+			contenteditable: 'false',
+		} );
+
+		container.append(
+			audio,
+			video,
+			iframe,
+			summary,
+			editable,
+			audioWithoutControls,
+			notEditable
+		);
+
+		expect( getFocusableElements( container ) ).toEqual( [
+			audio,
+			video,
+			iframe,
+			summary,
+			editable,
+		] );
+	} );
+
 	it( 'excludes disabled form controls and negative tabindex elements', () => {
 		const enabledButton = createVisibleControl( 'button' );
 		const disabledButton = createVisibleControl( 'button' );

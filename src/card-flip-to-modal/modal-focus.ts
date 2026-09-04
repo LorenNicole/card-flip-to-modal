@@ -7,6 +7,11 @@ const FOCUSABLE_SELECTOR = [
 	'textarea:not([disabled])',
 	'input:not([disabled])',
 	'select:not([disabled])',
+	'audio[controls]',
+	'video[controls]',
+	'iframe',
+	'summary',
+	'[contenteditable]:not([contenteditable="false"])',
 	'[tabindex]:not([tabindex="-1"])',
 ].join( ',' );
 
