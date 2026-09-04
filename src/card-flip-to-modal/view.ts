@@ -31,6 +31,7 @@
  * - Returns focus to the preview card as soon as the modal starts closing.
  */
 
+import { wirePreviewDialogRelationship } from './dialog-relationship';
 import { shouldIgnorePreviewActivation } from './interactive-target';
 import { getBackgroundElementsToInert, modalFocus } from './modal-focus';
 
@@ -495,12 +496,7 @@ function getModalAriaLabel( block: HTMLElement ): string {
 		}
 	}
 
-	// Legacy: label stored on parent before attribute move
-	const fromParent =
-		block.getAttribute( 'aria-label' ) ||
-		block.dataset.modalAriaLabel;
-
-	return getSafeModalAriaLabel( fromParent || DEFAULT_MODAL_ARIA_LABEL );
+	return DEFAULT_MODAL_ARIA_LABEL;
 }
 
 function getModalBehaviorSettingsElement( block: HTMLElement ): HTMLElement {
@@ -878,11 +874,15 @@ function handleDocumentKeydown( event: KeyboardEvent ): void {
 }
 
 function initCardFlipToModalBlock( block: HTMLElement ): void {
-	const { preview, closeButton, backdrop } = getBlockParts( block );
+	const { preview, dialog, closeButton, backdrop } = getBlockParts( block );
 	const settings = getBlockSettings( block );
 
 	if ( ! preview ) {
 		return;
+	}
+
+	if ( dialog ) {
+		wirePreviewDialogRelationship( preview, dialog );
 	}
 
 	preview.addEventListener( 'click', ( event ) => {
