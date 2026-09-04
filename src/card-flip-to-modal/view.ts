@@ -31,7 +31,10 @@
  * - Returns focus to the preview card as soon as the modal starts closing.
  */
 
-import { wirePreviewDialogRelationship } from './dialog-relationship';
+import {
+	wireDialogAccessibleName,
+	wirePreviewDialogRelationship,
+} from './dialog-relationship';
 import { getBackgroundElementsToInert, modalFocus } from './modal-focus';
 
 import {
@@ -780,7 +783,10 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 
 	block.classList.add( OPEN_CLASS );
 	preview.setAttribute( 'aria-expanded', 'true' );
-	dialog.setAttribute( 'aria-label', settings.modalAriaLabel );
+
+	if ( ! dialog.getAttribute( 'aria-labelledby' ) ) {
+		dialog.setAttribute( 'aria-label', settings.modalAriaLabel );
+	}
 
 	backdrop.hidden = false;
 	dialog.hidden = true;
@@ -890,6 +896,7 @@ function initCardFlipToModalBlock( block: HTMLElement ): void {
 
 	if ( dialog ) {
 		wirePreviewDialogRelationship( preview, dialog );
+		wireDialogAccessibleName( dialog );
 	}
 
 	preview.addEventListener( 'click', () => {

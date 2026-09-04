@@ -433,7 +433,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							} )
 						}
 						help={ __(
-							'Describe the purpose of the modal for screen readers. If left blank, the default label will be used.',
+							'Used when the modal has no heading. If a heading is present, screen readers use that heading as the dialog name.',
 							'card-flip-to-modal'
 						) }
 					/>
