@@ -18,7 +18,7 @@ const INTERACTIVE_SELECTOR = [
  * Returns true when the event originated from a nested interactive control
  * inside the preview card, not from the preview itself.
  *
- * @param target Event target.
+ * @param target  Event target.
  * @param preview Preview card element.
  * @return True when the preview should ignore the activation event.
  */

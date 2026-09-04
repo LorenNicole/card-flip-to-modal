@@ -373,7 +373,8 @@ body {
 	}
 }
 
-@media ( prefers-reduced-motion: reduce ) {
+@media (prefers-reduced-motion: reduce) {
+
 	.gb-flip-card-modal__preview {
 		transition: none;
 
@@ -384,6 +385,7 @@ body {
 	}
 
 	.gb-flip-card-modal--preview-hover-lift {
+
 		.gb-flip-card-modal__preview:hover,
 		.gb-flip-card-modal__preview:focus {
 			transform: none;

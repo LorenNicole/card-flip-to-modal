@@ -52,7 +52,8 @@ const ANIMATION_CLONE_CLASS = 'gb-flip-card-modal__animation-clone';
 const ANIMATION_INNER_CLASS = 'gb-flip-card-modal__animation-inner';
 const ANIMATION_FRONT_CLASS = 'gb-flip-card-modal__animation-front';
 const ANIMATION_BACK_CLASS = 'gb-flip-card-modal__animation-back';
-const ANIMATION_BACK_CONTENT_CLASS = 'gb-flip-card-modal__animation-back-content';
+const ANIMATION_BACK_CONTENT_CLASS =
+	'gb-flip-card-modal__animation-back-content';
 
 let activeBlock: HTMLElement | null = null;
 let activeTrigger: HTMLElement | null = null;
@@ -236,8 +237,9 @@ function createAnimationClone(
 	if ( settings.modalShowCloseButton ) {
 		back.append( backCloseButton );
 	}
-	
-	back.append( backContent );	inner.append( front, back );
+
+	back.append( backContent );
+	inner.append( front, back );
 
 	clone.append( inner );
 
@@ -601,9 +603,11 @@ function cancelActiveAnimation(): void {
 
 	if ( activeClone ) {
 		if ( typeof activeClone.getAnimations === 'function' ) {
-			activeClone.getAnimations( { subtree: true } ).forEach( ( animation ) => {
-				animation.cancel();
-			} );
+			activeClone
+				.getAnimations( { subtree: true } )
+				.forEach( ( animation ) => {
+					animation.cancel();
+				} );
 		}
 
 		activeClone.remove();
@@ -763,11 +767,12 @@ function closeAnyOpenModal(): void {
 
 function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	const { preview, backdrop, dialog } = getBlockParts( block );
-	const settings = getBlockSettings( block );
 
 	if ( ! preview || ! backdrop || ! dialog ) {
 		return;
 	}
+
+	const settings = getBlockSettings( block );
 
 	closeAnyOpenModal();
 
@@ -798,7 +803,13 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	const clone = createAnimationClone( block, preview, startRect, settings );
 	const animation = beginCloneAnimation( clone );
 
-	animateClone( clone, startRect, finalRect, 'open', settings.flipAnimationDuration )
+	animateClone(
+		clone,
+		startRect,
+		finalRect,
+		'open',
+		settings.flipAnimationDuration
+	)
 		.then( () => {
 			if ( animation.cancelled ) {
 				return;
@@ -875,11 +886,12 @@ function handleDocumentKeydown( event: KeyboardEvent ): void {
 
 function initCardFlipToModalBlock( block: HTMLElement ): void {
 	const { preview, dialog, closeButton, backdrop } = getBlockParts( block );
-	const settings = getBlockSettings( block );
 
 	if ( ! preview ) {
 		return;
 	}
+
+	const settings = getBlockSettings( block );
 
 	if ( dialog ) {
 		wirePreviewDialogRelationship( preview, dialog );
