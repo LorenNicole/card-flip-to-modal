@@ -12,7 +12,8 @@
   ],
   "supports": {
     "html": false,
-    "reusable": false
+    "reusable": false,
+    "inserter": false
   },
   "attributes": {
     "previewMinHeight": {

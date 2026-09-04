@@ -46,7 +46,8 @@ return array(
 		),
 		'supports' => array(
 			'html' => false,
-			'reusable' => false
+			'reusable' => false,
+			'inserter' => false
 		),
 		'attributes' => array(
 			'modalSize' => array(
@@ -188,7 +189,8 @@ return array(
 		),
 		'supports' => array(
 			'html' => false,
-			'reusable' => false
+			'reusable' => false,
+			'inserter' => false
 		),
 		'attributes' => array(
 			'previewMinHeight' => array(

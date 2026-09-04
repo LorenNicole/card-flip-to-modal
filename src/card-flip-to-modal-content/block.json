@@ -10,7 +10,8 @@
 	"parent": [ "fun-gutenberg-blocks/card-flip-to-modal" ],
 	"supports": {
 		"html": false,
-		"reusable": false
+		"reusable": false,
+		"inserter": false
 	},
 	"attributes": {
 		"modalSize": {
