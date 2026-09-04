@@ -28,7 +28,7 @@
  * - Does not close on backdrop click.
  * - Allows only one modal open at a time.
  * - Locks page scroll while modal is open.
- * - Returns focus to the preview card when closed.
+ * - Returns focus to the preview card as soon as the modal starts closing.
  */
 
 import { shouldIgnorePreviewActivation } from './interactive-target';
@@ -627,16 +627,9 @@ function beginCloneAnimation( clone: HTMLElement ): { cancelled: boolean } {
 
 function focusOpenDialog(
 	dialog: HTMLElement,
-	backdrop: HTMLElement | null,
-	closeButton: HTMLButtonElement | null,
-	modalShowCloseButton: boolean
+	backdrop: HTMLElement | null
 ): void {
 	applyBackgroundInert( dialog, backdrop );
-
-	if ( modalShowCloseButton && closeButton ) {
-		closeButton.focus();
-		return;
-	}
 
 	dialog.setAttribute( 'tabindex', '-1' );
 	dialog.focus();
@@ -664,6 +657,11 @@ function closeModal(
 		}
 
 		restoreBackgroundInert();
+
+		if ( activeTrigger ) {
+			activeTrigger.focus();
+		}
+
 		activeBlock = null;
 		activeTrigger = null;
 
@@ -689,13 +687,17 @@ function closeModal(
 
 		restoreBackgroundInert();
 
-		if ( activeTrigger ) {
-			activeTrigger.focus();
-		}
-
 		if ( safeBlock === activeBlock ) {
 			activeBlock = null;
 			activeTrigger = null;
+		}
+	}
+
+	function restoreTriggerFocus(): void {
+		restoreBackgroundInert();
+
+		if ( activeTrigger ) {
+			activeTrigger.focus();
 		}
 	}
 
@@ -705,6 +707,7 @@ function closeModal(
 		shouldReduceMotion() ||
 		! settings.flipAnimationEnabled
 	) {
+		restoreTriggerFocus();
 		finishClose();
 		return;
 	}
@@ -720,6 +723,7 @@ function closeModal(
 	const animation = beginCloneAnimation( clone );
 
 	safeDialog.hidden = true;
+	restoreTriggerFocus();
 
 	animateClone(
 		clone,
@@ -762,7 +766,7 @@ function closeAnyOpenModal(): void {
 }
 
 function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
-	const { preview, backdrop, dialog, closeButton } = getBlockParts( block );
+	const { preview, backdrop, dialog } = getBlockParts( block );
 	const settings = getBlockSettings( block );
 
 	if ( ! preview || ! backdrop || ! dialog ) {
@@ -787,12 +791,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 
 	if ( shouldReduceMotion() || ! settings.flipAnimationEnabled ) {
 		dialog.hidden = false;
-		focusOpenDialog(
-			dialog,
-			backdrop,
-			closeButton,
-			settings.modalShowCloseButton
-		);
+		focusOpenDialog( dialog, backdrop );
 		return;
 	}
 
@@ -825,12 +824,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 				}
 			} );
 
-			focusOpenDialog(
-				dialog,
-				backdrop,
-				closeButton,
-				settings.modalShowCloseButton
-			);
+			focusOpenDialog( dialog, backdrop );
 		} )
 		.finally( () => {
 			if ( animation.cancelled ) {
@@ -878,14 +872,9 @@ function handleDocumentKeydown( event: KeyboardEvent ): void {
 		return;
 	}
 
-	const { dialog, closeButton } = getBlockParts( activeBlock );
-	const settings = getBlockSettings( activeBlock );
+	const { dialog } = getBlockParts( activeBlock );
 
-	modalFocus(
-		event,
-		dialog,
-		settings.modalShowCloseButton ? closeButton : dialog
-	);
+	modalFocus( event, dialog, dialog );
 }
 
 function initCardFlipToModalBlock( block: HTMLElement ): void {
