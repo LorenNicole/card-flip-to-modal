@@ -96,10 +96,6 @@
       "type": "boolean",
       "default": false
     },
-    "modalShowCloseButton": {
-      "type": "boolean",
-      "default": true
-    },
     "modalLockPageScroll": {
       "type": "boolean",
       "default": true

@@ -130,10 +130,6 @@ return array(
 				'type' => 'boolean',
 				'default' => false
 			),
-			'modalShowCloseButton' => array(
-				'type' => 'boolean',
-				'default' => true
-			),
 			'modalLockPageScroll' => array(
 				'type' => 'boolean',
 				'default' => true
