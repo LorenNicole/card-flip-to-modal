@@ -103,6 +103,8 @@ This area can include supported blocks such as:
 
 Visitors can click this area, or focus it with the keyboard and press Enter or Space, to open the modal.
 
+To open from a specific element instead of the whole card, select the preview block and enter that element’s HTML ID under **Card Settings**. Set the same ID on the inner block under **Advanced → HTML anchor**. Leave the setting blank to keep whole-card open.
+
 ### Modal Content
 
 The Modal Content area is the expanded content shown inside the modal.
@@ -122,7 +124,7 @@ When the flip animation is enabled, the preview card flips and grows into the mo
 
 Select the **preview** child block. The sidebar includes **Card Settings**.
 
-- Element ID that opens the modal (optional HTML ID; set the same ID on an inner block under Advanced → HTML anchor)
+- Element ID that opens the modal (optional; leave blank to open from the whole card, or enter an HTML ID also set on an inner block under Advanced → HTML anchor)
 - Minimum height
 - Padding
 - Margin
@@ -203,13 +205,14 @@ If the visible text or accessible label is left blank, the default symbol or lab
 
 The block includes modal and keyboard accessibility behavior:
 
-- Preview card is keyboard-focusable.
+- Preview card is keyboard-focusable when no open-element ID is set.
+- When an open-element ID is set, only that inner element opens the modal.
 - Enter opens the modal.
 - Space opens the modal.
 - Escape closes the modal.
 - Focus moves into the modal when it opens.
 - Focus remains trapped inside the modal while it is open.
-- Focus returns to the preview card after the modal closes.
+- Focus returns to the trigger after the modal closes.
 - The close button is always visible and keyboard-focusable.
 - The modal label and close-button accessible label can be customized in the sidebar.
 - Background page scrolling can be locked while the modal is open.

@@ -20,15 +20,16 @@
  * Front-end behavior for Card Flip to Modal.
  *
  * Stage B/C:
- * - Opens modal when preview card is clicked.
- * - Opens modal with Enter or Space when preview card has focus.
+ * - Opens modal from a named inner element when data-modal-open-element-id is set.
+ * - Opens modal from the preview card when that ID is empty or not found.
+ * - Opens modal with Enter or Space on the resolved trigger.
  * - Closes modal with close button.
  * - Closes modal with Escape, including while the flip animation is running.
  * - Keeps Tab on the trigger while the open animation is running.
  * - Does not close on backdrop click.
  * - Allows only one modal open at a time.
  * - Locks page scroll while modal is open.
- * - Returns focus to the preview card as soon as the modal starts closing.
+ * - Returns focus to the trigger as soon as the modal starts closing.
  */
 
 import {
@@ -36,6 +37,12 @@ import {
 	wirePreviewDialogRelationship,
 } from './dialog-relationship';
 import { getBackgroundElementsToInert, modalFocus } from './modal-focus';
+import {
+	getPreviewOpenTrigger,
+	preparePreviewOpenTrigger,
+	shouldHandleOpenKeydown,
+	shouldPreventOpenClickDefault,
+} from './preview-open-trigger';
 
 import {
 	DEFAULT_FLIP_ANIMATION_DURATION_MS,
@@ -667,7 +674,10 @@ function closeModal(
 
 	function finishClose(): void {
 		safeBlock.classList.remove( OPEN_CLASS );
-		safePreview.setAttribute( 'aria-expanded', 'false' );
+		( activeTrigger || safePreview ).setAttribute(
+			'aria-expanded',
+			'false'
+		);
 		safePreview.classList.remove( PREVIEW_FLIPPED_CLASS );
 
 		safeBackdrop.hidden = true;
@@ -768,11 +778,13 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 
 	closeAnyOpenModal();
 
+	const openTrigger = trigger || preview;
+
 	activeBlock = block;
-	activeTrigger = trigger || preview;
+	activeTrigger = openTrigger;
 
 	block.classList.add( OPEN_CLASS );
-	preview.setAttribute( 'aria-expanded', 'true' );
+	openTrigger.setAttribute( 'aria-expanded', 'true' );
 
 	if ( ! dialog.getAttribute( 'aria-labelledby' ) ) {
 		dialog.setAttribute( 'aria-label', settings.modalAriaLabel );
@@ -838,17 +850,17 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 		} );
 }
 
-function handlePreviewKeydown(
+function handleOpenTriggerKeydown(
 	event: KeyboardEvent,
 	block: HTMLElement,
-	preview: HTMLElement
+	trigger: HTMLElement
 ): void {
-	if ( event.key !== 'Enter' && event.key !== ' ' ) {
+	if ( ! shouldHandleOpenKeydown( trigger, event ) ) {
 		return;
 	}
 
 	event.preventDefault();
-	openModal( block, preview );
+	openModal( block, trigger );
 }
 
 function handleDocumentKeydown( event: KeyboardEvent ): void {
@@ -883,18 +895,25 @@ function initCardFlipToModalBlock( block: HTMLElement ): void {
 	}
 
 	const settings = getBlockSettings( block );
+	const trigger = getPreviewOpenTrigger( preview );
+
+	preparePreviewOpenTrigger( preview, trigger );
 
 	if ( dialog ) {
-		wirePreviewDialogRelationship( preview, dialog );
+		wirePreviewDialogRelationship( trigger, dialog );
 		wireDialogAccessibleName( dialog );
 	}
 
-	preview.addEventListener( 'click', () => {
-		openModal( block, preview );
+	trigger.addEventListener( 'click', ( event ) => {
+		if ( shouldPreventOpenClickDefault( trigger ) ) {
+			event.preventDefault();
+		}
+
+		openModal( block, trigger );
 	} );
 
-	preview.addEventListener( 'keydown', ( event ) => {
-		handlePreviewKeydown( event, block, preview );
+	trigger.addEventListener( 'keydown', ( event ) => {
+		handleOpenTriggerKeydown( event, block, trigger );
 	} );
 
 	// The close button lives inside this block's modal,
