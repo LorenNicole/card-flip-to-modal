@@ -4,8 +4,6 @@ const NATIVE_OPEN_CONTROL_SELECTOR =
 	'button, summary, input, select, textarea';
 const LINK_SELECTOR = 'a[href]';
 
-export const PREVIEW_HAS_OPEN_ELEMENT_CLASS =
-	'gb-flip-card-modal__preview--has-open-element';
 export const PREVIEW_OPEN_TRIGGER_CLASS = 'gb-flip-card-modal__open-trigger';
 
 /**
@@ -28,26 +26,26 @@ function escapeHtmlIdForSelector( htmlId: string ): string {
 /**
  * Resolves the element that should open the modal for a preview card.
  *
- * Empty, invalid, or missing IDs fall back to the preview wrapper.
- * Lookup is scoped to this preview so another card cannot steal the trigger.
+ * Empty, invalid, or missing IDs do not open the modal. Lookup is scoped to
+ * this preview so another card cannot steal the trigger.
  *
  * @param preview Preview card element.
- * @return Trigger element inside the preview, or the preview itself.
+ * @return Trigger element inside the preview, or null when none is found.
  */
-export function getPreviewOpenTrigger( preview: HTMLElement ): HTMLElement {
+export function getPreviewOpenTrigger(
+	preview: HTMLElement
+): HTMLElement | null {
 	const openElementId = getSafePreviewOpenElementId(
 		preview.getAttribute( 'data-modal-open-element-id' )
 	);
 
 	if ( ! openElementId ) {
-		return preview;
+		return null;
 	}
 
-	const trigger = preview.querySelector< HTMLElement >(
+	return preview.querySelector< HTMLElement >(
 		`#${ escapeHtmlIdForSelector( openElementId ) }`
 	);
-
-	return trigger ?? preview;
 }
 
 /**
@@ -64,27 +62,26 @@ export function isNativeOpenControl( trigger: HTMLElement ): boolean {
 }
 
 /**
- * Moves button semantics from the preview wrapper onto an inner trigger.
+ * Removes wrapper button semantics and, when a trigger exists, prepares it.
  *
  * @param preview Preview card wrapper.
- * @param trigger Resolved open trigger.
+ * @param trigger Resolved open trigger, or null when the modal should not open.
  */
 export function preparePreviewOpenTrigger(
 	preview: HTMLElement,
-	trigger: HTMLElement
+	trigger: HTMLElement | null
 ): void {
-	if ( trigger === preview ) {
-		return;
-	}
-
 	preview.removeAttribute( 'role' );
 	preview.removeAttribute( 'tabindex' );
 	preview.removeAttribute( 'aria-haspopup' );
 	preview.removeAttribute( 'aria-expanded' );
 	preview.removeAttribute( 'aria-controls' );
-	preview.classList.add( PREVIEW_HAS_OPEN_ELEMENT_CLASS );
-	trigger.classList.add( PREVIEW_OPEN_TRIGGER_CLASS );
 
+	if ( ! trigger ) {
+		return;
+	}
+
+	trigger.classList.add( PREVIEW_OPEN_TRIGGER_CLASS );
 	trigger.setAttribute( 'aria-haspopup', 'dialog' );
 	trigger.setAttribute( 'aria-expanded', 'false' );
 

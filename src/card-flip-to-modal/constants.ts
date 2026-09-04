@@ -559,6 +559,10 @@ export const DEFAULT_PREVIEW_OPEN_ELEMENT_ID = '';
 
 const VALID_HTML_ID_PATTERN = /^[A-Za-z][\w:.-]*$/;
 
+export function getDefaultPreviewOpenElementId( clientId: string ): string {
+	return `gb-flip-card-open-${ clientId }`;
+}
+
 export function getSafePreviewOpenElementId(
 	previewOpenElementId: unknown = DEFAULT_PREVIEW_OPEN_ELEMENT_ID
 ): string {

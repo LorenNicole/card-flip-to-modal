@@ -79,10 +79,6 @@ export default function save( { attributes }: SaveProps ) {
 				previewMargin: previewMarginSides,
 			} ),
 		},
-		role: 'button',
-		tabIndex: 0,
-		'aria-haspopup': 'dialog',
-		'aria-expanded': 'false',
 		...( safePreviewOpenElementId
 			? { 'data-modal-open-element-id': safePreviewOpenElementId }
 			: {} ),

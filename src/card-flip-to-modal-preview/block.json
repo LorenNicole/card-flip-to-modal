@@ -54,6 +54,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"previewOpenElementIdInitialized": {
+			"type": "boolean",
+			"default": false
+		},
 		"previewPaddingTop": {
 			"type": "number",
 			"default": 24

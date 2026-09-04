@@ -20,6 +20,7 @@ import {
 	boxControlValueToSpacingSides,
 	getBooleanDataAttribute,
 	getCloseButtonPositionClassName,
+	getDefaultPreviewOpenElementId,
 	getModalSizeClassName,
 	getModalWidthStyle,
 	getPreviewCardClassNames,
@@ -358,5 +359,18 @@ describe( 'getSafePreviewOpenElementId', () => {
 		expect( getSafePreviewOpenElementId( null ) ).toBe(
 			DEFAULT_PREVIEW_OPEN_ELEMENT_ID
 		);
+	} );
+} );
+
+describe( 'getDefaultPreviewOpenElementId', () => {
+	it( 'returns a letter-prefixed unique ID from the clientId', () => {
+		expect(
+			getDefaultPreviewOpenElementId( '1a2b3c4d-e5f6-7890' )
+		).toBe( 'gb-flip-card-open-1a2b3c4d-e5f6-7890' );
+		expect(
+			getSafePreviewOpenElementId(
+				getDefaultPreviewOpenElementId( '1a2b3c4d-e5f6-7890' )
+			)
+		).toBe( 'gb-flip-card-open-1a2b3c4d-e5f6-7890' );
 	} );
 } );

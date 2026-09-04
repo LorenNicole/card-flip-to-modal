@@ -2,7 +2,6 @@
  * Tests for resolving and preparing the preview modal open trigger.
  */
 import {
-	PREVIEW_HAS_OPEN_ELEMENT_CLASS,
 	PREVIEW_OPEN_TRIGGER_CLASS,
 	getPreviewOpenTrigger,
 	isNativeOpenControl,
@@ -37,16 +36,16 @@ function createKeyEvent( key: string ): KeyboardEvent {
 }
 
 describe( 'getPreviewOpenTrigger', () => {
-	it( 'returns the preview when no open element ID is set', () => {
+	it( 'returns null when no open element ID is set', () => {
 		const preview = createPreview();
 
-		expect( getPreviewOpenTrigger( preview ) ).toBe( preview );
+		expect( getPreviewOpenTrigger( preview ) ).toBeNull();
 	} );
 
-	it( 'returns the preview when the open element ID is empty', () => {
+	it( 'returns null when the open element ID is empty', () => {
 		const preview = createPreview( '' );
 
-		expect( getPreviewOpenTrigger( preview ) ).toBe( preview );
+		expect( getPreviewOpenTrigger( preview ) ).toBeNull();
 	} );
 
 	it( 'returns the inner element when a valid ID is found', () => {
@@ -67,16 +66,16 @@ describe( 'getPreviewOpenTrigger', () => {
 		expect( getPreviewOpenTrigger( preview ) ).toBe( button );
 	} );
 
-	it( 'returns the preview when the ID is invalid', () => {
+	it( 'returns null when the ID is invalid', () => {
 		const preview = createPreview( '1open' );
 		const button = document.createElement( 'button' );
 		button.id = '1open';
 		preview.appendChild( button );
 
-		expect( getPreviewOpenTrigger( preview ) ).toBe( preview );
+		expect( getPreviewOpenTrigger( preview ) ).toBeNull();
 	} );
 
-	it( 'returns the preview when the ID is not inside this preview', () => {
+	it( 'returns null when the ID is not inside this preview', () => {
 		const preview = createPreview( 'open-btn' );
 		const otherPreview = createPreview();
 		const button = document.createElement( 'button' );
@@ -84,7 +83,7 @@ describe( 'getPreviewOpenTrigger', () => {
 		otherPreview.appendChild( button );
 		document.body.append( preview, otherPreview );
 
-		expect( getPreviewOpenTrigger( preview ) ).toBe( preview );
+		expect( getPreviewOpenTrigger( preview ) ).toBeNull();
 
 		preview.remove();
 		otherPreview.remove();
@@ -92,17 +91,14 @@ describe( 'getPreviewOpenTrigger', () => {
 } );
 
 describe( 'preparePreviewOpenTrigger', () => {
-	it( 'leaves preview button semantics when the trigger is the preview', () => {
+	it( 'demotes the preview and does not add a trigger class when there is no trigger', () => {
 		const preview = createPreview();
 
-		preparePreviewOpenTrigger( preview, preview );
+		preparePreviewOpenTrigger( preview, null );
 
-		expect( preview.getAttribute( 'role' ) ).toBe( 'button' );
-		expect( preview.getAttribute( 'tabindex' ) ).toBe( '0' );
-		expect( preview.getAttribute( 'aria-haspopup' ) ).toBe( 'dialog' );
-		expect(
-			preview.classList.contains( PREVIEW_HAS_OPEN_ELEMENT_CLASS )
-		).toBe( false );
+		expect( preview.hasAttribute( 'role' ) ).toBe( false );
+		expect( preview.hasAttribute( 'tabindex' ) ).toBe( false );
+		expect( preview.hasAttribute( 'aria-haspopup' ) ).toBe( false );
 		expect(
 			preview.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
 		).toBe( false );
@@ -124,9 +120,6 @@ describe( 'preparePreviewOpenTrigger', () => {
 		expect( button.getAttribute( 'aria-expanded' ) ).toBe( 'false' );
 		expect( button.getAttribute( 'role' ) ).toBeNull();
 		expect( button.hasAttribute( 'tabindex' ) ).toBe( false );
-		expect(
-			preview.classList.contains( PREVIEW_HAS_OPEN_ELEMENT_CLASS )
-		).toBe( true );
 		expect(
 			button.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
 		).toBe( true );

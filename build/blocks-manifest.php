@@ -238,6 +238,10 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'previewOpenElementIdInitialized' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
 			'previewPaddingTop' => array(
 				'type' => 'number',
 				'default' => 24

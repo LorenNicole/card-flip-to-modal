@@ -53,22 +53,18 @@
 		border-radius: var(--gb-flip-card-preview-border-radius, 0);
 		background: var(--gb-flip-card-preview-background-color, #ffffff);
 		color: var(--gb-flip-card-preview-text-color, #111111);
-		cursor: pointer;
+		cursor: default;
 		transition:
 			transform 180ms ease,
 			box-shadow 180ms ease,
 			border-color 180ms ease;
 
-		&--has-open-element {
-			cursor: default;
-
-			a[href],
-			button,
-			summary,
-			label[for],
-			[role="button"] {
-				cursor: pointer;
-			}
+		a[href],
+		button,
+		summary,
+		label[for],
+		[role="button"] {
+			cursor: pointer;
 		}
 
 		&:focus {

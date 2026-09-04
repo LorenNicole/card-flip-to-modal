@@ -20,8 +20,8 @@
  * Front-end behavior for Card Flip to Modal.
  *
  * Stage B/C:
- * - Opens modal from a named inner element when data-modal-open-element-id is set.
- * - Opens modal from the preview card when that ID is empty or not found.
+ * - Opens modal only from a named inner element found inside the preview.
+ * - Does not open when that ID is empty or not on the card.
  * - Opens modal with Enter or Space on the resolved trigger.
  * - Closes modal with close button.
  * - Closes modal with Escape, including while the flip animation is running.
@@ -900,21 +900,26 @@ function initCardFlipToModalBlock( block: HTMLElement ): void {
 	preparePreviewOpenTrigger( preview, trigger );
 
 	if ( dialog ) {
-		wirePreviewDialogRelationship( trigger, dialog );
+		if ( trigger ) {
+			wirePreviewDialogRelationship( trigger, dialog );
+		}
+
 		wireDialogAccessibleName( dialog );
 	}
 
-	trigger.addEventListener( 'click', ( event ) => {
-		if ( shouldPreventOpenClickDefault( trigger ) ) {
-			event.preventDefault();
-		}
+	if ( trigger ) {
+		trigger.addEventListener( 'click', ( event ) => {
+			if ( shouldPreventOpenClickDefault( trigger ) ) {
+				event.preventDefault();
+			}
 
-		openModal( block, trigger );
-	} );
+			openModal( block, trigger );
+		} );
 
-	trigger.addEventListener( 'keydown', ( event ) => {
-		handleOpenTriggerKeydown( event, block, trigger );
-	} );
+		trigger.addEventListener( 'keydown', ( event ) => {
+			handleOpenTriggerKeydown( event, block, trigger );
+		} );
+	}
 
 	// The close button lives inside this block's modal,
 	// but it is still part of the same block instance.

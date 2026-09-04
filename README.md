@@ -53,7 +53,7 @@ Select the parent or the relevant child in the editor to see that block’s side
 - Optional flip animation from the preview card into the modal
 - Focus moves into the modal when opened
 - Focus remains trapped inside the modal while open
-- Focus returns to the preview card after closing
+- Focus returns to the trigger after closing
 - Editable modal ARIA label for screen readers
 - Modal content scrolls internally when content is long
 - Multiple Card Flip to Modal blocks can be used on one page
@@ -101,9 +101,9 @@ This area can include supported blocks such as:
 - Shortcode
 - Latest Posts
 
-Visitors can click this area, or focus it with the keyboard and press Enter or Space, to open the modal.
+Visitors open the modal from a specific element inside the card. New cards start with a unique HTML ID on the “Click to open the modal content.” paragraph, and the Card Settings field uses that same ID. Change the setting (and the inner block’s **Advanced → HTML anchor**) to use a Button or another control instead.
 
-To open from a specific element instead of the whole card, select the preview block and enter that element’s HTML ID under **Card Settings**. Set the same ID on the inner block under **Advanced → HTML anchor**. Leave the setting blank to keep whole-card open.
+If the setting is blank, or the ID is not on an element inside that card, the modal does not open.
 
 ### Modal Content
 
@@ -124,7 +124,7 @@ When the flip animation is enabled, the preview card flips and grows into the mo
 
 Select the **preview** child block. The sidebar includes **Card Settings**.
 
-- Element ID that opens the modal (optional; leave blank to open from the whole card, or enter an HTML ID also set on an inner block under Advanced → HTML anchor)
+- Element ID that opens the modal (required; new cards start with a unique ID on the intro paragraph; set the same ID on an inner block under Advanced → HTML anchor)
 - Minimum height
 - Padding
 - Margin
@@ -205,10 +205,10 @@ If the visible text or accessible label is left blank, the default symbol or lab
 
 The block includes modal and keyboard accessibility behavior:
 
-- Preview card is keyboard-focusable when no open-element ID is set.
-- When an open-element ID is set, only that inner element opens the modal.
-- Enter opens the modal.
-- Space opens the modal.
+- The intro paragraph (or another named inner element) is the keyboard-focusable control that opens the modal.
+- The modal does not open if the element ID is blank or not found on the card.
+- Enter opens the modal from that trigger.
+- Space opens the modal from that trigger.
 - Escape closes the modal.
 - Focus moves into the modal when it opens.
 - Focus remains trapped inside the modal while it is open.

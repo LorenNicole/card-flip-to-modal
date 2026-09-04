@@ -4,6 +4,7 @@
 import {
 	InnerBlocks,
 	InspectorControls,
+	store as blockEditorStore,
 	useBlockProps,
 } from '@wordpress/block-editor';
 
@@ -15,6 +16,8 @@ import {
 	ToggleControl,
 } from '@wordpress/components';
 
+import { useSelect, useDispatch } from '@wordpress/data';
+import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import {
@@ -34,6 +37,7 @@ import {
 	MAX_CARD_MODAL_BORDER_WIDTH,
 	MIN_CARD_MODAL_BORDER_RADIUS,
 	MIN_CARD_MODAL_BORDER_WIDTH,
+	getDefaultPreviewOpenElementId,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
 	getPreviewMarginSides,
@@ -93,14 +97,20 @@ interface EditAttributes extends PreviewSpacingAttributes {
 	previewBorderWidth?: number;
 	previewTextColor?: string;
 	previewOpenElementId?: string;
+	previewOpenElementIdInitialized?: boolean;
 }
 
 interface EditProps {
 	attributes: EditAttributes;
+	clientId: string;
 	setAttributes: ( attributes: Partial< EditAttributes > ) => void;
 }
 
-export default function Edit( { attributes, setAttributes }: EditProps ) {
+export default function Edit( {
+	attributes,
+	clientId,
+	setAttributes,
+}: EditProps ) {
 	const {
 		previewMinHeight = DEFAULT_PREVIEW_MIN_HEIGHT,
 		previewHasShadow = true,
@@ -112,6 +122,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		previewBorderWidth = DEFAULT_PREVIEW_BORDER_WIDTH,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
 		previewOpenElementId = DEFAULT_PREVIEW_OPEN_ELEMENT_ID,
+		previewOpenElementIdInitialized = false,
 	} = attributes;
 
 	const safePreviewMinHeight = getSafeNumber(
@@ -141,6 +152,42 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const previewMarginShorthand = getSpacingShorthand(
 		previewMarginSides
 	);
+
+	const innerBlocks = useSelect(
+		( select ) => select( blockEditorStore ).getBlocks( clientId ),
+		[ clientId ]
+	);
+	const { updateBlockAttributes } = useDispatch( blockEditorStore );
+
+	useEffect( () => {
+		if ( previewOpenElementIdInitialized || ! innerBlocks.length ) {
+			return;
+		}
+
+		const openElementId = getDefaultPreviewOpenElementId( clientId );
+
+		setAttributes( {
+			previewOpenElementId: openElementId,
+			previewOpenElementIdInitialized: true,
+		} );
+
+		const paragraph = innerBlocks.find(
+			( block ) =>
+				block.name === 'core/paragraph' && ! block.attributes?.anchor
+		);
+
+		if ( paragraph ) {
+			updateBlockAttributes( paragraph.clientId, {
+				anchor: openElementId,
+			} );
+		}
+	}, [
+		clientId,
+		innerBlocks,
+		previewOpenElementIdInitialized,
+		setAttributes,
+		updateBlockAttributes,
+	] );
 
 	const blockProps = useBlockProps( {
 		className: [
@@ -192,7 +239,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							} )
 						}
 						help={ __(
-							'Enter the HTML ID of an element inside the card (set it on that block under Advanced → HTML anchor). Leave blank to open the modal from the whole card.',
+							'Enter the HTML ID of an element inside the card (Advanced → HTML anchor). The modal opens only from that element. New cards start with an ID on the intro paragraph; change it to use a different control.',
 							'card-flip-to-modal'
 						) }
 					/>
