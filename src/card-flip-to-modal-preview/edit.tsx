@@ -11,6 +11,7 @@ import {
 	PanelBody,
 	RangeControl,
 	SelectControl,
+	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
 
@@ -26,6 +27,7 @@ import {
 	DEFAULT_PREVIEW_BORDER_WIDTH,
 	DEFAULT_PREVIEW_MARGIN,
 	DEFAULT_PREVIEW_MIN_HEIGHT,
+	DEFAULT_PREVIEW_OPEN_ELEMENT_ID,
 	DEFAULT_PREVIEW_PADDING,
 	DEFAULT_PREVIEW_TEXT_COLOR,
 	MAX_CARD_MODAL_BORDER_RADIUS,
@@ -90,6 +92,7 @@ interface EditAttributes extends PreviewSpacingAttributes {
 	previewBorderRadius?: number;
 	previewBorderWidth?: number;
 	previewTextColor?: string;
+	previewOpenElementId?: string;
 }
 
 interface EditProps {
@@ -108,6 +111,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		previewBorderRadius = DEFAULT_PREVIEW_BORDER_RADIUS,
 		previewBorderWidth = DEFAULT_PREVIEW_BORDER_WIDTH,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
+		previewOpenElementId = DEFAULT_PREVIEW_OPEN_ELEMENT_ID,
 	} = attributes;
 
 	const safePreviewMinHeight = getSafeNumber(
@@ -176,6 +180,23 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					className="gb-flip-card-modal__inspector-settings-panel"
 					initialOpen={ true }
 				>
+					<TextControl
+						label={ __(
+							'Element ID that opens the modal',
+							'card-flip-to-modal'
+						) }
+						value={ previewOpenElementId }
+						onChange={ ( value ) =>
+							setAttributes( {
+								previewOpenElementId: value,
+							} )
+						}
+						help={ __(
+							'Enter the HTML ID of an element inside the card (set it on that block under Advanced → HTML anchor). Leave blank to open the modal from the whole card.',
+							'card-flip-to-modal'
+						) }
+					/>
+
 					<RangeControl
 						label={ __( 'Minimum height', 'card-flip-to-modal' ) }
 						value={ safePreviewMinHeight }

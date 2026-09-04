@@ -13,6 +13,7 @@ import {
 	DEFAULT_MODAL_SIZE,
 	DEFAULT_PREVIEW_BORDER_STYLE,
 	DEFAULT_PREVIEW_MARGIN,
+	DEFAULT_PREVIEW_OPEN_ELEMENT_ID,
 	MAX_FLIP_ANIMATION_DURATION_MS,
 	MIN_FLIP_ANIMATION_DURATION_MS,
 	ModalSize,
@@ -30,6 +31,7 @@ import {
 	getSafeFlipAnimationDuration,
 	getSafeModalAriaLabel,
 	getSafeNumber,
+	getSafePreviewOpenElementId,
 	getSpacingShorthand,
 	isValidCssSize,
 	spacingSidesToAttributes,
@@ -326,5 +328,35 @@ describe( 'getPreviewCardClassNames', () => {
 				previewHasHoverLift: false,
 			} )
 		).toEqual( [] );
+	} );
+} );
+
+describe( 'getSafePreviewOpenElementId', () => {
+	it( 'returns a trimmed valid HTML ID', () => {
+		expect( getSafePreviewOpenElementId( ' open-btn ' ) ).toBe( 'open-btn' );
+		expect( getSafePreviewOpenElementId( 'open_btn:1.2' ) ).toBe(
+			'open_btn:1.2'
+		);
+	} );
+
+	it( 'returns empty for empty, invalid, or non-string values', () => {
+		expect( getSafePreviewOpenElementId( '' ) ).toBe(
+			DEFAULT_PREVIEW_OPEN_ELEMENT_ID
+		);
+		expect( getSafePreviewOpenElementId( '  ' ) ).toBe(
+			DEFAULT_PREVIEW_OPEN_ELEMENT_ID
+		);
+		expect( getSafePreviewOpenElementId( '1open' ) ).toBe(
+			DEFAULT_PREVIEW_OPEN_ELEMENT_ID
+		);
+		expect( getSafePreviewOpenElementId( '-open' ) ).toBe(
+			DEFAULT_PREVIEW_OPEN_ELEMENT_ID
+		);
+		expect( getSafePreviewOpenElementId( 'open btn' ) ).toBe(
+			DEFAULT_PREVIEW_OPEN_ELEMENT_ID
+		);
+		expect( getSafePreviewOpenElementId( null ) ).toBe(
+			DEFAULT_PREVIEW_OPEN_ELEMENT_ID
+		);
 	} );
 } );

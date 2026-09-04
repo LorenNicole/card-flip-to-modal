@@ -50,6 +50,10 @@
 			"type": "string",
 			"default": "#111111"
 		},
+		"previewOpenElementId": {
+			"type": "string",
+			"default": ""
+		},
 		"previewPaddingTop": {
 			"type": "number",
 			"default": 24

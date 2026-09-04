@@ -234,6 +234,10 @@ return array(
 				'type' => 'string',
 				'default' => '#111111'
 			),
+			'previewOpenElementId' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'previewPaddingTop' => array(
 				'type' => 'number',
 				'default' => 24

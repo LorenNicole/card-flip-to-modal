@@ -122,6 +122,7 @@ When the flip animation is enabled, the preview card flips and grows into the mo
 
 Select the **preview** child block. The sidebar includes **Card Settings**.
 
+- Element ID that opens the modal (optional HTML ID; set the same ID on an inner block under Advanced → HTML anchor)
 - Minimum height
 - Padding
 - Margin

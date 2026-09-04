@@ -10,11 +10,13 @@ import {
 	DEFAULT_PREVIEW_BORDER_STYLE,
 	DEFAULT_PREVIEW_BORDER_WIDTH,
 	DEFAULT_PREVIEW_MIN_HEIGHT,
+	DEFAULT_PREVIEW_OPEN_ELEMENT_ID,
 	DEFAULT_PREVIEW_TEXT_COLOR,
 	getPreviewCardClassNames,
 	getPreviewCardStyle,
 	getPreviewMarginSides,
 	getPreviewPaddingSides,
+	getSafePreviewOpenElementId,
 	type BorderStyleValue,
 	type PreviewSpacingAttributes,
 } from '../card-flip-to-modal/constants';
@@ -29,6 +31,7 @@ interface SaveAttributes extends PreviewSpacingAttributes {
 	previewBorderRadius?: number;
 	previewBorderWidth?: number;
 	previewTextColor?: string;
+	previewOpenElementId?: string;
 }
 
 interface SaveProps {
@@ -46,10 +49,14 @@ export default function save( { attributes }: SaveProps ) {
 		previewBorderRadius = DEFAULT_PREVIEW_BORDER_RADIUS,
 		previewBorderWidth = DEFAULT_PREVIEW_BORDER_WIDTH,
 		previewTextColor = DEFAULT_PREVIEW_TEXT_COLOR,
+		previewOpenElementId = DEFAULT_PREVIEW_OPEN_ELEMENT_ID,
 	} = attributes;
 
 	const previewPaddingSides = getPreviewPaddingSides( attributes );
 	const previewMarginSides = getPreviewMarginSides( attributes );
+	const safePreviewOpenElementId = getSafePreviewOpenElementId(
+		previewOpenElementId
+	);
 
 	const blockProps = useBlockProps.save( {
 		className: [
@@ -76,6 +83,9 @@ export default function save( { attributes }: SaveProps ) {
 		tabIndex: 0,
 		'aria-haspopup': 'dialog',
 		'aria-expanded': 'false',
+		...( safePreviewOpenElementId
+			? { 'data-modal-open-element-id': safePreviewOpenElementId }
+			: {} ),
 	} );
 
 	return (

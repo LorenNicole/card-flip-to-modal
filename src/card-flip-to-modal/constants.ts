@@ -555,6 +555,26 @@ export function getPreviewCardClassNames( {
 	].filter( ( className ) => className !== '' );
 }
 
+export const DEFAULT_PREVIEW_OPEN_ELEMENT_ID = '';
+
+const VALID_HTML_ID_PATTERN = /^[A-Za-z][\w:.-]*$/;
+
+export function getSafePreviewOpenElementId(
+	previewOpenElementId: unknown = DEFAULT_PREVIEW_OPEN_ELEMENT_ID
+): string {
+	if ( typeof previewOpenElementId !== 'string' ) {
+		return DEFAULT_PREVIEW_OPEN_ELEMENT_ID;
+	}
+
+	const trimmedPreviewOpenElementId = previewOpenElementId.trim();
+
+	if ( ! VALID_HTML_ID_PATTERN.test( trimmedPreviewOpenElementId ) ) {
+		return DEFAULT_PREVIEW_OPEN_ELEMENT_ID;
+	}
+
+	return trimmedPreviewOpenElementId;
+}
+
 export const DEFAULT_MODAL_ARIA_LABEL = 'Card modal content';
 
 export function getSafeModalAriaLabel(
