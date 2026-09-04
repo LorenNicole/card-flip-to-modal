@@ -32,7 +32,6 @@
  */
 
 import { wirePreviewDialogRelationship } from './dialog-relationship';
-import { shouldIgnorePreviewActivation } from './interactive-target';
 import { getBackgroundElementsToInert, modalFocus } from './modal-focus';
 
 import {
@@ -852,10 +851,6 @@ function handlePreviewKeydown(
 		return;
 	}
 
-	if ( shouldIgnorePreviewActivation( event.target, preview ) ) {
-		return;
-	}
-
 	event.preventDefault();
 	openModal( block, preview );
 }
@@ -897,11 +892,7 @@ function initCardFlipToModalBlock( block: HTMLElement ): void {
 		wirePreviewDialogRelationship( preview, dialog );
 	}
 
-	preview.addEventListener( 'click', ( event ) => {
-		if ( shouldIgnorePreviewActivation( event.target, preview ) ) {
-			return;
-		}
-
+	preview.addEventListener( 'click', () => {
 		openModal( block, preview );
 	} );
 
