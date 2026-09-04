@@ -180,6 +180,9 @@ function createAnimationClone(
 	);
 
 	clone.className = ANIMATION_CLONE_CLASS;
+	clone.setAttribute( 'aria-hidden', 'true' );
+	clone.inert = true;
+	clone.tabIndex = -1;
 	inner.className = ANIMATION_INNER_CLASS;
 	front.className = ANIMATION_FRONT_CLASS;
 	back.className = ANIMATION_BACK_CLASS;
