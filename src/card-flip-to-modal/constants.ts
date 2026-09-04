@@ -29,25 +29,6 @@ export const MIN_FLIP_ANIMATION_DURATION_MS = 300;
 export const MAX_FLIP_ANIMATION_DURATION_MS = 10000;
 export const FLIP_ANIMATION_DURATION_STEP_MS = 50;
 
-export const MODAL_SIZE_OPTIONS: ModalSizeOption[] = [
-	{
-		label: 'Small',
-		value: ModalSize.SMALL,
-	},
-	{
-		label: 'Medium',
-		value: ModalSize.MEDIUM,
-	},
-	{
-		label: 'Large',
-		value: ModalSize.LARGE,
-	},
-	{
-		label: 'Custom',
-		value: ModalSize.CUSTOM,
-	},
-];
-
 const VALID_CSS_SIZE_PATTERN =
 	/^(?:\d+(?:\.\d+)?(?:px|rem|em|vw|vh|vmin|vmax|%|ch)|clamp\([^)]+\)|min\([^)]+\)|max\([^)]+\)|calc\([^)]+\))$/i;
 
@@ -328,29 +309,6 @@ export function getModalMarginSides(
 		DEFAULT_MODAL_MARGIN
 	);
 }
-
-export const BORDER_STYLE_OPTIONS: BorderStyleOption[] = [
-	{
-		label: 'Solid',
-		value: BorderStyle.SOLID,
-	},
-	{
-		label: 'Dashed',
-		value: BorderStyle.DASHED,
-	},
-	{
-		label: 'Dotted',
-		value: BorderStyle.DOTTED,
-	},
-	{
-		label: 'Double',
-		value: BorderStyle.DOUBLE,
-	},
-	{
-		label: 'None',
-		value: BorderStyle.NONE,
-	},
-];
 
 export const DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK = false;
 export const DEFAULT_MODAL_LOCK_PAGE_SCROLL = true;
@@ -665,17 +623,6 @@ export interface CloseButtonPositionOption {
 
 export const DEFAULT_CLOSE_BUTTON_POSITION: CloseButtonPositionValue =
 	CloseButtonPosition.TOP_RIGHT;
-
-export const CLOSE_BUTTON_POSITION_OPTIONS: CloseButtonPositionOption[] = [
-	{
-		label: 'Top right',
-		value: CloseButtonPosition.TOP_RIGHT,
-	},
-	{
-		label: 'Top left',
-		value: CloseButtonPosition.TOP_LEFT,
-	},
-];
 
 export function isCloseButtonPositionValue(
 	value: unknown

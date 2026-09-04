@@ -17,7 +17,6 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import {
-	BORDER_STYLE_OPTIONS,
 	CARD_MODAL_BORDER_RADIUS_STEP,
 	CARD_MODAL_BORDER_WIDTH_STEP,
 	DEFAULT_PREVIEW_BACKGROUND_COLOR,
@@ -48,6 +47,7 @@ import {
 	type PreviewSpacingAttributes,
 } from '../card-flip-to-modal/constants';
 import { CompactColorControl } from '../card-flip-to-modal/compact-color-control';
+import { getBorderStyleOptions } from '../card-flip-to-modal/editor-options';
 import { SpacingBoxControl } from '../card-flip-to-modal/spacing-box-control';
 
 const ALLOWED_BLOCKS = [
@@ -269,7 +269,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						className="gb-flip-card-modal__inspector-control--spaced"
 						label={ __( 'Border style', 'card-flip-to-modal' ) }
 						value={ safePreviewBorderStyle }
-						options={ BORDER_STYLE_OPTIONS }
+						options={ getBorderStyleOptions() }
 						onChange={ ( value ) =>
 							setAttributes( {
 								previewBorderStyle: value as BorderStyleValue,

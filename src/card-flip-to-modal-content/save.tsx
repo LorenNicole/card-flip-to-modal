@@ -2,6 +2,7 @@
  * WordPress dependencies
  */
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
+import { __ } from '@wordpress/i18n';
 
 import {
 	DEFAULT_CUSTOM_MODAL_WIDTH,
@@ -141,14 +142,23 @@ export default function save( { attributes }: SaveProps ) {
 				className="gb-flip-card-modal__dialog"
 				role="dialog"
 				aria-modal="true"
-				aria-label={ safeModalAriaLabel }
+				aria-label={
+					safeModalAriaLabel === DEFAULT_MODAL_ARIA_LABEL
+						? __( 'Card modal content', 'card-flip-to-modal' )
+						: safeModalAriaLabel
+				}
 				tabIndex={ -1 }
 				hidden
 			>
 				<ModalCloseButton
 					closeButtonPosition={ safeCloseButtonPosition }
 					text={ safeCloseButtonText }
-					ariaLabel={ safeCloseButtonAriaLabel }
+					ariaLabel={
+						safeCloseButtonAriaLabel ===
+						DEFAULT_CLOSE_BUTTON_ARIA_LABEL
+							? __( 'Close modal', 'card-flip-to-modal' )
+							: safeCloseButtonAriaLabel
+					}
 					style={ closeButtonStyle }
 				/>
 

@@ -19,11 +19,9 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import {
-	BORDER_STYLE_OPTIONS,
 	CARD_MODAL_BORDER_RADIUS_STEP,
 	CARD_MODAL_BORDER_WIDTH_STEP,
 	CLOSE_BUTTON_BORDER_RADIUS_STEP,
-	CLOSE_BUTTON_POSITION_OPTIONS,
 	CLOSE_BUTTON_SIZE_STEP,
 	DEFAULT_CLOSE_BUTTON_BACKGROUND_COLOR,
 	DEFAULT_CLOSE_BUTTON_BORDER_COLOR,
@@ -53,7 +51,6 @@ import {
 	MIN_CARD_MODAL_BORDER_WIDTH,
 	MIN_CLOSE_BUTTON_BORDER_RADIUS,
 	MIN_CLOSE_BUTTON_SIZE,
-	MODAL_SIZE_OPTIONS,
 	type BorderStyleValue,
 	type CloseButtonPositionValue,
 	type ModalSizeValue,
@@ -73,6 +70,11 @@ import {
 	spacingSidesToAttributes,
 	type ModalSpacingAttributes,
 } from '../card-flip-to-modal/constants';
+import {
+	getBorderStyleOptions,
+	getCloseButtonPositionOptions,
+	getModalSizeOptions,
+} from '../card-flip-to-modal/editor-options';
 import { ModalCloseButton } from '../card-flip-to-modal/close-button';
 import { CompactColorControl } from '../card-flip-to-modal/compact-color-control';
 import { SpacingBoxControl } from '../card-flip-to-modal/spacing-box-control';
@@ -232,7 +234,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					<SelectControl
 						label={ __( 'Modal width', 'card-flip-to-modal' ) }
 						value={ modalSize }
-						options={ MODAL_SIZE_OPTIONS }
+						options={ getModalSizeOptions() }
 						onChange={ ( value ) =>
 							setAttributes( {
 								modalSize: value as ModalSizeValue,
@@ -317,7 +319,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						className="gb-flip-card-modal__inspector-control--spaced"
 						label={ __( 'Border style', 'card-flip-to-modal' ) }
 						value={ safeModalBorderStyle }
-						options={ BORDER_STYLE_OPTIONS }
+						options={ getBorderStyleOptions() }
 						onChange={ ( value ) =>
 							setAttributes( {
 								modalBorderStyle: value as BorderStyleValue,
@@ -414,7 +416,12 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						value={ modalAriaLabel }
 						onChange={ ( value ) =>
 							setAttributes( {
-								modalAriaLabel: value || DEFAULT_MODAL_ARIA_LABEL,
+								modalAriaLabel:
+									value ||
+									__(
+										'Card modal content',
+										'card-flip-to-modal'
+									),
 							} )
 						}
 						help={ __(
@@ -460,7 +467,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					<SelectControl
 						label={ __( 'Close button position', 'card-flip-to-modal' ) }
 						value={ safeCloseButtonPosition }
-						options={ CLOSE_BUTTON_POSITION_OPTIONS }
+						options={ getCloseButtonPositionOptions() }
 						onChange={ ( value ) =>
 							setAttributes( {
 								closeButtonPosition: value as CloseButtonPositionValue,
