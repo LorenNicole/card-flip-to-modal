@@ -129,20 +129,12 @@
 		filter: blur(1px);
 		pointer-events: none;
 		border-color: transparent;
-	
+
 		&::after {
 			position: absolute;
 			inset: 0;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			padding: 1rem;
 			background: rgba(255, 255, 255, 0.72);
-			color: currentColor;
-			font-size: 1rem;
-			font-weight: 600;
-			text-align: center;
-			content: "Card has been flipped open";
+			content: '';
 		}
 	}
 

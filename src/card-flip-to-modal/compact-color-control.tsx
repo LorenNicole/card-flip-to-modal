@@ -9,7 +9,7 @@ import {
 	Dropdown,
 } from '@wordpress/components';
 import { useId } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 interface CompactColorControlProps {
 	label: string;
@@ -36,6 +36,10 @@ export function CompactColorControl( {
 					<ColorIndicator colorValue={ value } />
 				</>
 			}
+			help={ __(
+				'Choose a color with enough contrast against surrounding text and controls.',
+				'card-flip-to-modal'
+			) }
 		>
 			<div className="gb-flip-card-modal__compact-color-control-actions">
 				<Dropdown
@@ -44,6 +48,7 @@ export function CompactColorControl( {
 							variant="secondary"
 							onClick={ onToggle }
 							aria-expanded={ isOpen }
+							aria-haspopup="dialog"
 						>
 							{ __( 'Choose color', 'card-flip-to-modal' ) }
 						</Button>
@@ -63,7 +68,11 @@ export function CompactColorControl( {
 					variant="tertiary"
 					onClick={ () => onChange( defaultValue ) }
 				>
-					{ __( 'Reset', 'card-flip-to-modal' ) }
+					{ sprintf(
+						/* translators: %s: name of the color setting, e.g. Background color */
+						__( 'Reset %s', 'card-flip-to-modal' ),
+						label
+					) }
 				</Button>
 			</div>
 		</BaseControl>
