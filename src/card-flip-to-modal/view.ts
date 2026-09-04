@@ -30,6 +30,7 @@
  * - Returns focus to the preview card when closed.
  */
 
+import { shouldIgnorePreviewActivation } from './interactive-target';
 import { getBackgroundElementsToInert, modalFocus } from './modal-focus';
 
 import {
@@ -769,6 +770,10 @@ function handlePreviewKeydown(
 		return;
 	}
 
+	if ( shouldIgnorePreviewActivation( event.target, preview ) ) {
+		return;
+	}
+
 	event.preventDefault();
 	openModal( block, preview );
 }
@@ -801,7 +806,11 @@ function initCardFlipToModalBlock( block: HTMLElement ): void {
 		return;
 	}
 
-	preview.addEventListener( 'click', () => {
+	preview.addEventListener( 'click', ( event ) => {
+		if ( shouldIgnorePreviewActivation( event.target, preview ) ) {
+			return;
+		}
+
 		openModal( block, preview );
 	} );
 
