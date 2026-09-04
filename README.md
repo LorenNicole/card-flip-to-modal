@@ -47,7 +47,7 @@ Select the parent or the relevant child in the editor to see that block’s side
 - Click-to-open modal behavior
 - Keyboard activation with Enter and Space
 - Escape key closes the modal
-- Optional close button with customizable text, label, position, size, and colors
+- Close button with customizable text, label, position, size, and colors
 - Optional backdrop-click close behavior
 - Optional page scroll locking while the modal is open
 - Optional flip animation from the preview card into the modal
@@ -173,7 +173,6 @@ Additional modal appearance settings include:
 With the modal content block selected, the sidebar includes **Modal Behavior Settings**.
 
 - Close when clicking backdrop
-- Show close button
 - Lock page scroll while modal is open
 
 These settings are saved per block instance, so different Card Flip to Modal blocks on the same page can use different behavior.
@@ -210,8 +209,7 @@ The block includes modal and keyboard accessibility behavior:
 - Focus moves into the modal when it opens.
 - Focus remains trapped inside the modal while it is open.
 - Focus returns to the preview card after the modal closes.
-- The close button is keyboard-focusable when enabled.
-- If the close button is disabled, focus moves to the modal dialog.
+- The close button is always visible and keyboard-focusable.
 - The modal label and close-button accessible label can be customized in the sidebar.
 - Background page scrolling can be locked while the modal is open.
 - The modal uses dialog-related ARIA attributes.

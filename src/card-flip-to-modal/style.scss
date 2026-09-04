@@ -240,14 +240,6 @@
 		}
 	}
 
-	&[data-modal-show-close-button="false"] {
-		.gb-flip-card-modal {
-			&__close {
-				display: none;
-			}
-		}
-	}
-
 	> .gb-flip-card-modal__content-root {
 		margin-block: 0;
 	}
@@ -259,10 +251,6 @@
 		min-height: 0;
 		overflow: visible;
 	}
-}
-
-[data-modal-show-close-button="false"] .gb-flip-card-modal__close {
-	display: none;
 }
 
 .gb-flip-card-modal__animation-clone {

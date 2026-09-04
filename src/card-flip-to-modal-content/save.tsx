@@ -21,7 +21,6 @@ import {
 	DEFAULT_MODAL_BORDER_WIDTH,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
-	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
 	type BorderStyleValue,
 	type CloseButtonPositionValue,
@@ -52,7 +51,6 @@ interface SaveAttributes extends ModalSpacingAttributes {
 	modalBackgroundColor?: string;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
-	modalShowCloseButton?: boolean;
 	modalLockPageScroll?: boolean;
 	closeButtonText?: string;
 	closeButtonAriaLabel?: string;
@@ -79,7 +77,6 @@ export default function save( { attributes }: SaveProps ) {
 		modalBackgroundColor = DEFAULT_MODAL_BACKGROUND_COLOR,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
-		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 		closeButtonText = DEFAULT_CLOSE_BUTTON_TEXT,
 		closeButtonAriaLabel = DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
@@ -131,8 +128,6 @@ export default function save( { attributes }: SaveProps ) {
 		} ),
 		'data-modal-close-on-backdrop-click':
 			getBooleanDataAttribute( modalCloseOnBackdropClick ),
-		'data-modal-show-close-button':
-			getBooleanDataAttribute( modalShowCloseButton ),
 		'data-modal-lock-page-scroll':
 			getBooleanDataAttribute( modalLockPageScroll ),
 	} );

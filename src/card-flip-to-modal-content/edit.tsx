@@ -44,7 +44,6 @@ import {
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_MARGIN,
 	DEFAULT_MODAL_PADDING,
-	DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 	DEFAULT_MODAL_SIZE,
 	MAX_CARD_MODAL_BORDER_RADIUS,
 	MAX_CARD_MODAL_BORDER_WIDTH,
@@ -120,7 +119,6 @@ interface EditAttributes extends ModalSpacingAttributes {
 	modalBackgroundColor?: string;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
-	modalShowCloseButton?: boolean;
 	modalLockPageScroll?: boolean;
 	closeButtonText?: string;
 	closeButtonAriaLabel?: string;
@@ -148,7 +146,6 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		modalBackgroundColor = DEFAULT_MODAL_BACKGROUND_COLOR,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
-		modalShowCloseButton = DEFAULT_MODAL_SHOW_CLOSE_BUTTON,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 		closeButtonText = DEFAULT_CLOSE_BUTTON_TEXT,
 		closeButtonAriaLabel = DEFAULT_CLOSE_BUTTON_ARIA_LABEL,
@@ -395,18 +392,6 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					/>
 
 					<ToggleControl
-						label={ __( 'Show close button', 'card-flip-to-modal' ) }
-						checked={ modalShowCloseButton }
-						onChange={ ( value ) =>
-							setAttributes( { modalShowCloseButton: value } )
-						}
-						help={ __(
-							'Display the close button inside the modal.',
-							'card-flip-to-modal'
-						) }
-					/>
-
-					<ToggleControl
 						label={ __( 'Lock page scroll while modal is open', 'card-flip-to-modal' ) }
 						checked={ modalLockPageScroll }
 						onChange={ ( value ) =>
@@ -557,16 +542,14 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 			</p>
 
 			<div { ...blockProps }>
-				{ modalShowCloseButton && (
-					<ModalCloseButton
-						closeButtonPosition={ safeCloseButtonPosition }
-						text={ safeCloseButtonText }
-						ariaLabel={ safeCloseButtonAriaLabel }
-						style={ closeButtonStyle }
-						className="gb-flip-card-modal__editor-close-preview"
-						tabIndex={ -1 }
-					/>
-				) }
+				<ModalCloseButton
+					closeButtonPosition={ safeCloseButtonPosition }
+					text={ safeCloseButtonText }
+					ariaLabel={ safeCloseButtonAriaLabel }
+					style={ closeButtonStyle }
+					className="gb-flip-card-modal__editor-close-preview"
+					tabIndex={ -1 }
+				/>
 
 				<div className="gb-flip-card-modal__content">
 					<InnerBlocks

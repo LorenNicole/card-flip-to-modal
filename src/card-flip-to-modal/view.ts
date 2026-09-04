@@ -73,7 +73,6 @@ interface BlockParts {
 
 interface BlockSettings {
 	modalCloseOnBackdropClick: boolean;
-	modalShowCloseButton: boolean;
 	modalLockPageScroll: boolean;
 	modalAriaLabel: string;
 	flipAnimationEnabled: boolean;
@@ -236,10 +235,7 @@ function createAnimationClone(
 		backContent.textContent = 'Back';
 	}
 
-	if ( settings.modalShowCloseButton ) {
-		back.append( backCloseButton );
-	}
-
+	back.append( backCloseButton );
 	back.append( backContent );
 	inner.append( front, back );
 
@@ -514,7 +510,6 @@ function getModalBehaviorSettingsElement( block: HTMLElement ): HTMLElement {
 
 	const hasBehaviorOnContent =
 		contentBlock.dataset.modalCloseOnBackdropClick !== undefined ||
-		contentBlock.dataset.modalShowCloseButton !== undefined ||
 		contentBlock.dataset.modalLockPageScroll !== undefined;
 
 	return hasBehaviorOnContent ? contentBlock : block;
@@ -528,11 +523,6 @@ function getBlockSettings( block: HTMLElement ): BlockSettings {
 			behaviorElement,
 			'modalCloseOnBackdropClick',
 			false
-		),
-		modalShowCloseButton: getBooleanDataAttribute(
-			behaviorElement,
-			'modalShowCloseButton',
-			true
 		),
 		modalLockPageScroll: getBooleanDataAttribute(
 			behaviorElement,

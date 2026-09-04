@@ -353,7 +353,6 @@ export const BORDER_STYLE_OPTIONS: BorderStyleOption[] = [
 ];
 
 export const DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK = false;
-export const DEFAULT_MODAL_SHOW_CLOSE_BUTTON = true;
 export const DEFAULT_MODAL_LOCK_PAGE_SCROLL = true;
 
 export function getBooleanDataAttribute( value: boolean ): string {
