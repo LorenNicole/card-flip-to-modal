@@ -181,7 +181,7 @@ These settings are saved per block instance, so different Card Flip to Modal blo
 
 With the modal content block selected, the sidebar includes **Accessibility Settings**.
 
-- Modal label: describes the purpose of the modal for screen readers. If left blank, the default label is used.
+- Modal label: used by screen readers when the modal has no heading. If a heading is present, that heading names the dialog.
 
 ### Close Button Settings
 
@@ -212,7 +212,7 @@ The block includes modal and keyboard accessibility behavior:
 - The close button is always visible and keyboard-focusable.
 - The modal label and close-button accessible label can be customized in the sidebar.
 - Background page scrolling can be locked while the modal is open.
-- The modal uses dialog-related ARIA attributes.
+- The modal uses a heading as its accessible name when one is present, with a customizable fallback label.
 - Modal behavior supports multiple block instances on the same page.
 
 ## Project Structure
