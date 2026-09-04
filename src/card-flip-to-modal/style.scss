@@ -372,3 +372,25 @@ body {
 		overflow: hidden;
 	}
 }
+
+@media ( prefers-reduced-motion: reduce ) {
+	.gb-flip-card-modal__preview {
+		transition: none;
+
+		&.gb-flip-card-modal--preview-hover-lift:hover,
+		&.gb-flip-card-modal--preview-hover-lift:focus {
+			transform: none;
+		}
+	}
+
+	.gb-flip-card-modal--preview-hover-lift {
+		.gb-flip-card-modal__preview:hover,
+		.gb-flip-card-modal__preview:focus {
+			transform: none;
+		}
+	}
+
+	.gb-flip-card-modal__preview--flipped-open {
+		filter: none;
+	}
+}
