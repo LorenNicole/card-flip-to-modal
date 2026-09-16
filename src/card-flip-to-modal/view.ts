@@ -768,6 +768,10 @@ function closeAnyOpenModal(): void {
 }
 
 function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
+	if ( ! trigger ) {
+		return;
+	}
+
 	const { preview, backdrop, dialog } = getBlockParts( block );
 
 	if ( ! preview || ! backdrop || ! dialog ) {
@@ -778,13 +782,11 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 
 	closeAnyOpenModal();
 
-	const openTrigger = trigger || preview;
-
 	activeBlock = block;
-	activeTrigger = openTrigger;
+	activeTrigger = trigger;
 
 	block.classList.add( OPEN_CLASS );
-	openTrigger.setAttribute( 'aria-expanded', 'true' );
+	trigger.setAttribute( 'aria-expanded', 'true' );
 
 	if ( ! dialog.getAttribute( 'aria-labelledby' ) ) {
 		dialog.setAttribute( 'aria-label', settings.modalAriaLabel );
