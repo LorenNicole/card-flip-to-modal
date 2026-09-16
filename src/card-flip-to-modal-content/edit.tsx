@@ -98,14 +98,17 @@ const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 		'core/heading',
 		{
 			level: 2,
-			content: 'Modal Content',
+			content: __( 'Modal Content', 'card-flip-to-modal' ),
 			textAlign: 'center',
 		},
 	],
 	[
 		'core/paragraph',
 		{
-			content: 'This is where expanded custom modal content will appear.',
+			content: __(
+				'This is where expanded custom modal content will appear.',
+				'card-flip-to-modal'
+			),
 			align: 'center',
 		},
 	],

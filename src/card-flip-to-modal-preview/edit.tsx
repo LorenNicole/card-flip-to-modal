@@ -144,13 +144,16 @@ const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 		'core/heading',
 		{
 			level: 3,
-			content: 'Card Flip to Modal',
+			content: __( 'Card Flip to Modal', 'card-flip-to-modal' ),
 		},
 	],
 	[
 		'core/paragraph',
 		{
-			content: 'Click to open the modal content.',
+			content: __(
+				'Click to open the modal content.',
+				'card-flip-to-modal'
+			),
 		},
 	],
 ];
