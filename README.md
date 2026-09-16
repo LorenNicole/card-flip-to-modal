@@ -103,7 +103,7 @@ This area can include supported blocks such as:
 
 Visitors open the modal from a specific element inside the card. New cards start with a unique HTML ID on the “Click to open the modal content.” paragraph, and the Card Settings field uses that same ID. Change the setting (and the inner block’s **Advanced → HTML anchor**) to use a Button or another control instead.
 
-If the setting is blank, or the ID is not on an element inside that card, the modal does not open.
+If the setting is blank, or the ID is not on an element inside that card, the modal does not open. Cards saved before this required-ID behavior need to be opened in the editor once so the default paragraph ID can be stored, then saved again.
 
 ### Modal Content
 
@@ -207,6 +207,7 @@ The block includes modal and keyboard accessibility behavior:
 
 - The intro paragraph (or another named inner element) is the keyboard-focusable control that opens the modal.
 - The modal does not open if the element ID is blank or not found on the card.
+- Cards published before the required open-element ID must be opened in the editor and saved again so a unique ID is stored.
 - Enter opens the modal from that trigger.
 - Space opens the modal from that trigger.
 - Escape closes the modal.

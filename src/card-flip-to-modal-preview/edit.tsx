@@ -374,6 +374,16 @@ export default function Edit( {
 							) }
 						</Notice>
 					) }
+					{ previewOpenElementIdInitialized &&
+						innerBlocks.length > 0 &&
+						! matchedOpenElementBlock && (
+							<Notice status="warning" isDismissible={ false }>
+								{ __(
+									'The modal will not open until this ID matches an HTML anchor on an element inside the card.',
+									'card-flip-to-modal'
+								) }
+							</Notice>
+						) }
 
 					<RangeControl
 						label={ __( 'Minimum height', 'card-flip-to-modal' ) }
