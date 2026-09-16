@@ -899,6 +899,10 @@ function initCardFlipToModalBlock( block: HTMLElement ): void {
 
 	preparePreviewOpenTrigger( preview, trigger );
 
+	if ( backdrop ) {
+		backdrop.setAttribute( 'aria-hidden', 'true' );
+	}
+
 	if ( dialog ) {
 		if ( trigger ) {
 			wirePreviewDialogRelationship( trigger, dialog );
