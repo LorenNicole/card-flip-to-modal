@@ -45,12 +45,17 @@ export function CompactColorControl( {
 				<Dropdown
 					renderToggle={ ( { isOpen, onToggle } ) => (
 						<Button
+							id={ instanceId }
 							variant="secondary"
 							onClick={ onToggle }
 							aria-expanded={ isOpen }
 							aria-haspopup="dialog"
 						>
-							{ __( 'Choose color', 'card-flip-to-modal' ) }
+							{ sprintf(
+								/* translators: %s: name of the color setting, e.g. Background color */
+								__( 'Choose %s', 'card-flip-to-modal' ),
+								label
+							) }
 						</Button>
 					) }
 					renderContent={ () => (
