@@ -66,4 +66,15 @@ describe( 'getBackgroundElementsToInert', () => {
 		expect( elements ).toContain( backdrop );
 		expect( elements ).not.toContain( dialog );
 	} );
+
+	it( 'skips extra elements such as the preview during open animation', () => {
+		const elements = getBackgroundElementsToInert( dialog, backdrop, [
+			preview,
+		] );
+
+		expect( elements ).not.toContain( preview );
+		expect( elements ).toEqual(
+			expect.arrayContaining( [ header, footer ] )
+		);
+	} );
 } );

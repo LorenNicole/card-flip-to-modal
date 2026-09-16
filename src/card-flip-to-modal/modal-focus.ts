@@ -105,17 +105,20 @@ export function modalFocus(
  *
  * @param dialog The open modal dialog.
  * @param backdrop The modal backdrop, if present.
+ * @param additionalSkip Extra elements to leave interactive, such as the
+ *                       preview while focus remains on its open trigger.
  * @return Elements to mark inert.
  */
 export function getBackgroundElementsToInert(
 	dialog: HTMLElement | null,
-	backdrop: HTMLElement | null = null
+	backdrop: HTMLElement | null = null,
+	additionalSkip: HTMLElement[] = []
 ): HTMLElement[] {
 	if ( ! dialog ) {
 		return [];
 	}
 
-	const skip = new Set< HTMLElement >( [ dialog ] );
+	const skip = new Set< HTMLElement >( [ dialog, ...additionalSkip ] );
 
 	if ( backdrop ) {
 		skip.add( backdrop );

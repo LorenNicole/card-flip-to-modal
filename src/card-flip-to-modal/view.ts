@@ -584,11 +584,16 @@ function restoreBackgroundInert(): void {
 
 function applyBackgroundInert(
 	dialog: HTMLElement,
-	backdrop: HTMLElement | null
+	backdrop: HTMLElement | null,
+	additionalSkip: HTMLElement[] = []
 ): void {
 	restoreBackgroundInert();
 
-	inertedBackground = getBackgroundElementsToInert( dialog, backdrop );
+	inertedBackground = getBackgroundElementsToInert(
+		dialog,
+		backdrop,
+		additionalSkip
+	);
 	inertedBackground.forEach( ( element ) => {
 		element.inert = true;
 	} );
@@ -806,6 +811,7 @@ function openModal( block: HTMLElement, trigger?: HTMLElement ): void {
 	}
 
 	preview.classList.add( PREVIEW_FLIPPED_CLASS );
+	applyBackgroundInert( dialog, backdrop, [ preview ] );
 
 	const startRect = getRectFromElement( preview );
 	const finalRect = getFinalModalRect( dialog );
