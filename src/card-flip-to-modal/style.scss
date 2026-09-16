@@ -180,6 +180,15 @@
 
 	&__open-trigger {
 		cursor: pointer;
+
+		&:focus {
+			outline: none;
+		}
+
+		&:focus-visible {
+			outline: 3px solid currentColor;
+			outline-offset: 4px;
+		}
 	}
 
 	&__close {
