@@ -9,6 +9,7 @@ import {
 } from '@wordpress/block-editor';
 
 import {
+	Notice,
 	PanelBody,
 	RangeControl,
 	SelectControl,
@@ -19,6 +20,7 @@ import {
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import type { BlockInstance } from '@wordpress/blocks';
 
 import {
 	CARD_MODAL_BORDER_RADIUS_STEP,
@@ -44,6 +46,7 @@ import {
 	getPreviewPaddingSides,
 	getSafeBorderStyle,
 	getSafeNumber,
+	getSafePreviewOpenElementId,
 	getSpacingShorthand,
 	MAX_PREVIEW_MIN_HEIGHT,
 	MIN_PREVIEW_MIN_HEIGHT,
@@ -69,6 +72,32 @@ const ALLOWED_BLOCKS = [
 	'core/shortcode',
 	'core/latest-posts',
 ];
+
+function findInnerBlockByAnchor(
+	blocks: BlockInstance[],
+	anchor: string
+): BlockInstance | undefined {
+	if ( ! anchor ) {
+		return undefined;
+	}
+
+	for ( const block of blocks ) {
+		if ( block.attributes?.anchor === anchor ) {
+			return block;
+		}
+
+		const nested = findInnerBlockByAnchor(
+			block.innerBlocks ?? [],
+			anchor
+		);
+
+		if ( nested ) {
+			return nested;
+		}
+	}
+
+	return undefined;
+}
 
 const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 	[
@@ -153,11 +182,18 @@ export default function Edit( {
 		previewMarginSides
 	);
 
-	const innerBlocks = useSelect(
+	const innerBlocks: BlockInstance[] = useSelect(
 		( select ) => select( blockEditorStore ).getBlocks( clientId ),
 		[ clientId ]
 	);
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
+	const safeOpenElementId = getSafePreviewOpenElementId(
+		previewOpenElementId
+	);
+	const matchedOpenElementBlock = findInnerBlockByAnchor(
+		innerBlocks,
+		safeOpenElementId
+	);
 
 	useEffect( () => {
 		if ( previewOpenElementIdInitialized || ! innerBlocks.length ) {
@@ -243,6 +279,14 @@ export default function Edit( {
 							'card-flip-to-modal'
 						) }
 					/>
+					{ matchedOpenElementBlock?.name === 'core/heading' && (
+						<Notice status="warning" isDismissible={ false }>
+							{ __(
+								'Avoid using a heading as the open control. A heading should stay a heading; use a paragraph or Button instead.',
+								'card-flip-to-modal'
+							) }
+						</Notice>
+					) }
 
 					<RangeControl
 						label={ __( 'Minimum height', 'card-flip-to-modal' ) }

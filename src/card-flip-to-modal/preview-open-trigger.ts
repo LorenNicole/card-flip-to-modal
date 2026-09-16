@@ -3,6 +3,7 @@ import { getSafePreviewOpenElementId } from './constants';
 const NATIVE_OPEN_CONTROL_SELECTOR =
 	'button, summary, input, select, textarea';
 const LINK_SELECTOR = 'a[href]';
+const HEADING_SELECTOR = 'h1, h2, h3, h4, h5, h6';
 
 export const PREVIEW_OPEN_TRIGGER_CLASS = 'gb-flip-card-modal__open-trigger';
 
@@ -62,6 +63,19 @@ export function isNativeOpenControl( trigger: HTMLElement ): boolean {
 }
 
 /**
+ * Whether the trigger is a heading.
+ *
+ * Headings must not receive role="button", which would replace their heading
+ * role in the accessibility tree.
+ *
+ * @param trigger Candidate open trigger.
+ * @return True when the element is h1–h6.
+ */
+export function isHeadingTrigger( trigger: HTMLElement ): boolean {
+	return trigger.matches( HEADING_SELECTOR );
+}
+
+/**
  * Removes wrapper button semantics and, when a trigger exists, prepares it.
  *
  * @param preview Preview card wrapper.
@@ -85,9 +99,14 @@ export function preparePreviewOpenTrigger(
 	trigger.setAttribute( 'aria-haspopup', 'dialog' );
 	trigger.setAttribute( 'aria-expanded', 'false' );
 
-	if ( ! isNativeOpenControl( trigger ) ) {
+	if ( isNativeOpenControl( trigger ) ) {
+		return;
+	}
+
+	trigger.setAttribute( 'tabindex', '0' );
+
+	if ( ! isHeadingTrigger( trigger ) ) {
 		trigger.setAttribute( 'role', 'button' );
-		trigger.setAttribute( 'tabindex', '0' );
 	}
 }
 

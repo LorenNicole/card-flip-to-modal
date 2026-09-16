@@ -4,6 +4,7 @@
 import {
 	PREVIEW_OPEN_TRIGGER_CLASS,
 	getPreviewOpenTrigger,
+	isHeadingTrigger,
 	isNativeOpenControl,
 	preparePreviewOpenTrigger,
 	shouldHandleOpenKeydown,
@@ -126,6 +127,22 @@ describe( 'preparePreviewOpenTrigger', () => {
 	} );
 
 	it( 'adds button semantics to a generic inner trigger', () => {
+		const preview = createPreview( 'open-text' );
+		const paragraph = document.createElement( 'p' );
+		paragraph.id = 'open-text';
+		preview.appendChild( paragraph );
+
+		preparePreviewOpenTrigger( preview, paragraph );
+
+		expect( paragraph.getAttribute( 'role' ) ).toBe( 'button' );
+		expect( paragraph.getAttribute( 'tabindex' ) ).toBe( '0' );
+		expect( paragraph.getAttribute( 'aria-haspopup' ) ).toBe( 'dialog' );
+		expect(
+			paragraph.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
+		).toBe( true );
+	} );
+
+	it( 'keeps heading semantics and still makes a heading keyboard-activatable', () => {
 		const preview = createPreview( 'card-heading' );
 		const heading = document.createElement( 'h3' );
 		heading.id = 'card-heading';
@@ -133,7 +150,7 @@ describe( 'preparePreviewOpenTrigger', () => {
 
 		preparePreviewOpenTrigger( preview, heading );
 
-		expect( heading.getAttribute( 'role' ) ).toBe( 'button' );
+		expect( heading.getAttribute( 'role' ) ).toBeNull();
 		expect( heading.getAttribute( 'tabindex' ) ).toBe( '0' );
 		expect( heading.getAttribute( 'aria-haspopup' ) ).toBe( 'dialog' );
 		expect(
@@ -152,6 +169,16 @@ describe( 'isNativeOpenControl', () => {
 		expect( isNativeOpenControl( button ) ).toBe( true );
 		expect( isNativeOpenControl( link ) ).toBe( true );
 		expect( isNativeOpenControl( heading ) ).toBe( false );
+	} );
+} );
+
+describe( 'isHeadingTrigger', () => {
+	it( 'recognizes heading tags only', () => {
+		const heading = document.createElement( 'h3' );
+		const paragraph = document.createElement( 'p' );
+
+		expect( isHeadingTrigger( heading ) ).toBe( true );
+		expect( isHeadingTrigger( paragraph ) ).toBe( false );
 	} );
 } );
 
