@@ -73,6 +73,9 @@ const ALLOWED_BLOCKS = [
 	'core/latest-posts',
 ];
 
+const PREVIEW_BLOCK_NAME =
+	'fun-gutenberg-blocks/card-flip-to-modal-preview';
+
 function findInnerBlockByAnchor(
 	blocks: BlockInstance[],
 	anchor: string
@@ -97,6 +100,43 @@ function findInnerBlockByAnchor(
 	}
 
 	return undefined;
+}
+
+function previewOpenElementIdCollides(
+	blocks: BlockInstance[],
+	exceptClientId: string,
+	openElementId: string
+): boolean {
+	if ( ! openElementId ) {
+		return false;
+	}
+
+	for ( const block of blocks ) {
+		if (
+			block.name === PREVIEW_BLOCK_NAME &&
+			block.clientId !== exceptClientId
+		) {
+			const otherId = getSafePreviewOpenElementId(
+				block.attributes?.previewOpenElementId
+			);
+
+			if ( otherId === openElementId ) {
+				return true;
+			}
+		}
+
+		if (
+			previewOpenElementIdCollides(
+				block.innerBlocks ?? [],
+				exceptClientId,
+				openElementId
+			)
+		) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 const TEMPLATE: [ string, Record< string, unknown >? ][] = [
@@ -182,9 +222,21 @@ export default function Edit( {
 		previewMarginSides
 	);
 
-	const innerBlocks: BlockInstance[] = useSelect(
-		( select ) => select( blockEditorStore ).getBlocks( clientId ),
-		[ clientId ]
+	const { innerBlocks, openElementIdCollides } = useSelect(
+		( select ) => {
+			const { getBlocks } = select( blockEditorStore );
+			const currentInnerBlocks: BlockInstance[] = getBlocks( clientId );
+
+			return {
+				innerBlocks: currentInnerBlocks,
+				openElementIdCollides: previewOpenElementIdCollides(
+					getBlocks(),
+					clientId,
+					getSafePreviewOpenElementId( previewOpenElementId )
+				),
+			};
+		},
+		[ clientId, previewOpenElementId ]
 	);
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
 	const safeOpenElementId = getSafePreviewOpenElementId(
@@ -220,6 +272,41 @@ export default function Edit( {
 	}, [
 		clientId,
 		innerBlocks,
+		previewOpenElementIdInitialized,
+		setAttributes,
+		updateBlockAttributes,
+	] );
+
+	useEffect( () => {
+		if ( ! previewOpenElementIdInitialized || ! openElementIdCollides ) {
+			return;
+		}
+
+		const previousId = getSafePreviewOpenElementId(
+			previewOpenElementId
+		);
+		const nextId = getDefaultPreviewOpenElementId( clientId );
+
+		if ( ! previousId || previousId === nextId ) {
+			return;
+		}
+
+		setAttributes( {
+			previewOpenElementId: nextId,
+		} );
+
+		const current = findInnerBlockByAnchor( innerBlocks, previousId );
+
+		if ( current ) {
+			updateBlockAttributes( current.clientId, {
+				anchor: nextId,
+			} );
+		}
+	}, [
+		clientId,
+		innerBlocks,
+		openElementIdCollides,
+		previewOpenElementId,
 		previewOpenElementIdInitialized,
 		setAttributes,
 		updateBlockAttributes,
