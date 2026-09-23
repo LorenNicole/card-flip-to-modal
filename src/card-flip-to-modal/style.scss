@@ -168,7 +168,9 @@
 		max-height: 85vh;
 		padding: var(--gb-flip-card-modal-padding, 32px);
 		margin: var(--gb-flip-card-modal-margin, 0);
-		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 		background: var(--gb-flip-card-modal-background-color, #ffffff);
 		border-width: var(--gb-flip-card-modal-border-width, 1px);
 		border-style: var(--gb-flip-card-modal-border-style, none);
@@ -238,6 +240,9 @@
 	}
 
 	&__content {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: auto;
 		padding-right: 1rem;
 		text-align: center;
 
@@ -252,9 +257,12 @@
 
 	&--is-open {
 		.gb-flip-card-modal {
-			&__backdrop,
-			&__dialog {
+			&__backdrop {
 				display: block;
+			}
+
+			&__dialog {
+				display: flex;
 			}
 		}
 	}
