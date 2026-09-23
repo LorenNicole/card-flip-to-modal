@@ -42,6 +42,17 @@ export function CompactColorControl( {
 			) }
 		>
 			<div className="gb-flip-card-modal__compact-color-control-actions">
+				<Button
+					variant="tertiary"
+					onClick={ () => onChange( defaultValue ) }
+				>
+					{ sprintf(
+						/* translators: %s: name of the color setting, e.g. Background color */
+						__( 'Reset %s', 'card-flip-to-modal' ),
+						label
+					) }
+				</Button>
+
 				<Dropdown
 					renderToggle={ ( { isOpen, onToggle } ) => (
 						<Button
@@ -68,17 +79,6 @@ export function CompactColorControl( {
 						/>
 					) }
 				/>
-
-				<Button
-					variant="tertiary"
-					onClick={ () => onChange( defaultValue ) }
-				>
-					{ sprintf(
-						/* translators: %s: name of the color setting, e.g. Background color */
-						__( 'Reset %s', 'card-flip-to-modal' ),
-						label
-					) }
-				</Button>
 			</div>
 		</BaseControl>
 	);
