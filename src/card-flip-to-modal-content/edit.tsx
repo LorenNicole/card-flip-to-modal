@@ -34,6 +34,7 @@ import {
 	DEFAULT_CLOSE_BUTTON_TEXT,
 	DEFAULT_MODAL_ARIA_LABEL,
 	DEFAULT_MODAL_BACKGROUND_COLOR,
+	DEFAULT_MODAL_SCROLLBAR_COLOR,
 	DEFAULT_MODAL_BORDER_COLOR,
 	DEFAULT_MODAL_BORDER_RADIUS,
 	DEFAULT_MODAL_BORDER_STYLE,
@@ -122,6 +123,7 @@ interface EditAttributes extends ModalSpacingAttributes {
 	modalBorderColor?: string;
 	modalBorderWidth?: number;
 	modalBackgroundColor?: string;
+	modalScrollbarColor?: string;
 	modalAriaLabel?: string;
 	modalCloseOnBackdropClick?: boolean;
 	modalLockPageScroll?: boolean;
@@ -149,6 +151,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
 		modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
 		modalBackgroundColor = DEFAULT_MODAL_BACKGROUND_COLOR,
+		modalScrollbarColor = DEFAULT_MODAL_SCROLLBAR_COLOR,
 		modalAriaLabel = DEFAULT_MODAL_ARIA_LABEL,
 		modalCloseOnBackdropClick = DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 		modalLockPageScroll = DEFAULT_MODAL_LOCK_PAGE_SCROLL,
@@ -194,6 +197,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 			modalBorderColor,
 			modalBorderWidth: safeModalBorderWidth,
 			modalBackgroundColor,
+			modalScrollbarColor,
 			modalPadding: modalPaddingSides,
 			modalMargin: modalMarginSides,
 		} ),
@@ -285,6 +289,17 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						onChange={ ( value ) =>
 							setAttributes( {
 								modalBackgroundColor: value,
+							} )
+						}
+					/>
+
+					<CompactColorControl
+						label={ __( 'Scrollbar color', 'card-flip-to-modal' ) }
+						value={ modalScrollbarColor }
+						defaultValue={ DEFAULT_MODAL_SCROLLBAR_COLOR }
+						onChange={ ( value ) =>
+							setAttributes( {
+								modalScrollbarColor: value,
 							} )
 						}
 					/>

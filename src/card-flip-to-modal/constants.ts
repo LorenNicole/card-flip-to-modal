@@ -71,6 +71,7 @@ export const DEFAULT_PREVIEW_BORDER_STYLE: BorderStyleValue = BorderStyle.SOLID;
 export const DEFAULT_MODAL_BORDER_STYLE: BorderStyleValue = BorderStyle.NONE;
 export const DEFAULT_MODAL_BORDER_COLOR = '#d0d0d0';
 export const DEFAULT_MODAL_BACKGROUND_COLOR = '#ffffff';
+export const DEFAULT_MODAL_SCROLLBAR_COLOR = '#111111';
 
 export interface SpacingSides {
 	top: number;
@@ -392,6 +393,7 @@ export interface ModalShellStyleOptions {
 	modalBorderColor?: string;
 	modalBorderWidth?: number;
 	modalBackgroundColor?: string;
+	modalScrollbarColor?: string;
 	modalPadding?: Partial< SpacingSides >;
 	modalMargin?: Partial< SpacingSides >;
 }
@@ -404,6 +406,7 @@ export function getModalShellStyle( {
 	modalBorderColor = DEFAULT_MODAL_BORDER_COLOR,
 	modalBorderWidth = DEFAULT_MODAL_BORDER_WIDTH,
 	modalBackgroundColor = DEFAULT_MODAL_BACKGROUND_COLOR,
+	modalScrollbarColor = DEFAULT_MODAL_SCROLLBAR_COLOR,
 	modalPadding = {},
 	modalMargin = {},
 }: ModalShellStyleOptions ): CSSVariableStyle {
@@ -446,6 +449,10 @@ export function getModalShellStyle( {
 			safeModalMargin
 		),
 	};
+
+	if ( modalScrollbarColor !== DEFAULT_MODAL_SCROLLBAR_COLOR ) {
+		style[ '--gb-flip-card-modal-scrollbar-color' ] = modalScrollbarColor;
+	}
 
 	if ( modalSize === ModalSize.CUSTOM ) {
 		style[ '--gb-flip-card-modal-width' ] =

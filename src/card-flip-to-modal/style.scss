@@ -246,8 +246,8 @@
 		padding-right: 1rem;
 		text-align: center;
 		scrollbar-width: thin;
-		scrollbar-color: rgba(17, 17, 17, 0.4) transparent;
-		scrollbar-color: color-mix(in srgb, #111 40%, transparent) transparent;
+		scrollbar-color: var(--gb-flip-card-modal-scrollbar-color, #111111)
+			transparent;
 
 		&::-webkit-scrollbar {
 			width: 8px;
@@ -258,8 +258,7 @@
 		}
 
 		&::-webkit-scrollbar-thumb {
-			background: rgba(17, 17, 17, 0.4);
-			background: color-mix(in srgb, #111 40%, transparent);
+			background: var(--gb-flip-card-modal-scrollbar-color, #111111);
 			border-radius: 999px;
 		}
 

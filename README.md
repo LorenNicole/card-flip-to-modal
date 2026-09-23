@@ -164,6 +164,7 @@ If the custom width is invalid, the editor shows a warning and the default width
 Additional modal appearance settings include:
 
 - Background color
+- Scrollbar color
 - Padding
 - Margin
 - Border style

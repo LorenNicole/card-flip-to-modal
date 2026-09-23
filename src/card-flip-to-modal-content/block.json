@@ -43,6 +43,10 @@
 			"type": "string",
 			"default": "#ffffff"
 		},
+		"modalScrollbarColor": {
+			"type": "string",
+			"default": "#111111"
+		},
 		"modalPaddingTop": {
 			"type": "number",
 			"default": 32

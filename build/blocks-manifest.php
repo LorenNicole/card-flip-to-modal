@@ -90,6 +90,10 @@ return array(
 				'type' => 'string',
 				'default' => '#ffffff'
 			),
+			'modalScrollbarColor' => array(
+				'type' => 'string',
+				'default' => '#111111'
+			),
 			'modalPaddingTop' => array(
 				'type' => 'number',
 				'default' => 32
