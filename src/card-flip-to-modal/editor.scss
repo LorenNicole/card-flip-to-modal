@@ -85,6 +85,18 @@
 		}
 	}
 
+	&__editor-preview-disclosure {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		align-items: flex-start;
+		margin: 0 0 0.5rem;
+
+		.gb-flip-card-modal__editor-preview-label {
+			margin: 0;
+		}
+	}
+
 	&__editor-preview-label {
 		margin: 0 0 0.5rem;
 		font-size: 0.85rem;
@@ -110,6 +122,10 @@
 		border-style: var(--gb-flip-card-modal-border-style, none);
 		border-color: var(--gb-flip-card-modal-border-color, #d0d0d0);
 		border-radius: var(--gb-flip-card-modal-border-radius, 0);
+	}
+
+	.wp-block-fun-gutenberg-blocks-card-flip-to-modal-content.gb-flip-card-modal__editor-dialog-preview--is-hidden {
+		display: none;
 	}
 
 	&__editor-close-preview {

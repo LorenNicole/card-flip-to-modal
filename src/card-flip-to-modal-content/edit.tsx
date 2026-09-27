@@ -8,6 +8,7 @@ import {
 } from '@wordpress/block-editor';
 
 import {
+	Button,
 	Notice,
 	PanelBody,
 	RangeControl,
@@ -16,6 +17,7 @@ import {
 	ToggleControl,
 } from '@wordpress/components';
 
+import { useId, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import {
@@ -222,11 +224,21 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		closeButtonBorderRadius,
 	} );
 
+	const previewId = useId();
+	const [ isEditorModalPreviewVisible, setIsEditorModalPreviewVisible ] =
+		useState( true );
+
 	const blockProps = useBlockProps( {
+		id: previewId,
 		className: [
 			'gb-flip-card-modal__editor-dialog-preview',
 			getModalSizeClassName( modalSize ),
-		].join( ' ' ),
+			! isEditorModalPreviewVisible
+				? 'gb-flip-card-modal__editor-dialog-preview--is-hidden'
+				: '',
+		]
+			.filter( Boolean )
+			.join( ' ' ),
 		style: modalShellStyle,
 	} );
 
@@ -559,12 +571,33 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 				</PanelBody>
 			</InspectorControls>
 
-			<p className="gb-flip-card-modal__editor-preview-label">
-				{ __(
-					'Below is the Modal preview (not actual size).',
-					'card-flip-to-modal'
-				) }
-			</p>
+			<div className="gb-flip-card-modal__editor-preview-disclosure">
+				<p className="gb-flip-card-modal__editor-preview-label">
+					{ isEditorModalPreviewVisible
+						? __(
+								'Below is the Modal preview (not actual size).',
+								'card-flip-to-modal'
+						  )
+						: __(
+								'Modal preview hidden.',
+								'card-flip-to-modal'
+						  ) }
+				</p>
+				<Button
+					variant="tertiary"
+					aria-expanded={ isEditorModalPreviewVisible }
+					aria-controls={ previewId }
+					onClick={ () =>
+						setIsEditorModalPreviewVisible(
+							( isVisible ) => ! isVisible
+						)
+					}
+				>
+					{ isEditorModalPreviewVisible
+						? __( 'Hide modal preview', 'card-flip-to-modal' )
+						: __( 'Show modal preview', 'card-flip-to-modal' ) }
+				</Button>
+			</div>
 
 			<div { ...blockProps }>
 				<ModalCloseButton

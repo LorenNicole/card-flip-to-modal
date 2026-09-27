@@ -66,6 +66,7 @@ Select the parent or the relevant child in the editor to see that block’s side
 - Per-block modal behavior using saved data attributes
 - Front-end behavior powered by lightweight TypeScript-compiled JavaScript
 - Sass styling with BEM-style class names
+- Editor-only Hide/Show disclosure for the canvas modal preview (does not affect the frontend)
 
 ## Installation
 
@@ -110,6 +111,8 @@ If the setting is blank, or the ID is not on an element inside that card, the mo
 The Modal Content area is the expanded content shown inside the modal.
 
 This area can include longer text, images, lists, buttons, video, grouped layouts, columns, shortcodes, latest posts, or other supported content blocks.
+
+In the editor, **Hide modal preview** / **Show modal preview** is a keyboard-operable disclosure next to the helper label. Hide the canvas modal shell to judge how the card sits among other page content. This does not change the frontend modal. Reloading the editor shows the preview again.
 
 ### Animation Settings
 
