@@ -34,11 +34,11 @@ flowchart TD
   parent --> content
 ```
 
-- **Parent** `fun-gutenberg-blocks/card-flip-to-modal`: locked wrapper, flip animation on/off, and animation duration
+- **Parent** `fun-gutenberg-blocks/card-flip-to-modal`: locked wrapper; flip animation attributes stay parent-owned
 - **Preview child** `fun-gutenberg-blocks/card-flip-to-modal-preview`: the visible card and its appearance settings
-- **Content child** `fun-gutenberg-blocks/card-flip-to-modal-content`: modal markup plus appearance, behavior, accessibility, and close-button settings
+- **Content child** `fun-gutenberg-blocks/card-flip-to-modal-content`: modal markup plus appearance, behavior (including flip animation controls), accessibility, and close-button settings
 
-Select the parent or the relevant child in the editor to see that block’s sidebar panels.
+Select the relevant child in the editor to see that block’s sidebar panels.
 
 ## Features
 
@@ -77,7 +77,7 @@ Select the parent or the relevant child in the editor to see that block’s side
 5. Open the block editor for a page or post.
 6. Insert the **Card Flip to Modal** block.
 7. Edit the Preview Area and Modal Content area.
-8. Select the parent, preview, or modal content block to configure its sidebar settings.
+8. Select the preview or modal content block to configure its sidebar settings.
 
 The `build/` folder is included in this repository so the plugin can be installed and activated without running npm commands.
 
@@ -113,15 +113,6 @@ The Modal Content area is the expanded content shown inside the modal.
 This area can include longer text, images, lists, buttons, video, grouped layouts, columns, shortcodes, latest posts, or other supported content blocks.
 
 In the editor, **Hide modal preview** / **Show modal preview** is a keyboard-operable disclosure next to the helper label. Hide the canvas modal shell to judge how the card sits among other page content. This does not change the frontend modal. Reloading the editor shows the preview again.
-
-### Animation Settings
-
-Select the **parent** Card Flip to Modal block. The sidebar includes **Animation Settings**.
-
-- Enable flip animation
-- Animation duration in milliseconds
-
-When the flip animation is enabled, the preview card flips and grows into the modal.
 
 ### Card Settings
 
@@ -181,6 +172,10 @@ With the modal content block selected, the sidebar includes **Modal Behavior Set
 
 - Close when clicking backdrop
 - Lock page scroll while modal is open
+- Enable flip animation
+- Animation duration in milliseconds
+
+When the flip animation is enabled, the preview card flips and grows into the modal.
 
 These settings are saved per block instance, so different Card Flip to Modal blocks on the same page can use different behavior.
 
