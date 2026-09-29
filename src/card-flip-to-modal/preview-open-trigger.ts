@@ -1,9 +1,9 @@
 import { getSafePreviewOpenElementId } from './constants';
 
-const NATIVE_OPEN_CONTROL_SELECTOR =
-	'button, summary, input, select, textarea';
+const NATIVE_OPEN_CONTROL_SELECTOR = 'button, summary, input, select, textarea';
 const LINK_SELECTOR = 'a[href]';
 const HEADING_SELECTOR = 'h1, h2, h3, h4, h5, h6';
+const BUTTON_BLOCK_LINK_SELECTOR = ':scope > .wp-block-button__link';
 
 export const PREVIEW_OPEN_TRIGGER_CLASS = 'gb-flip-card-modal__open-trigger';
 
@@ -44,9 +44,42 @@ export function getPreviewOpenTrigger(
 		return null;
 	}
 
-	return preview.querySelector< HTMLElement >(
+	const matched = preview.querySelector< HTMLElement >(
 		`#${ escapeHtmlIdForSelector( openElementId ) }`
 	);
+
+	if ( ! matched ) {
+		return null;
+	}
+
+	return resolveButtonBlockTrigger( matched );
+}
+
+/**
+ * Uses the inner control when the HTML anchor is on a Button block wrapper.
+ *
+ * core/button writes the anchor id on `div.wp-block-button`, not on the
+ * `<button>`. Binding the wrapper would add a second tab stop beside the
+ * real control. A wrapper with more than one direct button link stays the
+ * trigger so this does not guess among several controls.
+ *
+ * @param element Element that carries the open-element id.
+ * @return Inner button link, or the original element.
+ */
+function resolveButtonBlockTrigger( element: HTMLElement ): HTMLElement {
+	if ( isNativeOpenControl( element ) || isHeadingTrigger( element ) ) {
+		return element;
+	}
+
+	const controls = element.querySelectorAll< HTMLElement >(
+		BUTTON_BLOCK_LINK_SELECTOR
+	);
+
+	if ( controls.length === 1 ) {
+		return controls[ 0 ];
+	}
+
+	return element;
 }
 
 /**
@@ -144,8 +177,6 @@ export function shouldHandleOpenKeydown(
  * @param trigger Open trigger.
  * @return True for links with an href.
  */
-export function shouldPreventOpenClickDefault(
-	trigger: HTMLElement
-): boolean {
+export function shouldPreventOpenClickDefault( trigger: HTMLElement ): boolean {
 	return trigger.matches( LINK_SELECTOR );
 }

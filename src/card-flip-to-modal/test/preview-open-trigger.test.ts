@@ -11,9 +11,7 @@ import {
 	shouldPreventOpenClickDefault,
 } from '../preview-open-trigger';
 
-function createPreview(
-	openElementId?: string
-): HTMLElement {
+function createPreview( openElementId?: string ): HTMLElement {
 	const preview = document.createElement( 'div' );
 	preview.className = 'gb-flip-card-modal__preview';
 	preview.setAttribute( 'role', 'button' );
@@ -76,6 +74,47 @@ describe( 'getPreviewOpenTrigger', () => {
 		expect( getPreviewOpenTrigger( preview ) ).toBeNull();
 	} );
 
+	it( 'uses the inner button when the HTML id is on a core/button wrapper', () => {
+		const preview = createPreview( 'open-btn' );
+		const wrapper = document.createElement( 'div' );
+		wrapper.id = 'open-btn';
+		wrapper.className = 'wp-block-button';
+		const button = document.createElement( 'button' );
+		button.className = 'wp-block-button__link';
+		button.type = 'button';
+		wrapper.appendChild( button );
+		preview.appendChild( wrapper );
+
+		expect( getPreviewOpenTrigger( preview ) ).toBe( button );
+	} );
+
+	it( 'keeps the wrapper when it contains more than one button link', () => {
+		const preview = createPreview( 'open-group' );
+		const wrapper = document.createElement( 'div' );
+		wrapper.id = 'open-group';
+		const first = document.createElement( 'button' );
+		first.className = 'wp-block-button__link';
+		const second = document.createElement( 'a' );
+		second.className = 'wp-block-button__link';
+		second.setAttribute( 'href', '#' );
+		wrapper.append( first, second );
+		preview.appendChild( wrapper );
+
+		expect( getPreviewOpenTrigger( preview ) ).toBe( wrapper );
+	} );
+
+	it( 'does not descend into a heading', () => {
+		const preview = createPreview( 'card-heading' );
+		const heading = document.createElement( 'h3' );
+		heading.id = 'card-heading';
+		const button = document.createElement( 'button' );
+		button.className = 'wp-block-button__link';
+		heading.appendChild( button );
+		preview.appendChild( heading );
+
+		expect( getPreviewOpenTrigger( preview ) ).toBe( heading );
+	} );
+
 	it( 'returns null when the ID is not inside this preview', () => {
 		const preview = createPreview( 'open-btn' );
 		const otherPreview = createPreview();
@@ -100,9 +139,9 @@ describe( 'preparePreviewOpenTrigger', () => {
 		expect( preview.hasAttribute( 'role' ) ).toBe( false );
 		expect( preview.hasAttribute( 'tabindex' ) ).toBe( false );
 		expect( preview.hasAttribute( 'aria-haspopup' ) ).toBe( false );
-		expect(
-			preview.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
-		).toBe( false );
+		expect( preview.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS ) ).toBe(
+			false
+		);
 	} );
 
 	it( 'moves dialog ARIA onto a native button and demotes the preview', () => {
@@ -121,9 +160,37 @@ describe( 'preparePreviewOpenTrigger', () => {
 		expect( button.getAttribute( 'aria-expanded' ) ).toBe( 'false' );
 		expect( button.getAttribute( 'role' ) ).toBeNull();
 		expect( button.hasAttribute( 'tabindex' ) ).toBe( false );
-		expect(
-			button.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
-		).toBe( true );
+		expect( button.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS ) ).toBe(
+			true
+		);
+	} );
+
+	it( 'puts dialog semantics on the inner button and not the wrapper', () => {
+		const preview = createPreview( 'open-btn' );
+		const wrapper = document.createElement( 'div' );
+		wrapper.id = 'open-btn';
+		wrapper.className = 'wp-block-button';
+		const button = document.createElement( 'button' );
+		button.className = 'wp-block-button__link';
+		button.type = 'button';
+		wrapper.appendChild( button );
+		preview.appendChild( wrapper );
+
+		const trigger = getPreviewOpenTrigger( preview );
+
+		preparePreviewOpenTrigger( preview, trigger );
+
+		expect( trigger ).toBe( button );
+		expect( wrapper.hasAttribute( 'role' ) ).toBe( false );
+		expect( wrapper.hasAttribute( 'tabindex' ) ).toBe( false );
+		expect( wrapper.hasAttribute( 'aria-haspopup' ) ).toBe( false );
+		expect( button.getAttribute( 'role' ) ).toBeNull();
+		expect( button.hasAttribute( 'tabindex' ) ).toBe( false );
+		expect( button.getAttribute( 'aria-haspopup' ) ).toBe( 'dialog' );
+		expect( button.getAttribute( 'aria-expanded' ) ).toBe( 'false' );
+		expect( button.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS ) ).toBe(
+			true
+		);
 	} );
 
 	it( 'adds button semantics to a generic inner trigger', () => {
@@ -153,9 +220,9 @@ describe( 'preparePreviewOpenTrigger', () => {
 		expect( heading.getAttribute( 'role' ) ).toBeNull();
 		expect( heading.getAttribute( 'tabindex' ) ).toBe( '0' );
 		expect( heading.getAttribute( 'aria-haspopup' ) ).toBe( 'dialog' );
-		expect(
-			heading.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS )
-		).toBe( true );
+		expect( heading.classList.contains( PREVIEW_OPEN_TRIGGER_CLASS ) ).toBe(
+			true
+		);
 	} );
 } );
 
@@ -189,9 +256,9 @@ describe( 'shouldHandleOpenKeydown', () => {
 		expect(
 			shouldHandleOpenKeydown( button, createKeyEvent( 'Enter' ) )
 		).toBe( false );
-		expect(
-			shouldHandleOpenKeydown( button, createKeyEvent( ' ' ) )
-		).toBe( false );
+		expect( shouldHandleOpenKeydown( button, createKeyEvent( ' ' ) ) ).toBe(
+			false
+		);
 	} );
 
 	it( 'handles Space but not Enter on a link', () => {

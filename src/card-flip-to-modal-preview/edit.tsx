@@ -73,8 +73,13 @@ const ALLOWED_BLOCKS = [
 	'core/latest-posts',
 ];
 
-const PREVIEW_BLOCK_NAME =
-	'fun-gutenberg-blocks/card-flip-to-modal-preview';
+const PREVIEW_BLOCK_NAME = 'fun-gutenberg-blocks/card-flip-to-modal-preview';
+
+type PreviewTemplate = [
+	string,
+	Record< string, unknown >?,
+	PreviewTemplate[]?,
+];
 
 function findInnerBlockByAnchor(
 	blocks: BlockInstance[],
@@ -139,7 +144,25 @@ function previewOpenElementIdCollides(
 	return false;
 }
 
-const TEMPLATE: [ string, Record< string, unknown >? ][] = [
+function findFirstUnanchoredButton(
+	blocks: BlockInstance[]
+): BlockInstance | undefined {
+	for ( const block of blocks ) {
+		if ( block.name === 'core/button' && ! block.attributes?.anchor ) {
+			return block;
+		}
+
+		const nested = findFirstUnanchoredButton( block.innerBlocks ?? [] );
+
+		if ( nested ) {
+			return nested;
+		}
+	}
+
+	return undefined;
+}
+
+const TEMPLATE: PreviewTemplate[] = [
 	[
 		'core/heading',
 		{
@@ -148,13 +171,30 @@ const TEMPLATE: [ string, Record< string, unknown >? ][] = [
 		},
 	],
 	[
-		'core/paragraph',
+		'core/buttons',
 		{
-			content: __(
-				'Click to open the modal content.',
-				'card-flip-to-modal'
-			),
+			layout: {
+				type: 'flex',
+				justifyContent: 'center',
+			},
 		},
+		[
+			[
+				'core/button',
+				{
+					tagName: 'button',
+					type: 'button',
+					text: __( 'Click to Open Modal', 'card-flip-to-modal' ),
+					className: 'gb-flip-card-modal__open-button',
+					style: {
+						color: {
+							background: '#000000',
+							text: '#ffffff',
+						},
+					},
+				},
+			],
+		],
 	],
 ];
 
@@ -218,12 +258,8 @@ export default function Edit( {
 	);
 	const previewPaddingSides = getPreviewPaddingSides( attributes );
 	const previewMarginSides = getPreviewMarginSides( attributes );
-	const previewPaddingShorthand = getSpacingShorthand(
-		previewPaddingSides
-	);
-	const previewMarginShorthand = getSpacingShorthand(
-		previewMarginSides
-	);
+	const previewPaddingShorthand = getSpacingShorthand( previewPaddingSides );
+	const previewMarginShorthand = getSpacingShorthand( previewMarginSides );
 
 	const { innerBlocks, openElementIdCollides } = useSelect(
 		( select ) => {
@@ -242,9 +278,8 @@ export default function Edit( {
 		[ clientId, previewOpenElementId ]
 	);
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
-	const safeOpenElementId = getSafePreviewOpenElementId(
-		previewOpenElementId
-	);
+	const safeOpenElementId =
+		getSafePreviewOpenElementId( previewOpenElementId );
 	const matchedOpenElementBlock = findInnerBlockByAnchor(
 		innerBlocks,
 		safeOpenElementId
@@ -262,13 +297,10 @@ export default function Edit( {
 			previewOpenElementIdInitialized: true,
 		} );
 
-		const paragraph = innerBlocks.find(
-			( block ) =>
-				block.name === 'core/paragraph' && ! block.attributes?.anchor
-		);
+		const button = findFirstUnanchoredButton( innerBlocks );
 
-		if ( paragraph ) {
-			updateBlockAttributes( paragraph.clientId, {
+		if ( button ) {
+			updateBlockAttributes( button.clientId, {
 				anchor: openElementId,
 			} );
 		}
@@ -285,9 +317,7 @@ export default function Edit( {
 			return;
 		}
 
-		const previousId = getSafePreviewOpenElementId(
-			previewOpenElementId
-		);
+		const previousId = getSafePreviewOpenElementId( previewOpenElementId );
 		const nextId = getDefaultPreviewOpenElementId( clientId );
 
 		if ( ! previousId || previousId === nextId ) {
@@ -365,7 +395,7 @@ export default function Edit( {
 							} )
 						}
 						help={ __(
-							'Enter the HTML ID of an element inside the card (Advanced → HTML anchor). The modal opens only from that element. New cards start with an ID on the intro paragraph; change it to use a different control.',
+							'Enter the HTML ID of an element inside the card (Advanced → HTML anchor). The modal opens only from that element. New cards start with an ID on the open button; change it to use a different control.',
 							'card-flip-to-modal'
 						) }
 					/>
@@ -448,7 +478,10 @@ export default function Edit( {
 					/>
 
 					<ToggleControl
-						label={ __( 'Hover lift effect', 'card-flip-to-modal' ) }
+						label={ __(
+							'Hover lift effect',
+							'card-flip-to-modal'
+						) }
 						checked={ previewHasHoverLift }
 						onChange={ ( value ) =>
 							setAttributes( { previewHasHoverLift: value } )
