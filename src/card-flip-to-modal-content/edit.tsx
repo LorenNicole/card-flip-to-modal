@@ -4,6 +4,7 @@
 import {
 	InspectorControls,
 	InnerBlocks,
+	store as blockEditorStore,
 	useBlockProps,
 } from '@wordpress/block-editor';
 
@@ -17,6 +18,7 @@ import {
 	ToggleControl,
 } from '@wordpress/components';
 
+import { useSelect, useDispatch } from '@wordpress/data';
 import { useId, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -41,19 +43,24 @@ import {
 	DEFAULT_MODAL_BORDER_RADIUS,
 	DEFAULT_MODAL_BORDER_STYLE,
 	DEFAULT_MODAL_BORDER_WIDTH,
+	DEFAULT_FLIP_ANIMATION_DURATION_MS,
+	DEFAULT_FLIP_ANIMATION_ENABLED,
 	DEFAULT_MODAL_CLOSE_ON_BACKDROP_CLICK,
 	DEFAULT_MODAL_LOCK_PAGE_SCROLL,
 	DEFAULT_MODAL_MARGIN,
 	DEFAULT_MODAL_PADDING,
 	DEFAULT_MODAL_SIZE,
+	FLIP_ANIMATION_DURATION_STEP_MS,
 	MAX_CARD_MODAL_BORDER_RADIUS,
 	MAX_CARD_MODAL_BORDER_WIDTH,
 	MAX_CLOSE_BUTTON_BORDER_RADIUS,
 	MAX_CLOSE_BUTTON_SIZE,
+	MAX_FLIP_ANIMATION_DURATION_MS,
 	MIN_CARD_MODAL_BORDER_RADIUS,
 	MIN_CARD_MODAL_BORDER_WIDTH,
 	MIN_CLOSE_BUTTON_BORDER_RADIUS,
 	MIN_CLOSE_BUTTON_SIZE,
+	MIN_FLIP_ANIMATION_DURATION_MS,
 	type BorderStyleValue,
 	type CloseButtonPositionValue,
 	type ModalSizeValue,
@@ -67,6 +74,7 @@ import {
 	getSafeCloseButtonPosition,
 	getSafeCloseButtonText,
 	getSafeCustomModalWidth,
+	getSafeFlipAnimationDuration,
 	getSafeNumber,
 	getSpacingShorthand,
 	isValidCssSize,
@@ -142,9 +150,19 @@ interface EditAttributes extends ModalSpacingAttributes {
 interface EditProps {
 	attributes: EditAttributes;
 	setAttributes: ( attributes: Partial< EditAttributes > ) => void;
+	clientId: string;
 }
 
-export default function Edit( { attributes, setAttributes }: EditProps ) {
+interface ParentAnimationAttributes {
+	flipAnimationEnabled?: boolean;
+	flipAnimationDuration?: number;
+}
+
+export default function Edit( {
+	attributes,
+	setAttributes,
+	clientId,
+}: EditProps ) {
 	const {
 		modalSize = DEFAULT_MODAL_SIZE,
 		customModalWidth = DEFAULT_CUSTOM_MODAL_WIDTH,
@@ -166,7 +184,36 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 		closeButtonBorderColor = DEFAULT_CLOSE_BUTTON_BORDER_COLOR,
 		closeButtonBorderRadius = DEFAULT_CLOSE_BUTTON_BORDER_RADIUS,
 	} = attributes;
-	
+
+	const { parentClientId, flipAnimationEnabled, flipAnimationDuration } =
+		useSelect(
+			( select ) => {
+				const { getBlockRootClientId, getBlockAttributes } =
+					select( blockEditorStore );
+				const rootClientId = getBlockRootClientId( clientId );
+				const parentAttributes = (
+					rootClientId
+						? getBlockAttributes( rootClientId )
+						: undefined
+				) as ParentAnimationAttributes | undefined;
+
+				return {
+					parentClientId: rootClientId,
+					flipAnimationEnabled:
+						parentAttributes?.flipAnimationEnabled ??
+						DEFAULT_FLIP_ANIMATION_ENABLED,
+					flipAnimationDuration:
+						parentAttributes?.flipAnimationDuration ??
+						DEFAULT_FLIP_ANIMATION_DURATION_MS,
+				};
+			},
+			[ clientId ]
+		);
+	const { updateBlockAttributes } = useDispatch( blockEditorStore );
+	const safeFlipAnimationDuration = getSafeFlipAnimationDuration(
+		flipAnimationDuration
+	);
+
 	const customWidthIsValid = isValidCssSize( customModalWidth );
 	
 	const safeCustomModalWidth = getSafeCustomModalWidth( customModalWidth );
@@ -434,6 +481,50 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 							'card-flip-to-modal'
 						) }
 					/>
+
+					{ parentClientId && (
+						<>
+							<ToggleControl
+								label={ __(
+									'Enable flip animation',
+									'card-flip-to-modal'
+								) }
+								checked={ flipAnimationEnabled }
+								onChange={ ( value ) =>
+									updateBlockAttributes( parentClientId, {
+										flipAnimationEnabled: value,
+									} )
+								}
+								help={ __(
+									'When enabled, the preview card flips and grows into the modal.',
+									'card-flip-to-modal'
+								) }
+							/>
+
+							<RangeControl
+								label={ __(
+									'Animation duration',
+									'card-flip-to-modal'
+								) }
+								value={ safeFlipAnimationDuration }
+								onChange={ ( value ) =>
+									updateBlockAttributes( parentClientId, {
+										flipAnimationDuration:
+											value ||
+											DEFAULT_FLIP_ANIMATION_DURATION_MS,
+									} )
+								}
+								min={ MIN_FLIP_ANIMATION_DURATION_MS }
+								max={ MAX_FLIP_ANIMATION_DURATION_MS }
+								step={ FLIP_ANIMATION_DURATION_STEP_MS }
+								disabled={ ! flipAnimationEnabled }
+								help={ __(
+									'Controls how long the flip/grow animation takes in milliseconds.',
+									'card-flip-to-modal'
+								) }
+							/>
+						</>
+					) }
 				</PanelBody>
 
 				<PanelBody
